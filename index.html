@@ -1,165 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulate Memory, RAM & CPU Usage</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      text-align: center;
-      background-color: #1f1f1f;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    h1 {
-      margin-bottom: 20px;
-      font-size: 28px;
-    }
-    .label {
-      margin-bottom: 10px;
-      font-size: 18px;
-    }
-    .input-box {
-      padding: 10px;
-      font-size: 16px;
-      width: 100px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-      text-align: center;
-      background-color: #333;
-      color: white;
-    }
-    .button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    .button:hover {
-      background-color: #45a049;
-    }
-    .checkbox {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #ff9800;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #66ff66;
-    }
-    .array-info {
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Emulator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="emulator-container">
+        <div class="viewport">
+            <div class="app-screen">
+                <button class="app-button" id="clickButton">Click Me!</button>
+            </div>
+        </div>
 
-  <div class="container">
-    <h1>Simulate Memory, RAM & CPU Usage</h1>
-    
-    <div class="label">Arrays to Spawn (each array = 1MB)</div>
-    <input type="number" id="arrayInput" class="input-box" min="1" value="1">
-    
-    <button class="button" onclick="spawnArrays()">Spawn Arrays</button>
-    
-    <div class="checkbox">
-      <label><input type="checkbox" id="refreshCheckbox"> Refresh Arrays Every Second</label>
+        <div class="touchpad">
+            <button class="touchpad-btn" id="up">↑</button>
+            <button class="touchpad-btn" id="down">↓</button>
+            <button class="touchpad-btn" id="left">←</button>
+            <button class="touchpad-btn" id="right">→</button>
+        </div>
     </div>
 
-    <button class="button" onclick="clearArrays()">Clear All Arrays</button>
-    
-    <div id="output" class="result"></div>
-    <div id="arrayCount" class="array-info"></div>
-  </div>
-
-  <script>
-    let spawnedArrays = 0;
-    const arrayList = [];
-    let cpuLoadIntervals = [];
-    
-    function spawnArrays() {
-      const numArrays = parseInt(document.getElementById('arrayInput').value);
-      const output = document.getElementById('output');
-      
-      if (numArrays < 1) {
-        output.textContent = 'Please enter a value greater than 0.';
-        output.style.color = '#ff4444';
-        return;
-      }
-
-      // Simulate spawning arrays and using memory (each array is 1MB)
-      let totalSize = 0;
-
-      for (let i = 0; i < numArrays; i++) {
-        const newArray = new Array(1024 * 1024); // 1MB Array
-        arrayList.push(newArray);
-        totalSize += 1; // 1MB for each array
-        
-        // Simulate CPU load by continuously iterating over arrays (mimicking computational work)
-        const cpuLoadInterval = setInterval(() => {
-          // Perform some trivial computation to simulate CPU usage (e.g., summing array elements)
-          for (let j = 0; j < newArray.length; j++) {
-            newArray[j] = newArray[j] || 0;
-            newArray[j]++;
-          }
-        }, 10); // Small interval to simulate CPU load (can adjust frequency for more load)
-        
-        cpuLoadIntervals.push(cpuLoadInterval);
-      }
-      
-      spawnedArrays += numArrays;
-      output.textContent = `Spawned ${numArrays} arrays (Total: ${spawnedArrays} arrays).`;
-      output.style.color = '#66ff66';
-      
-      updateArrayCount();
-      
-      // If the refresh checkbox is checked, start refreshing arrays every second
-      if (document.getElementById('refreshCheckbox').checked) {
-        setInterval(refreshArrays, 1000);
-      }
-    }
-    
-    function clearArrays() {
-      // Clear all arrays and stop CPU load
-      arrayList.length = 0;
-      spawnedArrays = 0;
-      cpuLoadIntervals.forEach(interval => clearInterval(interval));
-      cpuLoadIntervals = [];
-      updateArrayCount();
-      document.getElementById('output').textContent = 'All arrays cleared.';
-    }
-    
-    function refreshArrays() {
-      // Refresh arrays by re-processing their contents (simulate work)
-      arrayList.forEach((array, index) => {
-        for (let j = 0; j < array.length; j++) {
-          array[j] = array[j] || 0;
-          array[j]++;
-        }
-      });
-    }
-
-    function updateArrayCount() {
-      document.getElementById('arrayCount').textContent = `Current Arrays: ${spawnedArrays}`;
-    }
-  </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
