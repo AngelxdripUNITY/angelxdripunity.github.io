@@ -3,25 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Android Emulator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Browser Simulator</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        /* Button to toggle search bar */
+        #searchButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        #searchButton img {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Search bar container */
+        #searchBar {
+            position: fixed;
+            top: -60px; /* Hidden by default */
+            right: 0;
+            width: 300px;
+            background: #fff;
+            padding: 15px;
+            box-sizing: border-box;
+            border-radius: 8px 8px 0 0;
+            transition: top 0.3s ease;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            visibility: hidden; /* Initially hidden */
+        }
+
+        /* Search bar inputs and button */
+        #searchBar input {
+            width: 85%;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        #searchBar button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #searchBar button:hover {
+            background-color: #45a049;
+        }
+
+        /* Close button styling */
+        #closeButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+        }
+        #closeButton:hover {
+            color: #555;
+        }
+
+        /* iframe setup */
+        iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="emulator-container">
-        <div class="viewport">
-            <div class="app-screen">
-                <button class="app-button" id="clickButton">Click Me!</button>
-            </div>
-        </div>
+    <button id="searchButton">
+        <img src="https://cdn-icons-png.flaticon.com/512/4475/4475396.png" alt="Search Icon">
+    </button>
 
-        <div class="touchpad">
-            <button class="touchpad-btn" id="up">↑</button>
-            <button class="touchpad-btn" id="down">↓</button>
-            <button class="touchpad-btn" id="left">←</button>
-            <button class="touchpad-btn" id="right">→</button>
-        </div>
+    <div id="searchBar">
+        <button id="closeButton" onclick="hideSearchBar()">×</button>
+        <input type="text" id="searchInput" placeholder="Enter URL..." onkeydown="if(event.key === 'Enter') loadUrl()">
+        <label for="loadMethod">Use CORS Anywhere</label>
+        <input type="checkbox" id="loadMethod">
+        <button onclick="loadUrl()">Go</button>
     </div>
 
-    <script src="script.js"></script>
+    <iframe id="browserFrame"></iframe>
+
+    <script>
+        // Function to load the page with or without CORS proxy
+        function loadPage(url, useCORS) {
+            if (!url.startsWith('http')) {
+                url = 'http://' + url; // Make sure it's a valid URL
+            }
+
+            if (useCORS) {
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + url;
+                fetch(proxyUrl, {
+                    headers: {
+                        'x-requested-with': 'fetch'
+                    }
+                })
+                .then(response => response.text())
+                .then(text => {
+                    const blob = new Blob([text], { type: 'text/html' });
+                    const iframeUrl = URL.createObjectURL(blob);
+                    document.getElementById('browserFrame').src = iframeUrl;
+                })
+                .catch(error => console.error('Failed to load page with CORS:', error));
+            } else {
+                document.getElementById('browserFrame').src = url; // Direct loading
+            }
+        }
+
+        // Load URL when 'Go' button or Enter key is pressed
+        function loadUrl() {
+            const url = document.getElementById('searchInput').value;
+            const useCORS = document.getElementById('loadMethod').checked;
+            if (url) {
+                loadPage(url, useCORS);
+                hideSearchBar(); // Hide search bar after URL is loaded
+            }
+        }
+
+        // Hide the search bar
+        function hideSearchBar() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.style.top = '-60px';
+            searchBar.style.visibility = 'hidden';
+        }
+
+        // Show the search bar
+        function showSearchBar() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.style.top = '0';
+            searchBar.style.visibility = 'visible';
+            document.getElementById('searchInput').focus(); // Focus the input field
+        }
+
+        // Toggle search bar visibility when search button is clicked
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar.style.visibility === 'visible') {
+                hideSearchBar(); // Hide if already visible
+            } else {
+                showSearchBar(); // Show if currently hidden
+            }
+        });
+
+        // Default page load (optional)
+        loadPage('https://www.google.com', false);
+    </script>
 </body>
 </html>
