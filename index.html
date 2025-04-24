@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Inverted VR Cam</title>
+  <title>VR Cam View</title>
   <style>
     html, body {
       margin: 0;
@@ -17,35 +17,34 @@
 
     #container {
       display: flex;
-      height: 100%;
       width: 100%;
+      height: 100%;
       flex-direction: row;
-      justify-content: space-between;
     }
 
     .eye {
       flex: 1;
       overflow: hidden;
       position: relative;
-      height: 100%;
     }
 
     video {
       position: absolute;
       top: 0;
       height: 100%;
-      width: 130%;
+      width: var(--zoom, 120%);
       object-fit: cover;
       transform: rotate(180deg);
       filter: contrast(1.2) saturate(1.1);
+      transition: width 0.2s, left 0.2s;
     }
 
     #leftVideo {
-      left: -6%;
+      left: calc(var(--offset, -6%) * 1);
     }
 
     #rightVideo {
-      left: 6%;
+      left: calc(var(--offset, 6%) * 1);
     }
 
     .divider {
@@ -55,7 +54,31 @@
       width: 1px;
       height: 100%;
       background: rgba(255, 255, 255, 0.1);
-      z-index: 5;
+      z-index: 2;
+    }
+
+    #controls {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #controls input[type=range] {
+      width: 150px;
+    }
+
+    #controls label {
+      font-size: 12px;
     }
   </style>
 </head>
@@ -66,7 +89,14 @@
   </div>
   <div class="divider"></div>
 
+  <div id="controls">
+    <label for="zoom">Zoom</label>
+    <input type="range" id="zoom" min="100" max="160" value="120" />
+  </div>
+
   <script>
+    const root = document.documentElement;
+
     async function initCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -75,23 +105,30 @@
         document.getElementById('leftVideo').srcObject = stream;
         document.getElementById('rightVideo').srcObject = stream;
       } catch (err) {
-        alert("Rear camera not accessible. Check permissions or try a different browser.");
+        alert("Can't access rear camera. Try a different browser or check permissions.");
         console.error(err);
       }
     }
 
     async function enterFullscreen() {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        await elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) {
-        await elem.webkitRequestFullscreen();
+      const docEl = document.documentElement;
+      if (docEl.requestFullscreen) {
+        await docEl.requestFullscreen();
+      } else if (docEl.webkitRequestFullscreen) {
+        await docEl.webkitRequestFullscreen();
       }
     }
 
     window.addEventListener("touchstart", async () => {
       await enterFullscreen();
     }, { once: true });
+
+    document.getElementById("zoom").addEventListener("input", e => {
+      const zoomVal = e.target.value + "%";
+      root.style.setProperty("--zoom", zoomVal);
+      const offset = (parseInt(e.target.value) - 100) / 4 + 6;
+      root.style.setProperty("--offset", offset + "%");
+    });
 
     initCamera();
   </script>
