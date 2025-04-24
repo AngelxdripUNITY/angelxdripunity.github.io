@@ -2,56 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Realistic VR Cam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Inverted VR Cam</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       background: black;
       overflow: hidden;
+      height: 100%;
+      width: 100%;
+      position: fixed;
     }
 
     #container {
       display: flex;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     .eye {
-      width: 50vw;
-      height: 100vh;
+      flex: 1;
       overflow: hidden;
       position: relative;
+      height: 100%;
     }
 
     video {
       position: absolute;
       top: 0;
-      height: 100vh;
-      width: 110vw; /* zoom a bit for the offset */
+      height: 100%;
+      width: 130%;
       object-fit: cover;
       transform: rotate(180deg);
-      filter: contrast(1.3) saturate(1.2);
+      filter: contrast(1.2) saturate(1.1);
     }
 
     #leftVideo {
-      left: -5vw;
+      left: -6%;
     }
 
     #rightVideo {
-      left: 5vw;
+      left: 6%;
     }
 
     .divider {
       position: absolute;
       top: 0;
       left: 50%;
-      width: 2px;
+      width: 1px;
       height: 100%;
       background: rgba(255, 255, 255, 0.1);
-      z-index: 2;
+      z-index: 5;
     }
   </style>
 </head>
@@ -71,7 +75,7 @@
         document.getElementById('leftVideo').srcObject = stream;
         document.getElementById('rightVideo').srcObject = stream;
       } catch (err) {
-        alert("Rear camera access failed. Try allowing permissions.");
+        alert("Rear camera not accessible. Check permissions or try a different browser.");
         console.error(err);
       }
     }
@@ -81,12 +85,12 @@
       if (elem.requestFullscreen) {
         await elem.requestFullscreen();
       } else if (elem.webkitRequestFullscreen) {
-        await elem.webkitRequestFullscreen(); // iPhone Safari
+        await elem.webkitRequestFullscreen();
       }
     }
 
-    window.addEventListener('touchstart', () => {
-      enterFullscreen();
+    window.addEventListener("touchstart", async () => {
+      await enterFullscreen();
     }, { once: true });
 
     initCamera();
