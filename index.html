@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>VR Cam View</title>
+  <title>Realistic VR Cam</title>
   <style>
     html, body {
       margin: 0;
@@ -19,66 +19,43 @@
       display: flex;
       width: 100%;
       height: 100%;
-      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .eye {
-      flex: 1;
-      overflow: hidden;
+      flex: 0 0 45%; /* Smaller eye box */
+      height: 100%;
       position: relative;
+      overflow: hidden;
     }
 
     video {
       position: absolute;
       top: 0;
       height: 100%;
-      width: var(--zoom, 120%);
+      width: 100%;
       object-fit: cover;
       transform: rotate(180deg);
       filter: contrast(1.2) saturate(1.1);
-      transition: width 0.2s, left 0.2s;
     }
 
     #leftVideo {
-      left: calc(var(--offset, -6%) * 1);
+      left: -4%;
     }
 
     #rightVideo {
-      left: calc(var(--offset, 6%) * 1);
+      left: 4%;
     }
 
     .divider {
       position: absolute;
       top: 0;
       left: 50%;
-      width: 1px;
+      width: 2px;
       height: 100%;
       background: rgba(255, 255, 255, 0.1);
-      z-index: 2;
-    }
-
-    #controls {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 8px 12px;
-      border-radius: 8px;
-      color: white;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    #controls input[type=range] {
-      width: 150px;
-    }
-
-    #controls label {
-      font-size: 12px;
+      z-index: 5;
     }
   </style>
 </head>
@@ -89,14 +66,7 @@
   </div>
   <div class="divider"></div>
 
-  <div id="controls">
-    <label for="zoom">Zoom</label>
-    <input type="range" id="zoom" min="100" max="160" value="120" />
-  </div>
-
   <script>
-    const root = document.documentElement;
-
     async function initCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -105,17 +75,17 @@
         document.getElementById('leftVideo').srcObject = stream;
         document.getElementById('rightVideo').srcObject = stream;
       } catch (err) {
-        alert("Can't access rear camera. Try a different browser or check permissions.");
+        alert("Can't access rear camera. Check permissions.");
         console.error(err);
       }
     }
 
     async function enterFullscreen() {
-      const docEl = document.documentElement;
-      if (docEl.requestFullscreen) {
-        await docEl.requestFullscreen();
-      } else if (docEl.webkitRequestFullscreen) {
-        await docEl.webkitRequestFullscreen();
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        await elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        await elem.webkitRequestFullscreen();
       }
     }
 
@@ -123,13 +93,7 @@
       await enterFullscreen();
     }, { once: true });
 
-    document.getElementById("zoom").addEventListener("input", e => {
-      const zoomVal = e.target.value + "%";
-      root.style.setProperty("--zoom", zoomVal);
-      const offset = (parseInt(e.target.value) - 100) / 4 + 6;
-      root.style.setProperty("--offset", offset + "%");
-    });
-
+    // Initialize camera stream
     initCamera();
   </script>
 </body>
