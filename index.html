@@ -1,100 +1,431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Realistic VR Cam</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: black;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
-      position: fixed;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Qbit</title>
+    <link rel="icon" id="dynamic-favicon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Q</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-    #container {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .eye {
-      flex: 0 0 45%; /* Smaller eye box */
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    video {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-      transform: rotate(180deg);
-      filter: contrast(1.2) saturate(1.1);
-    }
-
-    #leftVideo {
-      left: -4%;
-    }
-
-    #rightVideo {
-      left: 4%;
-    }
-
-    .divider {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 2px;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      z-index: 5;
-    }
-  </style>
+    <style>
+        :root { /* Theme Variables */ --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff; --font-size: 16px; --font-family: 'Segoe UI', sans-serif; /* Radii */ --radius-std: 8px; --radius-lg: 12px; /* Slider */ --slider-track-bg: var(--accent); --slider-thumb-bg: var(--text); --slider-track-height: 6px; --slider-thumb-size: 16px; /* Games Section Specific */ --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent); --delete-color: #e53e3e; --edit-color: #4299e1; --play-color: #48bb78; }
+        /* Apply box-sizing selectively */ body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .game-card, .game-card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn { box-sizing: border-box; }
+        body { margin: 0; font-family: var(--font-family); display: flex; height: 100vh; overflow: hidden; background-color: var(--bg); color: var(--text); font-size: var(--font-size); transition: background-color 0.3s, color 0.3s; }
+        .sidebar { width: 200px; background-color: var(--sidebar); flex-shrink: 0; animation: slideInLeft 0.5s ease forwards; transition: background-color 0.3s; display:flex; flex-direction:column; padding: 20px 10px; gap: 20px; }
+        .sidebar h2 { font-size: 1.1em; border-bottom: 1px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px;}
+        .sidebar button { background: var(--accent); border: none; padding: 0.6em 0.8em; text-align: left; color: var(--text); cursor: pointer; border-radius: var(--radius-std); transition: background 0.3s, transform 0.2s, color 0.3s; font-size: 0.9em; display: block; width: 100%; }
+        .sidebar button:hover { background: #555; transform: scale(1.05); }
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .topbar { background-color: var(--topbar); animation: slideDown 0.5s ease forwards; transition: background-color 0.3s; display:flex; align-items:center; justify-content: space-between; padding: 10px 20px; position: sticky; top:0; z-index: 2; }
+        .search { flex-grow: 1; margin-right: 10px; }
+        .search input { width: 100%; padding: 8px 12px; background-color: var(--bg); color: var(--text); border: 1px solid var(--accent); border-radius: var(--radius-std); font-size: 0.9em; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+        .top-buttons { display: flex; gap: 10px; }
+        .icon-btn { width: 38px; height: 38px; border-radius: 50%; background-color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, transform 0.2s; padding: 0; }
+        .icon-btn:hover { background: #555; transform: scale(1.1); }
+        .icon-btn svg { width: 18px; height: 18px; fill: var(--text); display: block; }
+        .content { padding: 25px; overflow-y: auto; flex-grow: 1; line-height: 1.6; position: relative; z-index: 1; }
+        .content h1 { font-size: 1.8em; margin-bottom: 0.5em;} .content h2 { font-size: 1.4em; margin-bottom: 0.4em; margin-top: 1em;} .content p { font-size: 1em; margin-bottom: 1em;}
+        #welcome-area { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; opacity: 0; animation: fadeIn 1s 0.2s forwards; }
+        #welcome-logo-container { width: 64px; height: 64px; margin-bottom: 20px; opacity: 0; transform: scale(0.5); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards; }
+        #welcome-logo-container svg { display: block; width: 100%; height: 100%; }
+        #welcome-message { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s ease-out 0.8s forwards; }
+        .settings-panel { position: fixed; top: 55px; right: 20px; background-color: var(--topbar); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 250px; z-index: 10; opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s, visibility 0s linear 0.4s; display: none; /* Start hidden */ flex-direction: column; gap: 20px; }
+        .settings-panel.show { display: flex; opacity: 1; transform: translateY(0); visibility: visible; transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s; } /* Make visible */
+        .settings-panel label { font-size: 0.9em; display: flex; flex-direction: column; gap: 8px; color: var(--text); }
+        .settings-panel select { padding: 10px; border-radius: var(--radius-std); border: 1px solid var(--accent); background-color: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s, border-color 0.3s; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${(typeof getComputedStyle !== 'undefined' ? getComputedStyle(document.documentElement).getPropertyValue('--text') || '#ffffff' : '#ffffff').substring(1)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px auto; padding-right: 35px; font-size: 0.9em; }
+        .custom-slider-container { position: relative; width: 100%; height: var(--slider-thumb-size); display: flex; align-items: center; cursor: pointer; margin-top: 5px; }
+        input[type="range"].custom-slider { appearance: none; -webkit-appearance: none; width: 100%; height: var(--slider-track-height); background: transparent; position: absolute; top: calc(50% - var(--slider-track-height) / 2); left: 0; z-index: 2; margin: 0; cursor: pointer; }
+        input[type="range"].custom-slider::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: var(--slider-thumb-size); height: var(--slider-thumb-size); background: transparent; border: none; }
+        input[type="range"].custom-slider::-moz-range-thumb { width: var(--slider-thumb-size); height: var(--slider-thumb-size); background: transparent; border: none; border-radius: 0; }
+        .slider-track { position: absolute; width: 100%; height: var(--slider-track-height); background-color: var(--slider-track-bg); border-radius: var(--slider-track-height); top: calc(50% - var(--slider-track-height) / 2); left: 0; z-index: 0; transition: background-color 0.3s; }
+        .slider-progress { position: absolute; height: var(--slider-track-height); background-color: var(--text); border-radius: var(--slider-track-height); top: calc(50% - var(--slider-track-height) / 2); left: 0; z-index: 1; width: 50%; transition: background-color 0.3s; opacity: 0.7; }
+        .slider-thumb { position: absolute; width: var(--slider-thumb-size); height: var(--slider-thumb-size); background-color: var(--slider-thumb-bg); border-radius: 50%; border: 1px solid var(--accent); top: calc(50% - var(--slider-thumb-size) / 2); left: 50%; transform: translateX(-50%); z-index: 3; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: background-color 0.3s, border-color 0.3s; }
+        .slider-value-display { margin-left: 10px; font-size: 0.85em; color: var(--text); opacity: 0.8; position: absolute; right: 0; top: -1.5em; min-width: 30px; text-align: right; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 100; opacity: 0; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
+        .modal-overlay.visible { display: flex; opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
+        .modal-box { background-color: var(--topbar); padding: 30px 40px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 20px rgba(0,0,0,0.4); text-align: center; color: var(--text); transform: scale(0.9); transition: transform 0.3s ease; max-width: 450px; width: 90%; }
+        .modal-overlay.visible .modal-box { transform: scale(1); }
+        .modal-box h3 { margin-top: 0; margin-bottom: 25px; font-size: 1.3em; }
+        .modal-box p { margin-bottom: 20px; font-size: 0.95em; opacity: 0.9; text-align: left; }
+        .modal-box label { display: block; text-align: left; margin-bottom: 5px; font-size: 0.9em; font-weight: bold; }
+        .modal-box .form-field { margin-bottom: 18px; }
+        .modal-box .category-field { display: flex; align-items: center; gap: 10px; }
+        .modal-box input[type="text"], .modal-box input[type="url"], .modal-box select { display: block; width: 100%; padding: 10px; border: 1px solid var(--accent); border-radius: var(--radius-std); background-color: var(--bg); color: var(--text); font-size: 1em; flex-grow: 1; }
+        .modal-box select { appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${(typeof getComputedStyle !== 'undefined' ? getComputedStyle(document.documentElement).getPropertyValue('--text') || '#ffffff' : '#ffffff').substring(1)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px auto; padding-right: 35px; }
+        #addCategoryBtn { padding: 6px 10px; font-size: 0.8em; flex-shrink: 0; background-color: var(--accent); color: var(--text); border: none; border-radius: var(--radius-std); cursor: pointer; }
+        #addCategoryBtn:hover { filter: brightness(1.2); }
+        .modal-box .modal-actions { margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px; }
+        .modal-box button { padding: 10px 20px; border: none; border-radius: var(--radius-std); font-size: 1em; cursor: pointer; transition: background-color 0.3s, transform 0.1s; }
+        .modal-box button.primary { background-color: var(--accent); color: var(--text); }
+        .modal-box button.secondary { background-color: transparent; color: var(--text); border: 1px solid var(--accent); }
+        .modal-box button:hover { filter: brightness(1.2); } .modal-box button:active { transform: scale(0.95); }
+        #games-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--accent); }
+        #addGameBtn { background-color: var(--accent); color: var(--text); border: none; padding: 8px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; transition: background-color 0.3s, transform 0.1s; }
+        #addGameBtn:hover { filter: brightness(1.2); } #addGameBtn:active { transform: scale(0.95); }
+        .game-list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding-top: 10px; }
+        .game-card { background-color: var(--game-card-bg); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid transparent; transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(20px); animation: cardFadeInUp 0.5s ease forwards; min-height: 130px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .game-card:nth-child(1) { animation-delay: 0.05s; } .game-card:nth-child(2) { animation-delay: 0.1s; } .game-card:nth-child(3) { animation-delay: 0.15s; } .game-card:nth-child(4) { animation-delay: 0.2s; }
+        .game-card:hover { transform: translateY(-5px) scale(1.02); background-color: var(--game-card-hover-bg); border-color: var(--text); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .game-card h4 { font-size: 1.05em; margin-top: 0; margin-bottom: 8px; word-break: break-word; flex-grow: 1; }
+        .game-card p.category { font-size: 0.75em; color: var(--text); opacity: 0.7; margin-bottom: 10px; background-color: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: var(--radius-std); display: inline-block; }
+        .game-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; }
+        .game-card-actions button { background-color: transparent; border: none; border-radius: var(--radius-std); cursor: pointer; padding: 5px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s, transform 0.1s; }
+        .game-card-actions button svg { width: 18px; height: 18px; display: block; fill: var(--text); opacity: 0.7; transition: opacity 0.2s, fill 0.2s; }
+        .game-card-actions button:hover svg { opacity: 1; } .game-card-actions button:active { transform: scale(0.9); }
+        .game-card-actions button.play-btn:hover svg { fill: var(--play-color); } .game-card-actions button.edit-btn:hover svg { fill: var(--edit-color); } .game-card-actions button.delete-btn:hover svg { fill: var(--delete-color); }
+        .game-card.deleting { animation: cardFadeOut 0.4s ease forwards; }
+        *:focus { outline: none; }
+        button:focus-visible, input:focus-visible, select:focus-visible, iframe:focus-visible, .game-card:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); transition: box-shadow 0.2s ease-in-out; }
+        .settings-panel:focus-visible { border-radius: var(--radius-lg); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+        input[type="range"].custom-slider:focus-visible { box-shadow: none; }
+        input[type="range"].custom-slider:focus-visible + .slider-track + .slider-progress + .slider-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); border-radius: 50%; }
+        @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } } @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } @keyframes cardFadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } @keyframes cardFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+    </style>
 </head>
 <body>
-  <div id="container">
-    <div class="eye"><video id="leftVideo" autoplay muted playsinline></video></div>
-    <div class="eye"><video id="rightVideo" autoplay muted playsinline></video></div>
-  </div>
-  <div class="divider"></div>
+    <div class="modal-overlay" id="namePromptModal">
+        <div class="modal-box">
+            <h3>Welcome to Qbit!</h3>
+            <p>Please enter your name:</p>
+            <div class="form-field"> <input type="text" id="nameInput" placeholder="Your Name" maxlength="50"> </div>
+            <div class="modal-actions"> <button id="submitNameBtn" class="primary">Continue</button> </div>
+        </div>
+    </div>
 
-  <script>
-    async function initCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { exact: "environment" } }
+    <div class="modal-overlay" id="gameModal">
+        <div class="modal-box">
+            <h3 id="gameModalTitle">Add New Game</h3>
+            <input type="hidden" id="gameIdInput">
+            <div class="form-field"> <label for="gameNameInput">Name:</label> <input type="text" id="gameNameInput" placeholder="e.g., 2048" required> </div>
+            <div class="form-field"> <label for="gameUrlInput">URL:</label> <input type="url" id="gameUrlInput" placeholder="https://play2048.co/" required> </div>
+            <div class="form-field">
+                <label for="gameCategorySelect">Category:</label>
+                <div class="category-field">
+                    <select id="gameCategorySelect"> <option value="">Uncategorized</option> </select>
+                    <button id="addCategoryBtn" title="Add New Category">+</button>
+                </div>
+            </div>
+            <div class="modal-actions"> <button type="button" class="secondary" id="cancelGameBtn">Cancel</button> <button type="button" class="primary" id="saveGameBtn">Save Game</button> </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+       <h2>Qbit</h2>
+       <button onclick="showSection('games')">Games</button>
+       <button onclick="showSection('proxy')">Proxy</button>
+       <button onclick="showSection('tools')">Tools</button>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+             <div class="search"> <input type="text" id="search" placeholder="Search Qbit..." /> </div>
+             <div class="top-buttons">
+                 <button class="icon-btn" onclick="openChat()" title="Open Chat"> <svg viewBox="0 0 24 24"><path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"/></svg> </button>
+                 <button class="icon-btn" title="Settings" id="settingsBtn"> <svg viewBox="0 0 24 24"><path d="M12 15.5C10.07 15.5 8.5 13.93 8.5 12S10.07 8.5 12 8.5 15.5 10.07 15.5 12 13.93 15.5 12 15.5ZM19.43 12.98C19.46 12.66 19.5 12.34 19.5 12S19.46 11.34 19.43 11.02L21.54 9.37C21.73 9.21 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.06 19.3 4.97 19.07 5.03L16.56 5.67C16.04 5.25 15.47 4.89 14.85 4.6L14.5 2H9.5L9.15 4.6C8.53 4.89 7.96 5.25 7.44 5.67L4.93 5.03C4.7 4.97 4.46 5.06 4.34 5.27L2.34 8.73C2.22 8.95 2.27 9.21 2.46 9.37L4.57 11.02C4.54 11.34 4.5 11.66 4.5 12S4.54 12.66 4.57 12.98L2.46 14.63C2.27 14.79 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.94 4.7 19.03 4.93 18.97L7.44 18.33C7.96 18.75 8.53 19.11 9.15 19.4L9.5 22H14.5L14.85 19.4C15.47 19.11 16.04 18.75 16.56 18.33L19.07 18.97C19.3 19.03 19.54 18.94 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.79 21.54 14.63L19.43 12.98Z"/></svg> </button>
+             </div>
+        </div>
+        <div class="content" id="main-content"> <div id="welcome-area-placeholder" style="display: none;">Loading...</div> </div>
+        </div>
+
+    <div class="settings-panel" id="settingsPanel">
+         <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span> <div class="custom-slider-container"> <div class="slider-track"></div> <div class="slider-progress" id="fontSizeProgress"></div> <div class="slider-thumb" id="fontSizeThumb"></div> <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16"> </div> </label>
+         <label>Color Scheme: <select id="themeSelector" onchange="updateTheme(this.value)"> <option value="dark">Dark</option> <option value="light">Light</option> <option value="blue">Cool Blue</option> <option value="forest">Forest Green</option> <option value="sunset">Sunset Orange</option> </select> </label>
+         <label>Font Family: <select id="fontSelector" onchange="updateFontFamily(this.value)"> <option value="'Segoe UI', sans-serif">Segoe UI</option> <option value="Arial, sans-serif">Arial</option> <option value="Verdana, sans-serif">Verdana</option> <option value="'Times New Roman', Times, serif">Times New Roman</option> <option value="'Courier New', Courier, monospace">Courier New</option> <option value="Georgia, serif">Georgia</option> <option value="'Roboto', sans-serif">Roboto</option> <option value="'Lato', sans-serif">Lato</option> </select> </label>
+    </div>
+
+<script>
+        // --- DOM Element References (Assigned in DOMContentLoaded) ---
+        let mainContent, settingsPanel, root, body, faviconLink,
+            namePromptModal, nameInput, submitNameBtn, welcomeAreaPlaceholder,
+            gameModal, gameModalTitle, gameIdInput, gameNameInput, gameUrlInput,
+            gameCategorySelect, addCategoryBtn, saveGameBtn, cancelGameBtn,
+            fontSizeSlider, fontSizeThumb, fontSizeValueDisplay, fontSizeProgress,
+            themeSelector, fontSelector, settingsBtn;
+
+        // --- Global State ---
+        let currentUserName = null;
+        let currentThemeColor = '#444444';
+        let games = [];
+        let categories = [];
+        let isEditingGame = false;
+
+        // --- LocalStorage Keys ---
+        const LS_PREFIX = 'qbit_v2_';
+        const LS_USERNAME = LS_PREFIX + 'userName';
+        const LS_THEME = LS_PREFIX + 'theme';
+        const LS_FONTSIZE = LS_PREFIX + 'fontSize';
+        const LS_FONTFAMILY = LS_PREFIX + 'fontFamily';
+        const LS_GAMES = LS_PREFIX + 'games';
+        const LS_CATEGORIES = LS_PREFIX + 'categories';
+
+        // --- SVG Icons ---
+        const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
+
+        // --- Function Definitions ---
+        function getLogoSvg(color) { const safeColor = color || '#444444'; return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="10" width="6" height="12" rx="2"/><rect x="13" y="10" width="6" height="12" rx="2"/><rect x="21" y="10" width="6" height="12" rx="2"/></svg>`; }
+        function updateFavicon(color) { if (!faviconLink) return; const svgString = getLogoSvg(color); const dataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`; faviconLink.href = dataUri; }
+
+        function promptForName() {
+            console.log("[DEBUG] Executing promptForName");
+            if (!namePromptModal || !nameInput || !submitNameBtn) { console.error("Name prompt modal elements missing."); return; }
+            namePromptModal.classList.add('visible'); nameInput.focus();
+            let currentSubmitAction = null; let currentEnterAction = null;
+            currentSubmitAction = () => { console.log("[DEBUG] Submit name action triggered."); const name = nameInput.value.trim(); if (name) { currentUserName = name; saveSetting(LS_USERNAME, name); namePromptModal.classList.remove('visible'); displayWelcomeMessage(name); submitNameBtn.removeEventListener('click', currentSubmitAction); nameInput.removeEventListener('keypress', currentEnterAction); } else { nameInput.style.borderColor = 'red'; setTimeout(() => { nameInput.style.borderColor = '' }, 1500); } };
+            currentEnterAction = (event) => { if (event.key === 'Enter') { currentSubmitAction(); } };
+            submitNameBtn.removeEventListener('click', currentSubmitAction); nameInput.removeEventListener('keypress', currentEnterAction);
+            submitNameBtn.addEventListener('click', currentSubmitAction, { once: true }); nameInput.addEventListener('keypress', currentEnterAction);
+        }
+
+        function displayWelcomeMessage(name) {
+            console.log("[DEBUG] Displaying welcome message for:", name);
+            if (!mainContent) { console.error("mainContent not found for welcome message."); return; }
+            mainContent.innerHTML = ''; const welcomeArea = document.createElement('div'); welcomeArea.id = 'welcome-area'; const logoContainer = document.createElement('div'); logoContainer.id = 'welcome-logo-container'; logoContainer.innerHTML = getLogoSvg(currentThemeColor); const message = document.createElement('h1'); message.id = 'welcome-message'; message.textContent = `Welcome, ${name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}!`; welcomeArea.appendChild(logoContainer); welcomeArea.appendChild(message); mainContent.appendChild(welcomeArea); mainContent.style.opacity = 1;
+        }
+
+        function updateWelcomeLogoColor(color) { const welcomeArea = document.getElementById('welcome-area'); if (!welcomeArea) return; const logoSvgElement = welcomeArea.querySelector('#welcome-logo-container svg'); if (logoSvgElement) { const safeColor = color || '#444444'; logoSvgElement.setAttribute('fill', safeColor); logoSvgElement.querySelectorAll('rect').forEach(rect => rect.setAttribute('fill', safeColor)); } }
+        function loadGames() { try { const storedGames = localStorage.getItem(LS_GAMES); games = storedGames ? JSON.parse(storedGames) : []; console.log("[DEBUG] Games loaded:", games.length); } catch (e) { console.error("Failed to load games:", e); games = []; } }
+        function saveGames() { try { localStorage.setItem(LS_GAMES, JSON.stringify(games)); console.log("[DEBUG] Games saved."); } catch (e) { console.error("Failed to save games:", e); } }
+        function loadCategories() { try { const storedCategories = localStorage.getItem(LS_CATEGORIES); categories = storedCategories ? JSON.parse(storedCategories) : ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc']; console.log("[DEBUG] Categories loaded:", categories); } catch (e) { console.error("Failed to load categories:", e); categories = ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc']; } }
+        function saveCategories() { try { localStorage.setItem(LS_CATEGORIES, JSON.stringify(categories)); console.log("[DEBUG] Categories saved."); } catch (e) { console.error("Failed to save categories:", e); } }
+        function populateCategorySelect(selectElement, selectedCategory = "") { if (!selectElement) { console.warn("Category select element not provided for population."); return; } selectElement.innerHTML = '<option value="">Uncategorized</option>'; categories.forEach(cat => { const option = document.createElement('option'); option.value = cat; option.textContent = cat; if (cat === selectedCategory) { option.selected = true; } selectElement.appendChild(option); }); }
+        function handleAddCategory() { console.log("[DEBUG] handleAddCategory called"); const newCategory = prompt("Enter new category name:"); if (newCategory && newCategory.trim()) { const trimmedCategory = newCategory.trim(); if (!categories.includes(trimmedCategory)) { categories.push(trimmedCategory); categories.sort(); saveCategories(); populateCategorySelect(gameCategorySelect, trimmedCategory); console.log("Added category:", trimmedCategory); } else { alert("Category already exists!"); gameCategorySelect.value = trimmedCategory; } } }
+
+        function renderGames() {
+            const container = mainContent ? mainContent.querySelector('.game-list-container') : null;
+            if (!container) { return; }
+            console.log("[DEBUG] Rendering games...");
+            container.innerHTML = '';
+            if (games.length === 0) { container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; opacity: 0.7;">No games added yet.</p>'; return; }
+            games.forEach(game => {
+                const card = document.createElement('div'); card.className = 'game-card'; card.dataset.id = game.id; card.setAttribute('tabindex', '0');
+                card.innerHTML = `<div><h4></h4><p class="category"></p></div> <div class="game-card-actions"> <button class="play-btn" title="Play Game">${ICONS.play}</button> <button class="edit-btn" title="Edit Game">${ICONS.edit}</button> <button class="delete-btn" title="Delete Game">${ICONS.delete}</button> </div>`;
+                card.querySelector('h4').textContent = game.name.replace(/</g, "&lt;"); card.querySelector('p.category').textContent = game.category || 'Uncategorized';
+                card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playGame(game.url, game.name); } }); // Pass name for title
+                card.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); playGame(game.url, game.name); }; // Pass name for title
+                card.querySelector('.edit-btn').onclick = (e) => { e.stopPropagation(); openGameModal(game); };
+                card.querySelector('.delete-btn').onclick = (e) => { e.stopPropagation(); deleteGame(game.id, card); };
+                container.appendChild(card);
+            });
+        }
+
+        function openGameModal(gameToEdit = null) {
+            console.log("[DEBUG] Executing openGameModal. Editing:", !!gameToEdit);
+            if (!gameModal || !gameCategorySelect) { console.error("Game modal or category select not found."); return; }
+            isEditingGame = !!gameToEdit; gameIdInput.value = ''; gameNameInput.value = ''; gameUrlInput.value = ''; gameNameInput.style.borderColor = ''; gameUrlInput.style.borderColor = '';
+            populateCategorySelect(gameCategorySelect, gameToEdit ? gameToEdit.category : "");
+            if (isEditingGame) { gameModalTitle.textContent = 'Edit Game'; gameIdInput.value = gameToEdit.id; gameNameInput.value = gameToEdit.name; gameUrlInput.value = gameToEdit.url; saveGameBtn.textContent = 'Save Changes'; } else { gameModalTitle.textContent = 'Add New Game'; saveGameBtn.textContent = 'Add Game'; }
+            gameModal.classList.add('visible'); gameNameInput.focus();
+            console.log("[DEBUG] Game modal visibility set to:", gameModal.classList.contains('visible'));
+        }
+        function closeGameModal() { if (gameModal) gameModal.classList.remove('visible'); isEditingGame = false; }
+        function handleSaveGame() {
+            console.log("[DEBUG] Attempting to save game...");
+            if (!gameNameInput || !gameUrlInput || !gameCategorySelect || !gameIdInput) { console.error("Game modal inputs missing."); return; }
+            const name = gameNameInput.value.trim(); const url = gameUrlInput.value.trim(); const category = gameCategorySelect.value; const id = gameIdInput.value;
+            let isValid = true; if (!name) { gameNameInput.style.borderColor = 'red'; isValid = false; } else { gameNameInput.style.borderColor = ''; } if (!url || !url.match(/^https?:\/\/.+/)) { gameUrlInput.style.borderColor = 'red'; isValid = false; } else { gameUrlInput.style.borderColor = ''; } if (!isValid) { console.log("Save cancelled, validation failed."); return; }
+            if (isEditingGame && id) { const gameIndex = games.findIndex(g => g.id === id); if (gameIndex > -1) { games[gameIndex] = {...games[gameIndex], name, url, category }; console.log("Game updated"); } else { console.error("Edit error: ID not found"); closeGameModal(); return; } } else { const newGame = { id: crypto.randomUUID(), name, url, category }; games.push(newGame); console.log("Game added"); }
+            saveGames(); renderGames(); closeGameModal();
+        }
+        function deleteGame(id, cardElement) { if (!confirm(`Delete this game?`)) return; console.log("[DEBUG] Deleting game:", id); if (cardElement) { cardElement.classList.add('deleting'); cardElement.addEventListener('animationend', () => { games = games.filter(game => game.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(game => game.id !== id); saveGames(); renderGames(); } }
+
+        // --- Play Game (Updated to open iframe wrapper in new tab) ---
+        function playGame(url, gameName = 'Game') {
+            console.log(`[DEBUG] Creating iframe wrapper for: ${url}`);
+            if (!url || !url.match(/^https?:\/\/.+/)) {
+                console.error("Invalid URL provided for game:", url);
+                alert("Cannot open game: Invalid URL provided.");
+                return;
+            }
+
+            const newWindow = window.open('', '_blank'); // Open blank tab first
+
+            if (newWindow) {
+                // Use try/catch for potential cross-origin issues if the game URL immediately redirects
+                try {
+                    newWindow.document.open(); // Prepare to write content
+                    newWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>${gameName.replace(/</g, "&lt;")}</title>
+                            <style>
+                                html, body {
+                                    margin: 0;
+                                    padding: 0;
+                                    height: 100%;
+                                    overflow: hidden; /* Prevent scrollbars on the wrapper */
+                                    background-color: #000; /* Optional: background for loading */
+                                }
+                                iframe {
+                                    display: block; /* Remove potential space below */
+                                    width: 100%;
+                                    height: 100%;
+                                    border: none;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <iframe
+                                src="${url}"
+                                frameborder="0"
+                                allowfullscreen
+                                sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+                            ></iframe>
+                        </body>
+                        </html>
+                    `);
+                    newWindow.document.close(); // Finish writing
+                    console.log("[DEBUG] Iframe wrapper written to new tab.");
+                } catch (e) {
+                    console.error("Error writing to new window (potentially blocked):", e);
+                    // Fallback: Try navigating the blank window directly (might still be blocked)
+                    try {
+                        newWindow.location.href = url;
+                    } catch (e2) {
+                        console.error("Error navigating new window:", e2);
+                        alert("Could not open game in new tab. Please check your pop-up blocker settings.");
+                        // Close the potentially useless blank tab
+                        newWindow.close();
+                    }
+                }
+            } else {
+                console.error("Failed to open new window. Pop-up blocker likely active.");
+                alert("Could not open game. Please disable your pop-up blocker for this site.");
+            }
+        }
+
+        // --- Content Loading ---
+        function showSection(section) {
+            console.log("[DEBUG] Showing section:", section);
+            if (!mainContent) { console.error("Cannot show section, mainContent not found."); return; }
+            // No iframe container to close
+            mainContent.style.opacity = 0;
+            setTimeout(() => {
+                mainContent.innerHTML = ''; mainContent.style.animation = 'none'; let sectionContent = '';
+                if (section === "welcome" && currentUserName) { displayWelcomeMessage(currentUserName); return;
+                } else if (section === "games") {
+                    if (!currentUserName) { console.log("User not logged in, redirecting to name prompt."); promptForName(); return; }
+                    sectionContent = `<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML = sectionContent; const addBtn = document.getElementById('addGameBtn'); if (addBtn) { console.log("[DEBUG] Add Game button FOUND, attaching listener."); addBtn.onclick = () => { console.log("[DEBUG] Add Game button CLICKED."); openGameModal(); }; } else { console.error("Add Game button NOT FOUND after injection!"); } renderGames();
+                } else if (section === "proxy") {
+                    if (!currentUserName) { console.log("User not logged in, redirecting to name prompt."); promptForName(); return; }
+                    sectionContent = `<h2>Proxy</h2><p id="proxyStatus">Loading proxy...</p><iframe src="about:blank" id="proxyFrame" title="Web Proxy" style="display: none; width:100%; height: calc(100vh - 120px); border: 1px solid var(--accent); border-radius: var(--radius-lg);"></iframe>`; mainContent.innerHTML = sectionContent; const frame = document.getElementById('proxyFrame'); const status = document.getElementById('proxyStatus'); const url = "YOUR_GRAMMARHEAD_LINK_HERE"; if (url && url !== "YOUR_GRAMMARHEAD_LINK_HERE" && url.trim() !== "") { frame.src = url; frame.style.display = 'block'; if (status) status.style.display = 'none'; } else { if (status) status.textContent = 'Proxy link not configured.'; }
+                } else if (section === "tools") {
+                    if (!currentUserName) { console.log("User not logged in, redirecting to name prompt."); promptForName(); return; }
+                    sectionContent = `<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML = sectionContent;
+                } else if (!currentUserName) { console.log("[DEBUG] No username, prompting for name instead of showing section:", section); if (welcomeAreaPlaceholder) mainContent.appendChild(welcomeAreaPlaceholder); if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'flex'; promptForName(); mainContent.style.opacity = 1; return;
+                } else { console.log("[DEBUG] Unknown section or state, showing welcome."); displayWelcomeMessage(currentUserName); return; }
+                if (section !== "welcome") { mainContent.style.opacity = 0; void mainContent.offsetWidth; mainContent.style.animation = "fadeIn 0.5s forwards"; mainContent.style.opacity = 1; }
+            }, 200);
+        }
+
+        function openChat() { alert("Chat feature placeholder."); }
+
+        // Robust Settings Panel Toggle
+        function toggleSettings() {
+            console.log("[DEBUG] Executing toggleSettings.");
+            if(!settingsPanel) { console.error("Settings panel element var is missing in toggleSettings."); return; }
+            console.log("[DEBUG] Panel found. Current classes:", settingsPanel.classList);
+            settingsPanel.classList.toggle("show");
+            console.log("[DEBUG] Panel classes after toggle:", settingsPanel.classList);
+            setTimeout(() => { try { const styles = window.getComputedStyle(settingsPanel); console.log("[DEBUG] Panel computed display:", styles.display, "opacity:", styles.opacity, "visibility:", styles.visibility); } catch (e) { console.error("Error getting computed styles for settings panel:", e)} }, 50);
+        }
+
+        // Update Slider Visuals / Settings Application
+        function updateSliderVisuals(slider, thumb, progress, display) { if (!slider || !thumb || !progress || !display) { return; } try { const min = parseFloat(slider.min) || 12; const max = parseFloat(slider.max) || 24; const value = parseFloat(slider.value) || 16; let percentage = ((value - min) / (max - min)) * 100; percentage = Math.max(0, Math.min(100, percentage)); thumb.style.left = `${percentage}%`; thumb.style.transform = 'translateX(-50%)'; progress.style.width = `${percentage}%`; display.textContent = `${Math.round(value)}px`; } catch (e) { console.error("Error updating slider visuals:", e); } }
+        function updateFontSize(val) { if (!fontSizeSlider || !root) return; const value = val || fontSizeSlider.value; root.style.setProperty("--font-size", `${value}px`); saveSetting(LS_FONTSIZE, value); updateSliderVisuals(fontSizeSlider, fontSizeThumb, fontSizeProgress, fontSizeValueDisplay); }
+        function updateFontFamily(fontName) { if (!fontSelector || !root) return; const value = fontName || fontSelector.value; root.style.setProperty("--font-family", value); saveSetting(LS_FONTFAMILY, value); }
+        function updateTheme(theme) { if (!root || !body) return; const value = theme || (themeSelector ? themeSelector.value : 'dark'); let accentColor = '#444444'; let textColorValue = '#ffffff'; switch (value) { case "light": root.style.setProperty("--bg", "#ffffff"); root.style.setProperty("--sidebar", "#eeeeee"); root.style.setProperty("--topbar", "#dddddd"); root.style.setProperty("--accent", "#cccccc"); root.style.setProperty("--text", "#1a1a1a"); accentColor = '#cccccc'; textColorValue = '#1a1a1a'; break; case "blue": root.style.setProperty("--bg", "#0a0f1c"); root.style.setProperty("--sidebar", "#091121"); root.style.setProperty("--topbar", "#101a35"); root.style.setProperty("--accent", "#395b9c"); root.style.setProperty("--text", "#e0e0ff"); accentColor = '#395b9c'; textColorValue = '#e0e0ff'; break; case "forest": root.style.setProperty("--bg", "#1f2e1f"); root.style.setProperty("--sidebar", "#141e14"); root.style.setProperty("--topbar", "#2a3f2a"); root.style.setProperty("--accent", "#4a784a"); root.style.setProperty("--text", "#e5f5e5"); accentColor = '#4a784a'; textColorValue = '#e5f5e5'; break; case "sunset": root.style.setProperty("--bg", "#2b1a1a"); root.style.setProperty("--sidebar", "#3a2525"); root.style.setProperty("--topbar", "#4d3333"); root.style.setProperty("--accent", "#b36b4a"); root.style.setProperty("--text", "#ffe8e0"); accentColor = '#b36b4a'; textColorValue = '#ffe8e0'; break; case "dark": default: root.style.setProperty("--bg", "#1e1e1e"); root.style.setProperty("--sidebar", "#111111"); root.style.setProperty("--topbar", "#2c2c2c"); root.style.setProperty("--accent", "#444444"); root.style.setProperty("--text", "#ffffff"); accentColor = '#444444'; textColorValue = '#ffffff'; break; } currentThemeColor = accentColor; body.setAttribute('data-theme', value); updateSelectArrowColor(textColorValue); if(root.style && typeof root.style.setProperty === 'function') { root.style.setProperty('--slider-track-bg', accentColor); root.style.setProperty('--slider-thumb-bg', textColorValue); } updateFavicon(accentColor); updateWelcomeLogoColor(accentColor); saveSetting(LS_THEME, value); }
+        function updateSelectArrowColor(textColor = '#ffffff') { try { if (!textColor || !textColor.startsWith('#')) { textColor = '#ffffff'; } const hexColor = textColor.substring(1); const selectElements = document.querySelectorAll('.settings-panel select'); selectElements.forEach(s => { if (s) s.style.backgroundImage = `url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${hexColor}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')`; }); } catch (e) { console.error("Error updating select arrow color:", e); } }
+        function saveSetting(key, value) { try { localStorage.setItem(key, value); } catch (e) { console.error("LS Save Error:", key, e); } }
+
+        // --- Load Settings & Initial Setup ---
+        function loadSettingsAndInit() {
+            console.log("[DEBUG] Executing loadSettingsAndInit.");
+            // Element variables assigned in DOMContentLoaded
+            try {
+                const theme = localStorage.getItem(LS_THEME) || 'dark';
+                const fontSize = localStorage.getItem(LS_FONTSIZE) || '16';
+                const fontFamily = localStorage.getItem(LS_FONTFAMILY) || "'Segoe UI', sans-serif";
+                currentUserName = localStorage.getItem(LS_USERNAME);
+
+                // Update controls (check existence)
+                if(themeSelector) themeSelector.value = theme;
+                if(fontSizeSlider) fontSizeSlider.value = fontSize;
+                if(fontSelector) fontSelector.value = fontFamily;
+
+                // Apply settings
+                updateTheme(theme); updateFontSize(fontSize); updateFontFamily(fontFamily);
+                loadGames(); loadCategories(); // Load data
+
+                // Handle Name & Initial View
+                if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'none';
+                if (currentUserName) { console.log(`[DEBUG] User found: ${currentUserName}`); showSection('welcome'); }
+                else { console.log("[DEBUG] No user found, prompting."); if (welcomeAreaPlaceholder && mainContent) mainContent.appendChild(welcomeAreaPlaceholder); if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'flex'; promptForName(); }
+                updateFavicon(currentThemeColor);
+
+            } catch (e) { console.error("Error during loadSettingsAndInit:", e); if(mainContent) mainContent.innerHTML = `<h2 style="color: red; text-align: center; padding-top: 50px;">Error loading state: ${e.message}</h2>`; updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif"); if (!currentUserName) promptForName(); else showSection('welcome'); }
+            if (themeSelector) updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim());
+             console.log("[DEBUG] loadSettingsAndInit finished.");
+        }
+
+        // --- Event Listeners (Attached ONCE after DOM Ready)---
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("[DEBUG] DOMContentLoaded event fired.");
+            try {
+                // Assign ALL Element References HERE
+                mainContent = document.getElementById("main-content");
+                settingsPanel = document.getElementById("settingsPanel");
+                root = document.documentElement;
+                body = document.body;
+                faviconLink = document.getElementById('dynamic-favicon');
+                namePromptModal = document.getElementById('namePromptModal');
+                nameInput = document.getElementById('nameInput');
+                submitNameBtn = document.getElementById('submitNameBtn');
+                welcomeAreaPlaceholder = document.getElementById('welcome-area-placeholder');
+                gameModal = document.getElementById('gameModal');
+                gameModalTitle = document.getElementById('gameModalTitle');
+                gameIdInput = document.getElementById('gameIdInput');
+                gameNameInput = document.getElementById('gameNameInput');
+                gameUrlInput = document.getElementById('gameUrlInput');
+                gameCategorySelect = document.getElementById('gameCategorySelect');
+                addCategoryBtn = document.getElementById('addCategoryBtn');
+                saveGameBtn = document.getElementById('saveGameBtn');
+                cancelGameBtn = document.getElementById('cancelGameBtn');
+                // gameIframe elements removed
+                fontSizeSlider = document.getElementById('fontSizeSlider');
+                fontSizeThumb = document.getElementById('fontSizeThumb');
+                fontSizeValueDisplay = document.getElementById('fontSizeValue');
+                fontSizeProgress = document.getElementById('fontSizeProgress');
+                themeSelector = document.getElementById('themeSelector');
+                fontSelector = document.getElementById('fontSelector');
+                settingsBtn = document.getElementById('settingsBtn');
+
+                console.log("[DEBUG] Elements assigned:", { settingsPanelFound: !!settingsPanel, settingsBtnFound: !!settingsBtn, gameModalFound: !!gameModal });
+                const criticalElements = { mainContent, settingsPanel, settingsBtn, namePromptModal, gameModal, gameCategorySelect, addCategoryBtn, submitNameBtn, saveGameBtn, cancelGameBtn, fontSizeSlider, themeSelector, fontSelector };
+                const missing = Object.entries(criticalElements).filter(([key, val]) => !val).map(([key]) => key);
+                if (missing.length > 0) { throw new Error(`Critical UI elements could not be found: ${missing.join(', ')}`); }
+
+            } catch(e) { console.error("FATAL: Error finding critical elements:", e); document.body.innerHTML = `<div style="padding: 30px; color: red; background-color: #333; border: 2px solid red;"><h2>App Init Error</h2><p>Failed to find page elements.</p><p>Error: ${e.message}</p></div>`; return; }
+
+            // --- Load Settings and Initialize ---
+            loadSettingsAndInit();
+
+            // --- Attach Event Listeners ---
+            console.log("[DEBUG] Attaching event listeners.");
+            if (settingsBtn) { console.log("[DEBUG] Settings Button FOUND, attaching listener."); settingsBtn.addEventListener('click', toggleSettings); } else { console.error("Could not attach listener: Settings Button not found!"); }
+            if (fontSizeSlider) { fontSizeSlider.addEventListener('input', (e) => updateFontSize(e.target.value)); updateSliderVisuals(fontSizeSlider, fontSizeThumb, fontSizeProgress, fontSizeValueDisplay); } else { console.warn("Font Size Slider not found, listener not attached."); }
+            if (saveGameBtn) { saveGameBtn.addEventListener('click', handleSaveGame); } else { console.warn("Save Game Button not found, listener not attached."); }
+            if (cancelGameBtn) { cancelGameBtn.addEventListener('click', closeGameModal); } else { console.warn("Cancel Game Button not found, listener not attached."); }
+            if (addCategoryBtn) { addCategoryBtn.addEventListener('click', handleAddCategory); } else { console.warn("Add Category Button not found, listener not attached."); }
+            if (gameModal) { gameModal.addEventListener('click', (e) => { if (e.target === gameModal) { closeGameModal(); } }); } else { console.warn("Game Modal not found, overlay listener not attached."); }
+            console.log("[DEBUG] Initialization complete.");
         });
-        document.getElementById('leftVideo').srcObject = stream;
-        document.getElementById('rightVideo').srcObject = stream;
-      } catch (err) {
-        alert("Can't access rear camera. Check permissions.");
-        console.error(err);
-      }
-    }
 
-    async function enterFullscreen() {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        await elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) {
-        await elem.webkitRequestFullscreen();
-      }
-    }
+    </script>
 
-    window.addEventListener("touchstart", async () => {
-      await enterFullscreen();
-    }, { once: true });
-
-    // Initialize camera stream
-    initCamera();
-  </script>
 </body>
 </html>
