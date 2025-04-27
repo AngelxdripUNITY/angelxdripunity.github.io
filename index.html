@@ -89,6 +89,57 @@
         .settings-panel:focus-visible { border-radius: var(--radius-lg); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
         input[type="range"].custom-slider:focus-visible { box-shadow: none; }
         input[type="range"].custom-slider:focus-visible + .slider-track + .slider-progress + .slider-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); border-radius: 50%; }
+
+        /* --- NEW: Toggle Switch Styles --- */
+        .toggle-switch-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Align text and switch */
+            cursor: pointer;
+            font-size: 0.9em;
+            color: var(--text);
+            position: relative; /* Needed for positioning the slider */
+            user-select: none; /* Prevent text selection on click */
+             margin-top: 15px; /* Add some space above */
+        }
+        .toggle-switch {
+            opacity: 0; /* Hide the default checkbox */
+            width: 0;
+            height: 0;
+            position: absolute; /* Take it out of layout flow */
+        }
+        .toggle-slider {
+            position: relative;
+            display: inline-block; /* Or block if needed */
+            width: 40px;  /* Width of the switch */
+            height: 20px; /* Height of the switch */
+            background-color: var(--accent); /* Default off background */
+            border-radius: 20px; /* Make it pill-shaped */
+            transition: background-color 0.3s;
+        }
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 16px;  /* Size of the knob */
+            height: 16px; /* Size of the knob */
+            left: 2px;    /* Position when off */
+            bottom: 2px;  /* Position from bottom */
+            background-color: var(--text); /* Knob color */
+            border-radius: 50%; /* Make it round */
+            transition: transform 0.3s;
+        }
+        .toggle-switch:checked + .toggle-slider {
+            background-color: var(--play-color); /* Green when on */
+        }
+        .toggle-switch:checked + .toggle-slider::before {
+            transform: translateX(20px); /* Move knob to the right when on */
+        }
+         /* Focus style for accessibility */
+        .toggle-switch:focus-visible + .toggle-slider {
+             box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+        }
+        /* --- END: Toggle Switch Styles --- */
+
         @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } } @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } @keyframes cardFadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } @keyframes cardFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
     </style>
 </head>
@@ -103,7 +154,43 @@
         <div class="content" id="main-content"> <div id="welcome-area-placeholder" style="display: none;">Loading...</div> </div>
     </div>
 
-    <div class="settings-panel" id="settingsPanel"> <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span> <div class="custom-slider-container"> <div class="slider-track"></div> <div class="slider-progress" id="fontSizeProgress"></div> <div class="slider-thumb" id="fontSizeThumb"></div> <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16"> </div> </label> <label>Color Scheme: <select id="themeSelector" onchange="updateTheme(this.value)"> <option value="dark">Dark</option> <option value="light">Light</option> <option value="blue">Cool Blue</option> <option value="forest">Forest Green</option> <option value="sunset">Sunset Orange</option> </select> </label> <label>Font Family: <select id="fontSelector" onchange="updateFontFamily(this.value)"> <option value="'Segoe UI', sans-serif">Segoe UI</option> <option value="Arial, sans-serif">Arial</option> <option value="Verdana, sans-serif">Verdana</option> <option value="'Times New Roman', Times, serif">Times New Roman</option> <option value="'Courier New', Courier, monospace">Courier New</option> <option value="Georgia, serif">Georgia</option> <option value="'Roboto', sans-serif">Roboto</option> <option value="'Lato', sans-serif">Lato</option> </select> </label> </div>
+    <div class="settings-panel" id="settingsPanel">
+        <label>Font Size:
+             <span class="slider-value-display" id="fontSizeValue">16px</span>
+             <div class="custom-slider-container">
+                 <div class="slider-track"></div>
+                 <div class="slider-progress" id="fontSizeProgress"></div>
+                 <div class="slider-thumb" id="fontSizeThumb"></div>
+                 <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16">
+             </div>
+        </label>
+        <label>Color Scheme:
+            <select id="themeSelector" onchange="updateTheme(this.value)">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+                <option value="blue">Cool Blue</option>
+                <option value="forest">Forest Green</option>
+                <option value="sunset">Sunset Orange</option>
+            </select>
+        </label>
+        <label>Font Family:
+            <select id="fontSelector" onchange="updateFontFamily(this.value)">
+                 <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                 <option value="Arial, sans-serif">Arial</option>
+                 <option value="Verdana, sans-serif">Verdana</option>
+                 <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                 <option value="'Courier New', Courier, monospace">Courier New</option>
+                 <option value="Georgia, serif">Georgia</option>
+                 <option value="'Roboto', sans-serif">Roboto</option>
+                 <option value="'Lato', sans-serif">Lato</option>
+            </select>
+        </label>
+         <label class="toggle-switch-label">
+             Warn on Close:
+             <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch">
+             <span class="toggle-slider"></span>
+         </label>
+         </div>
 
     <script>
         // --- DOM Element References ---
@@ -120,6 +207,7 @@
         let games = [];
         let categories = [];
         let isEditingGame = false;
+        let warnOnClose = false; // Add state variable
         let debounceTimer;
 
         // --- LocalStorage Keys ---
@@ -130,6 +218,7 @@
         const LS_FONTFAMILY = LS_PREFIX + 'fontFamily';
         const LS_GAMES = LS_PREFIX + 'games';
         const LS_CATEGORIES = LS_PREFIX + 'categories';
+        const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose'; // Add localStorage key
 
         // --- SVG Icons ---
         const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
@@ -480,6 +569,16 @@
         }
         const debouncedFilterGames = debounce(filterGames, 300);
 
+        // --- NEW: Function to handle the 'beforeunload' warning ---
+        function handleBeforeUnload(event) {
+            if (warnOnClose) {
+                // Standard warning message (browser controls exact text)
+                const confirmationMessage = 'You have unsaved changes or active processes. Are you sure you want to leave?';
+                event.preventDefault(); // Required for Chrome
+                event.returnValue = confirmationMessage; // Required for other browsers
+                return confirmationMessage;
+            }
+        }
 
         // --- Load Settings & Initial Setup ---
         function loadSettingsAndInit() {
@@ -503,6 +602,21 @@
                 updateTheme(theme); // Apply theme
                 updateFontSize(fontSize); // Apply font size & update slider visuals
                 updateFontFamily(fontFamily); // Apply font family
+
+                // Load Warn on Close setting
+                warnOnClose = localStorage.getItem(LS_WARNONCLOSE) === 'true'; // Load state
+                const warnSwitch = document.getElementById('warnOnCloseSwitch');
+                if (warnSwitch) {
+                    warnSwitch.checked = warnOnClose; // Set the switch state
+                }
+                 // Add or remove the event listener based on the loaded state
+                if (warnOnClose) {
+                    window.addEventListener('beforeunload', handleBeforeUnload);
+                     console.log("[DEBUG] Initial beforeunload listener ADDED.");
+                } else {
+                    window.removeEventListener('beforeunload', handleBeforeUnload);
+                     console.log("[DEBUG] Initial beforeunload listener NOT added.");
+                }
 
                 loadGames(); loadCategories();
 
@@ -567,6 +681,24 @@
              const fSelector = document.getElementById('fontSelector');
              if (fsSlider) { fsSlider.addEventListener('input', (e) => updateFontSize(e.target.value)); } else { console.warn("Font Size Slider not found for listener."); }
              // onchange listeners are in the HTML for theme/font selectors - keep for now
+
+             // Attach listener for the new Warn on Close switch
+             const warnSwitch = document.getElementById('warnOnCloseSwitch');
+             if (warnSwitch) {
+                 warnSwitch.addEventListener('change', (e) => {
+                     warnOnClose = e.target.checked;
+                     saveSetting(LS_WARNONCLOSE, warnOnClose); // Save the setting
+                     if (warnOnClose) {
+                         window.addEventListener('beforeunload', handleBeforeUnload);
+                         console.log("[DEBUG] Added beforeunload listener via toggle.");
+                     } else {
+                         window.removeEventListener('beforeunload', handleBeforeUnload);
+                         console.log("[DEBUG] Removed beforeunload listener via toggle.");
+                     }
+                 });
+             } else {
+                 console.warn("Warn on Close switch not found for listener.");
+             }
 
             console.log("[DEBUG] Initialization complete.");
         });
