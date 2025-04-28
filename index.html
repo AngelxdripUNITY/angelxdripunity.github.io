@@ -289,12 +289,18 @@
         // --- Game & Category Management ---
         function loadGames() {
             const defaultGames = [
-                { id: crypto.randomUUID(), name: "N-GON", url: "https://landgreen.github.io/n-gon/index.html", category: "Puzzle" },
+                { id: crypto.randomUUID(), name: "N-GON", url: "https://landgreen.github.io/n-gon/index.html", category: "Strategy" },
                 { id: crypto.randomUUID(), name: "Dead Shot", url: "https://deadshot.io/", category: "Action" },
+                { id: crypto.randomUUID(), name: "Tik-Tok", url: "https://shop.lang.hm/&?q=TikTok", category: "Media" },
+                { id: crypto.randomUUID(), name: "VS-Code", url: "https://shop.lang.hm/&?q=VS%20Code", category: "Coding" },
+                { id: crypto.randomUUID(), name: "ChatGPT", url: "https://shop.lang.hm/&?q=ChatGPT", category: "Conversation" },
                 { id: crypto.randomUUID(), name: "Netquel", url: "https://netquel.com/", category: "Strategy" },
-                { id: crypto.randomUUID(), name: "MK48", url: "https://mk48.io/", category: "Simulation" },
-                { id: crypto.randomUUID(), name: "Ships 3D", url: "https://yp3d.com/ships3d/", category: "Simulation" },
-                { id: crypto.randomUUID(), name: "Geometry Dash", url: "https://geometrylite.github.io", category: "Action" }
+                { id: crypto.randomUUID(), name: "MK48", url: "https://mk48.io/", category: "Strategy" },
+                { id: crypto.randomUUID(), name: "Ships 3D", url: "https://yp3d.com/ships3d/", category: "Action" },
+                { id: crypto.randomUUID(), name: "Geometry Dash", url: "https://geometrylite.github.io", category: "Action" },
+                { id: crypto.randomUUID(), name: "Five Nights At Freddy's", url: "https://wellsousaaa.github.io/Five-Nights-at-Freddys-Web/", category: "Horror" },
+                { id: crypto.randomUUID(), name: "Five Nights At Freddy's Two", url: "https://ruihq.github.io/FNAF2/", category: "Horror" },
+                { id: crypto.randomUUID(), name: "Five Nights At Freddy's Three", url: "https://sussygamedeveloper.github.io/fnaf3/", category: "Horror" }
             ];
 
             try {
@@ -411,7 +417,7 @@
         }
         function renderProxySites() {
             const container = mainContent ? mainContent.querySelector('.proxy-list-container') : null; if (!container) { console.error("Proxy list container not found."); return; } container.innerHTML = '';
-            const proxySites = [ { name: "Space", url: "https://use.bsfa.info/" }, { name: "Transend", url: "https://hw.billigerhost.com/" }, { name: "RammerHead", url: "https://pluh.root.sx/" }, { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" } ];
+            const proxySites = [ { name: "Space", url: "https://shop.lang.hm/" }, { name: "Transend", url: "https://hw.billigerhost.com/" }, { name: "RammerHead", url: "https://pluh.root.sx/" }, { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" } ];
             proxySites.forEach(site => { const card = document.createElement('div'); card.className = 'proxy-card'; card.setAttribute('tabindex', '0'); card.innerHTML = `<div><h4></h4></div> <div class="proxy-card-actions"><button class="play-btn" title="Open ${site.name.replace(/</g, "&lt;")}">${ICONS.play}</button></div>`; card.querySelector('h4').textContent = site.name.replace(/</g, "&lt;"); card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openInAboutBlank(site.url, site.name); } }); card.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); openInAboutBlank(site.url, site.name); }; container.appendChild(card); });
             console.log("[DEBUG] Proxy sites rendered.");
         }
