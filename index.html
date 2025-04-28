@@ -253,7 +253,33 @@
         }
 
         function updateWelcomeLogoColor(color) { const welcomeArea = document.getElementById('welcome-area'); if (!welcomeArea) return; const logoSvgElement = welcomeArea.querySelector('#welcome-logo-container svg'); if (logoSvgElement) { const safeColor = color || '#444444'; logoSvgElement.setAttribute('fill', safeColor); logoSvgElement.querySelectorAll('rect').forEach(rect => rect.setAttribute('fill', safeColor)); } }
-        function loadGames() { try { const storedGames = localStorage.getItem(LS_GAMES); games = storedGames ? JSON.parse(storedGames) : []; console.log("[DEBUG] Games loaded:", games.length); } catch (e) { console.error("Failed to load games:", e); games = []; } }
+function loadGames() {
+            const defaultGames = [
+                { id: crypto.randomUUID(), name: "N-GON", url: "https://landgreen.github.io/n-gon/index.html", category: "Puzzle" },
+                { id: crypto.randomUUID(), name: "Dead Shot", url: "https://deadshot.io/", category: "Action" },
+                { id: crypto.randomUUID(), name: "Netquel", url: "https://netquel.com/", category: "Strategy" },
+                { id: crypto.randomUUID(), name: "MK48", url: "https://mk48.io/", category: "Simulation" },
+                { id: crypto.randomUUID(), name: "Ships 3D", url: "https://yp3d.com/ships3d/", category: "Simulation" },
+                { id: crypto.randomUUID(), name: "Geometry Dash", url: "https://geometrylite.github.io", category: "Action" } // Added https://
+            ];
+
+            try {
+                const storedGames = localStorage.getItem(LS_GAMES);
+                games = storedGames ? JSON.parse(storedGames) : [];
+                console.log("[DEBUG] Games loaded from storage:", games.length);
+
+                // Check if loaded games array is empty (or failed to parse)
+                if (!games || games.length === 0) {
+                     console.log("[DEBUG] No saved games found, loading defaults.");
+                     games = defaultGames;
+                     saveGames(); // Save the defaults immediately so they persist
+                }
+            } catch (e) {
+                console.error("Failed to load or parse games, loading defaults:", e);
+                games = defaultGames; // Load defaults if there was an error
+                 saveGames(); // Attempt to save defaults even after error
+            }
+        }
         function saveGames() { try { localStorage.setItem(LS_GAMES, JSON.stringify(games)); console.log("[DEBUG] Games saved."); } catch (e) { console.error("Failed to save games:", e); } }
         function loadCategories() { try { const storedCategories = localStorage.getItem(LS_CATEGORIES); categories = storedCategories ? JSON.parse(storedCategories) : ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc']; console.log("[DEBUG] Categories loaded:", categories); } catch (e) { console.error("Failed to load categories:", e); categories = ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc']; } }
         function saveCategories() { try { localStorage.setItem(LS_CATEGORIES, JSON.stringify(categories)); console.log("[DEBUG] Categories saved."); } catch (e) { console.error("Failed to save categories:", e); } }
