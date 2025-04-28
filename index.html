@@ -91,84 +91,21 @@
         input[type="range"].custom-slider:focus-visible + .slider-track + .slider-progress + .slider-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); border-radius: 50%; }
 
         /* Toggle Switch Styles */
-        .toggle-switch-label {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Align text and switch */
-            cursor: pointer;
-            font-size: 0.9em;
-            color: var(--text);
-            position: relative; /* Needed for positioning the slider */
-            user-select: none; /* Prevent text selection on click */
-             /* margin-top: 15px;  Removed margin here, rely on gap */
-        }
-        .toggle-switch {
-            opacity: 0; /* Hide the default checkbox */
-            width: 0;
-            height: 0;
-            position: absolute; /* Take it out of layout flow */
-        }
-        .toggle-slider {
-            position: relative;
-            display: inline-block; /* Or block if needed */
-            width: 40px;  /* Width of the switch */
-            height: 20px; /* Height of the switch */
-            background-color: var(--accent); /* Default off background */
-            border-radius: 20px; /* Make it pill-shaped */
-            transition: background-color 0.3s;
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-        .toggle-slider::before {
-            content: "";
-            position: absolute;
-            width: 16px;  /* Size of the knob */
-            height: 16px; /* Size of the knob */
-            left: 2px;    /* Position when off */
-            bottom: 2px;  /* Position from bottom */
-            background-color: var(--text); /* Knob color */
-            border-radius: 50%; /* Make it round */
-            transition: transform 0.3s;
-        }
-        .toggle-switch:checked + .toggle-slider {
-            background-color: var(--play-color); /* Green when on */
-        }
-        .toggle-switch:checked + .toggle-slider::before {
-            transform: translateX(20px); /* Move knob to the right when on */
-        }
+        .toggle-switch-label { display: flex; align-items: center; justify-content: space-between; /* Align text and switch */ cursor: pointer; font-size: 0.9em; color: var(--text); position: relative; /* Needed for positioning the slider */ user-select: none; /* Prevent text selection on click */ /* margin-top: 15px;  Removed margin here, rely on gap */ }
+        .toggle-switch { opacity: 0; /* Hide the default checkbox */ width: 0; height: 0; position: absolute; /* Take it out of layout flow */ }
+        .toggle-slider { position: relative; display: inline-block; /* Or block if needed */ width: 40px;  /* Width of the switch */ height: 20px; /* Height of the switch */ background-color: var(--accent); /* Default off background */ border-radius: 20px; /* Make it pill-shaped */ transition: background-color 0.3s; flex-shrink: 0; /* Prevent shrinking */ }
+        .toggle-slider::before { content: ""; position: absolute; width: 16px;  /* Size of the knob */ height: 16px; /* Size of the knob */ left: 2px;    /* Position when off */ bottom: 2px;  /* Position from bottom */ background-color: var(--text); /* Knob color */ border-radius: 50%; /* Make it round */ transition: transform 0.3s; }
+        .toggle-switch:checked + .toggle-slider { background-color: var(--play-color); /* Green when on */ }
+        .toggle-switch:checked + .toggle-slider::before { transform: translateX(20px); /* Move knob to the right when on */ }
          /* Focus style for accessibility */
-        .toggle-switch:focus-visible + .toggle-slider {
-             box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
-        }
+        .toggle-switch:focus-visible + .toggle-slider { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
 
-        /* Clear Data Button Style */
-/* Clear Data Button Style (Themed) */
-/* Clear Data Button Style (Themed, No Border) */
-        .danger-btn {
-            background-color: var(--accent); /* Use theme accent color */
-            color: var(--text);             /* Use theme text color */
-            border: none;                   /* Removed border */
-            padding: 10px 15px;
-            border-radius: var(--radius-std);
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
-            text-align: center;
-            transition: background-color 0.3s, transform 0.1s, filter 0.3s; /* Removed border-color */
-            margin-top: 10px; /* Add space above */
-            width: 100%; /* Make it full width */
-        }
-
-        .danger-btn:hover {
-            filter: brightness(0.8); /* Darken the accent color slightly on hover */
-        }
-
-        .danger-btn:active {
-            transform: scale(0.98);
-        }
-        /* Focus style using theme colors */
-         .danger-btn:focus-visible {
-             box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); /* Use bg and accent for focus */
-         }
+        /* Clear Data Button Style (Themed, No Border) */
+        .danger-btn { background-color: var(--accent); /* Use theme accent color */ color: var(--text); /* Use theme text color */ border: none; /* Removed border */ padding: 10px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; font-weight: bold; text-align: center; transition: background-color 0.3s, transform 0.1s, filter 0.3s; /* Removed border-color */ margin-top: 10px; /* Add space above */ width: 100%; /* Make it full width */ }
+        .danger-btn:hover { filter: brightness(0.8); /* Darken the accent color slightly on hover */ }
+        .danger-btn:active { transform: scale(0.98); }
+         /* Focus style using theme colors */
+         .danger-btn:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); /* Use bg and accent for focus */ }
 
         /* Animations */
         @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } } @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } @keyframes cardFadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } @keyframes cardFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
@@ -202,7 +139,7 @@
                 <option value="blue">Cool Blue</option>
                 <option value="forest">Forest Green</option>
                 <option value="sunset">Sunset Orange</option>
-            </select>
+                <option value="trigonometrical-red">Trigonometrical Red</option> </select>
         </label>
         <label>Font Family:
             <select id="fontSelector" onchange="updateFontFamily(this.value)">
@@ -304,16 +241,13 @@
             ];
 
             try {
-                // Check if the app has been initialized before using the flag
                 if (localStorage.getItem(LS_INITIALIZED) === null) {
                     console.log("[DEBUG] First run detected. Loading default games.");
                     games = defaultGames;
                     saveGames(); // Save defaults
                     localStorage.setItem(LS_INITIALIZED, 'true'); // Set the flag
                 } else {
-                    // Not the first run, load normally
                     const storedGames = localStorage.getItem(LS_GAMES);
-                    // If storage exists but is empty/invalid, default to empty array
                     try {
                        games = storedGames ? JSON.parse(storedGames) : [];
                     } catch (parseError) {
@@ -323,32 +257,34 @@
                     console.log("[DEBUG] Games loaded from storage:", games.length);
                 }
             } catch (e) {
-                 // General catch block for unexpected errors during the process
-                 console.error("Unexpected error during game loading:", e);
-                 // Safest fallback is usually an empty list if not the very first run
-                 if (localStorage.getItem(LS_INITIALIZED)) {
-                     games = [];
-                 } else {
-                      // If error occurs even before/during setting flag, attempt defaults
-                      console.warn("Error during initial load/parse, attempting defaults.");
-                      games = defaultGames;
-                      saveGames(); // Try to save defaults
-                      localStorage.setItem(LS_INITIALIZED, 'true'); // Try to set flag
-                 }
+                console.error("Unexpected error during game loading:", e);
+                if (localStorage.getItem(LS_INITIALIZED)) {
+                   games = [];
+                } else {
+                    console.warn("Error during initial load/parse, attempting defaults.");
+                    games = defaultGames;
+                    saveGames();
+                    localStorage.setItem(LS_INITIALIZED, 'true');
+                }
             }
         }
         function saveGames() { try { localStorage.setItem(LS_GAMES, JSON.stringify(games)); console.log("[DEBUG] Games saved."); } catch (e) { console.error("Failed to save games:", e); } }
-        function loadCategories() { try { const storedCategories = localStorage.getItem(LS_CATEGORIES); categories = storedCategories ? JSON.parse(storedCategories) : ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc']; console.log("[DEBUG] Categories loaded:", categories); } catch (e) { console.error("Failed to load categories:", e); categories = ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc']; } }
+        function loadCategories() { try { const storedCategories = localStorage.getItem(LS_CATEGORIES); categories = storedCategories ? JSON.parse(storedCategories) : ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc', 'Horror', 'Media', 'Coding', 'Conversation']; console.log("[DEBUG] Categories loaded:", categories); } catch (e) { console.error("Failed to load categories:", e); categories = ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc', 'Horror', 'Media', 'Coding', 'Conversation']; } } // Added default categories from loadGames
         function saveCategories() { try { localStorage.setItem(LS_CATEGORIES, JSON.stringify(categories)); console.log("[DEBUG] Categories saved."); } catch (e) { console.error("Failed to save categories:", e); } }
         function populateCategorySelect(selectElement, selectedCategory = "") {
-             if (!selectElement) { console.warn("Category select element not provided."); return; }
-             selectElement.innerHTML = '<option value="">Uncategorized</option>';
-             categories.forEach(cat => { const option = document.createElement('option'); option.value = cat; option.textContent = cat; if (cat === selectedCategory) option.selected = true; selectElement.appendChild(option); });
+            if (!selectElement) { console.warn("Category select element not provided."); return; }
+            selectElement.innerHTML = '<option value="">Uncategorized</option>';
+            // Ensure all categories from default games are included initially if not present
+            const defaultCats = ['Action', 'Puzzle', 'Strategy', 'Simulation', 'Misc', 'Horror', 'Media', 'Coding', 'Conversation'];
+            defaultCats.forEach(cat => { if (!categories.includes(cat)) categories.push(cat); });
+            categories.sort(); // Sort after potentially adding new ones
+
+            categories.forEach(cat => { const option = document.createElement('option'); option.value = cat; option.textContent = cat; if (cat === selectedCategory) option.selected = true; selectElement.appendChild(option); });
         }
         function handleAddCategory() {
             console.log("[DEBUG] handleAddCategory called");
             const categorySelect = document.getElementById('gameCategorySelect');
-             if (!categorySelect) { console.error("Category select not found in handleAddCategory"); return; }
+            if (!categorySelect) { console.error("Category select not found in handleAddCategory"); return; }
             const newCategory = prompt("Enter new category name:");
             if (newCategory && newCategory.trim()) { const trimmedCategory = newCategory.trim(); if (!categories.includes(trimmedCategory)) { categories.push(trimmedCategory); categories.sort(); saveCategories(); populateCategorySelect(categorySelect, trimmedCategory); console.log("Added category:", trimmedCategory); } else { alert("Category already exists!"); categorySelect.value = trimmedCategory; } }
         }
@@ -386,18 +322,71 @@
             const idInput = document.getElementById('gameIdInput');
             if (!nameInput || !urlInput || !categorySelect || !idInput) { console.error("Game modal inputs missing for save."); return; }
             const name = nameInput.value.trim(); const url = urlInput.value.trim(); const category = categorySelect.value; const id = idInput.value;
-            let isValid = true; if (!name) { nameInput.style.borderColor = 'red'; isValid = false; } else { nameInput.style.borderColor = ''; } if (!url || !url.match(/^https?:\/\/.+/)) { urlInput.style.borderColor = 'red'; isValid = false; } else { urlInput.style.borderColor = ''; } if (!isValid) { console.log("Save cancelled, validation failed."); return; }
+            let isValid = true; if (!name) { nameInput.style.borderColor = 'red'; isValid = false; } else { nameInput.style.borderColor = ''; } if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { urlInput.style.borderColor = 'red'; isValid = false; alert("Please enter a valid URL (starting with http://, https://, /, ./, or ../)");} else { urlInput.style.borderColor = ''; } if (!isValid) { console.log("Save cancelled, validation failed."); return; }
             if (isEditingGame && id) { const gameIndex = games.findIndex(g => g.id === id); if (gameIndex > -1) { games[gameIndex] = {...games[gameIndex], name, url, category }; console.log("Game updated"); } else { console.error("Edit error: ID not found"); closeGameModal(); return; } } else { const newGame = { id: crypto.randomUUID(), name, url, category }; games.push(newGame); console.log("Game added"); }
             saveGames(); renderGames(); closeGameModal();
         }
         function deleteGame(id, cardElement) { if (!confirm(`Delete this game?`)) return; console.log("[DEBUG] Deleting game:", id); if (cardElement) { cardElement.classList.add('deleting'); cardElement.addEventListener('animationend', () => { games = games.filter(game => game.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(game => game.id !== id); saveGames(); renderGames(); } }
+
+        // --- MODIFIED: Function to open content in about:blank with conditional warning ---
         function openInAboutBlank(url, title = 'Content') {
-             console.log(`[DEBUG] Creating about:blank wrapper for: ${url}`);
-             if (!url || !url.match(/^https?:\/\/.+/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; }
+             console.log(`[DEBUG] Creating about:blank wrapper for: ${url}. Warn setting: ${warnOnClose}`);
+             if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; }
+
              const newWindow = window.open('', '_blank');
-             if (newWindow) { try { newWindow.document.open(); newWindow.document.write(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title.replace(/</g, "&lt;")}</title><style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style></head><body><iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe></body></html>`); newWindow.document.close(); console.log("[DEBUG] about:blank wrapper written."); } catch (e) { console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); } } } else { console.error("Failed to open new window. Pop-up blocker?"); alert("Could not open link. Please check pop-up blocker."); }
+             if (newWindow) {
+                 try {
+                     newWindow.document.open();
+                     // Embed a script within the new window's HTML to handle its own beforeunload
+                     newWindow.document.write(`
+                         <!DOCTYPE html>
+                         <html lang="en">
+                         <head>
+                             <meta charset="UTF-8">
+                             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                             <title>${title.replace(/</g, "&lt;")}</title>
+                             <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style>
+                         </head>
+                         <body>
+                             <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe>
+                             <script>
+                                 // This script runs inside the new about:blank window
+                                 const shouldWarnOnClose = ${warnOnClose}; // Inject the boolean value from the main app's state
+
+                                 window.addEventListener('beforeunload', (event) => {
+                                     if (shouldWarnOnClose) {
+                                         console.log('Child window: beforeunload triggered with warning.');
+                                         const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?';
+                                         event.preventDefault(); // Required for Chrome
+                                         event.returnValue = confirmationMessage; // Required for older browsers
+                                         return confirmationMessage; // For some browsers
+                                     } else {
+                                         console.log('Child window: beforeunload triggered without warning.');
+                                     }
+                                 });
+                             <\/script>
+                         </body>
+                         </html>
+                     `); // Note: Escaped closing script tag: <\/script>
+                     newWindow.document.close();
+                     console.log("[DEBUG] about:blank wrapper written with embedded script.");
+                 } catch (e) {
+                     console.error("Error writing to new window:", e);
+                     // Fallback attempt if writing fails (less likely but possible)
+                     try {
+                         newWindow.location.href = url;
+                     } catch (e2) {
+                         console.error("Error navigating new window:", e2);
+                         alert("Could not open link. Check pop-up blocker.");
+                         newWindow.close();
+                     }
+                 }
+             } else {
+                 console.error("Failed to open new window. Pop-up blocker?");
+                 alert("Could not open link. Please check pop-up blocker.");
+             }
         }
-        const playGame = openInAboutBlank; // Alias
+        const playGame = openInAboutBlank; // Alias still works
 
         // --- UI Section Management ---
         function showSection(section) {
@@ -428,7 +417,86 @@
         function updateSliderVisuals(slider, thumb, progress, display) { if (!slider || !thumb || !progress || !display) { return; } try { const min=parseFloat(slider.min)||12; const max=parseFloat(slider.max)||24; const value=parseFloat(slider.value)||16; let p=((value-min)/(max-min))*100; p=Math.max(0,Math.min(100,p)); thumb.style.left=`${p}%`; thumb.style.transform='translateX(-50%)'; progress.style.width=`${p}%`; display.textContent=`${Math.round(value)}px`; } catch (e) { console.error("Error updating slider visuals:", e); } }
         function updateFontSize(val) { const slider = document.getElementById('fontSizeSlider'); const thumb = document.getElementById('fontSizeThumb'); const progress = document.getElementById('fontSizeProgress'); const display = document.getElementById('fontSizeValue'); if (!slider || !root) return; const value = val || slider.value; root.style.setProperty("--font-size", `${value}px`); saveSetting(LS_FONTSIZE, value); updateSliderVisuals(slider, thumb, progress, display); }
         function updateFontFamily(fontName) { const selector = document.getElementById('fontSelector'); if (!selector || !root) return; const value = fontName || selector.value; root.style.setProperty("--font-family", value); saveSetting(LS_FONTFAMILY, value); }
-        function updateTheme(theme) { const selector = document.getElementById('themeSelector'); if (!root || !body) return; const value = theme || (selector ? selector.value : 'dark'); let accentColor = '#444444'; let textColorValue = '#ffffff'; switch (value) { case "light": root.style.setProperty("--bg","#fff"); root.style.setProperty("--sidebar","#eee"); root.style.setProperty("--topbar","#ddd"); root.style.setProperty("--accent","#ccc"); root.style.setProperty("--text","#1a1a1a"); accentColor = '#ccc'; textColorValue = '#1a1a1a'; break; case "blue": root.style.setProperty("--bg","#0a0f1c"); root.style.setProperty("--sidebar","#091121"); root.style.setProperty("--topbar","#101a35"); root.style.setProperty("--accent","#395b9c"); root.style.setProperty("--text","#e0e0ff"); accentColor = '#395b9c'; textColorValue = '#e0e0ff'; break; case "forest": root.style.setProperty("--bg","#1f2e1f"); root.style.setProperty("--sidebar","#141e14"); root.style.setProperty("--topbar","#2a3f2a"); root.style.setProperty("--accent","#4a784a"); root.style.setProperty("--text","#e5f5e5"); accentColor = '#4a784a'; textColorValue = '#e5f5e5'; break; case "sunset": root.style.setProperty("--bg","#2b1a1a"); root.style.setProperty("--sidebar","#3a2525"); root.style.setProperty("--topbar","#4d3333"); root.style.setProperty("--accent","#b36b4a"); root.style.setProperty("--text","#ffe8e0"); accentColor = '#b36b4a'; textColorValue = '#ffe8e0'; break; case "dark": default: root.style.setProperty("--bg","#1e1e1e"); root.style.setProperty("--sidebar","#111"); root.style.setProperty("--topbar","#2c2c2c"); root.style.setProperty("--accent","#444"); root.style.setProperty("--text","#fff"); accentColor = '#444'; textColorValue = '#fff'; break; } currentThemeColor = accentColor; body.setAttribute('data-theme', value); updateSelectArrowColor(textColorValue); if(root.style && typeof root.style.setProperty === 'function') { root.style.setProperty('--slider-track-bg', accentColor); root.style.setProperty('--slider-thumb-bg', textColorValue); } updateFavicon(accentColor); updateWelcomeLogoColor(accentColor); saveSetting(LS_THEME, value); }
+
+        // --- MODIFIED: updateTheme function with new theme ---
+        function updateTheme(theme) {
+            const selector = document.getElementById('themeSelector');
+            if (!root || !body) return;
+            const value = theme || (selector ? selector.value : 'dark');
+            let accentColor = '#444444';
+            let textColorValue = '#ffffff';
+            switch (value) {
+                case "light":
+                    root.style.setProperty("--bg","#ffffff");
+                    root.style.setProperty("--sidebar","#eeeeee");
+                    root.style.setProperty("--topbar","#dddddd");
+                    root.style.setProperty("--accent","#cccccc");
+                    root.style.setProperty("--text","#1a1a1a");
+                    accentColor = '#cccccc';
+                    textColorValue = '#1a1a1a';
+                    break;
+                case "blue":
+                    root.style.setProperty("--bg","#0a0f1c");
+                    root.style.setProperty("--sidebar","#091121");
+                    root.style.setProperty("--topbar","#101a35");
+                    root.style.setProperty("--accent","#395b9c");
+                    root.style.setProperty("--text","#e0e0ff");
+                    accentColor = '#395b9c';
+                    textColorValue = '#e0e0ff';
+                    break;
+                case "forest":
+                    root.style.setProperty("--bg","#1f2e1f");
+                    root.style.setProperty("--sidebar","#141e14");
+                    root.style.setProperty("--topbar","#2a3f2a");
+                    root.style.setProperty("--accent","#4a784a");
+                    root.style.setProperty("--text","#e5f5e5");
+                    accentColor = '#4a784a';
+                    textColorValue = '#e5f5e5';
+                    break;
+                case "sunset":
+                    root.style.setProperty("--bg","#2b1a1a");
+                    root.style.setProperty("--sidebar","#3a2525");
+                    root.style.setProperty("--topbar","#4d3333");
+                    root.style.setProperty("--accent","#b36b4a");
+                    root.style.setProperty("--text","#ffe8e0");
+                    accentColor = '#b36b4a';
+                    textColorValue = '#ffe8e0';
+                    break;
+                case "trigonometrical-red": // ADDED THEME CASE
+                    root.style.setProperty("--bg", "#ffffff"); // White background
+                    root.style.setProperty("--sidebar", "#f0f0f0"); // Light grey sidebar
+                    root.style.setProperty("--topbar", "#e0e0e0"); // Slightly darker grey topbar
+                    root.style.setProperty("--accent", "#e53e3e"); // Use delete red as accent
+                    root.style.setProperty("--text", "#1a1a1a"); // Dark text
+                    accentColor = '#e53e3e';
+                    textColorValue = '#1a1a1a';
+                    break;
+                case "dark":
+                default:
+                    root.style.setProperty("--bg","#1e1e1e");
+                    root.style.setProperty("--sidebar","#111111");
+                    root.style.setProperty("--topbar","#2c2c2c");
+                    root.style.setProperty("--accent","#444444");
+                    root.style.setProperty("--text","#ffffff");
+                    accentColor = '#444444';
+                    textColorValue = '#ffffff';
+                    break;
+            }
+            currentThemeColor = accentColor;
+            body.setAttribute('data-theme', value);
+            updateSelectArrowColor(textColorValue);
+            if(root.style && typeof root.style.setProperty === 'function') {
+                // Update slider colors based on theme
+                root.style.setProperty('--slider-track-bg', accentColor);
+                root.style.setProperty('--slider-thumb-bg', textColorValue);
+                // Ensure game card colors adapt correctly
+                root.style.setProperty('--game-card-bg', getComputedStyle(root).getPropertyValue('--topbar'));
+                root.style.setProperty('--game-card-hover-bg', accentColor);
+            }
+            updateFavicon(accentColor);
+            updateWelcomeLogoColor(accentColor);
+            saveSetting(LS_THEME, value);
+        }
 
         // --- Search & Filtering ---
         function filterGames() {
@@ -440,18 +508,28 @@
             const noGamesFoundMsg = mainContentRef.querySelector('#no-games-found');
             let visibleGameCount = 0;
             if (gameListContainer) { const gameCards = gameListContainer.querySelectorAll('.game-card'); gameCards.forEach(card => { const nameEl = card.querySelector('h4'); const catEl = card.querySelector('p.category'); const name = nameEl ? nameEl.textContent.toLowerCase() : ''; const cat = catEl ? catEl.textContent.toLowerCase() : ''; if (!searchTerm || name.includes(searchTerm) || cat.includes(searchTerm)) { card.style.display = ''; visibleGameCount++; } else { card.style.display = 'none'; } }); }
-            if (noGamesFoundMsg && gameListContainer) { if (visibleGameCount === 0 && searchTerm) { noGamesFoundMsg.textContent = `No games found matching "${searchInputRef.value.trim()}"`; noGamesFoundMsg.style.display = 'block'; } else { noGamesFoundMsg.style.display = 'none'; } }
+            if (noGamesFoundMsg && gameListContainer) { if (visibleGameCount === 0 && games.length > 0 && searchTerm) { noGamesFoundMsg.textContent = `No games found matching "${searchInputRef.value.trim()}"`; noGamesFoundMsg.style.display = 'block'; } else { noGamesFoundMsg.style.display = 'none'; } }
             const proxyListContainer = mainContentRef.querySelector('.proxy-list-container');
-             if (proxyListContainer && searchTerm) { const proxyCards = proxyListContainer.querySelectorAll('.proxy-card'); proxyCards.forEach(card => { const nameEl = card.querySelector('h4'); const name = nameEl ? nameEl.textContent.toLowerCase() : ''; if (name.includes(searchTerm)) { card.style.display = ''; } else { card.style.display = 'none'; } }); } else if (proxyListContainer) { const proxyCards = proxyListContainer.querySelectorAll('.proxy-card'); proxyCards.forEach(card => card.style.display = ''); }
+            if (proxyListContainer && searchTerm) { const proxyCards = proxyListContainer.querySelectorAll('.proxy-card'); proxyCards.forEach(card => { const nameEl = card.querySelector('h4'); const name = nameEl ? nameEl.textContent.toLowerCase() : ''; if (name.includes(searchTerm)) { card.style.display = ''; } else { card.style.display = 'none'; } }); } else if (proxyListContainer) { const proxyCards = proxyListContainer.querySelectorAll('.proxy-card'); proxyCards.forEach(card => card.style.display = ''); }
         }
         const debouncedFilterGames = debounce(filterGames, 300);
 
-        // --- Warn on Close Logic ---
-        function handleBeforeUnload(event) {
-            if (warnOnClose) { const confirmationMessage = 'Changes you made may not be saved.'; event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage; }
+        // --- Warn on Close Logic (for MAIN window) ---
+        // Note: The warning for game/proxy windows is now handled by the script injected by openInAboutBlank
+        function handleMainBeforeUnload(event) {
+            // This listener is ONLY for the main Qbit application window/tab itself.
+            if (warnOnClose) {
+                console.log("Main window: beforeunload triggered with warning.");
+                const confirmationMessage = 'Closing the main Qbit app. Are you sure?';
+                event.preventDefault(); // Required for Chrome
+                event.returnValue = confirmationMessage; // Required for older browsers
+                return confirmationMessage; // For some browsers
+            } else {
+                 console.log("Main window: beforeunload triggered without warning.");
+            }
         }
 
-         // --- Function to Clear All Local Storage Data ---
+        // --- Function to Clear All Local Storage Data ---
         function clearAllData() {
             if (confirm("Are you sure you want to clear ALL saved data?\nThis includes your name, settings, games, and categories. This cannot be undone.")) {
                 console.log("[DEBUG] Clearing all application data...");
@@ -491,13 +569,19 @@
                 if(fontSel) fontSel.value = fontFamily;
                 if(warnSwitch) warnSwitch.checked = warnOnClose; // Set warn switch state
 
-                updateTheme(theme);
+                updateTheme(theme); // Apply theme first to set colors
                 updateFontSize(fontSize);
                 updateFontFamily(fontFamily);
 
-                 // Add/Remove 'beforeunload' listener based on loaded state
-                if (warnOnClose) { window.addEventListener('beforeunload', handleBeforeUnload); console.log("[DEBUG] Initial beforeunload listener ADDED."); }
-                else { window.removeEventListener('beforeunload', handleBeforeUnload); console.log("[DEBUG] Initial beforeunload listener NOT added."); }
+                // Add/Remove 'beforeunload' listener for the MAIN window based on loaded state
+                if (warnOnClose) {
+                    window.addEventListener('beforeunload', handleMainBeforeUnload);
+                    console.log("[DEBUG] Initial MAIN beforeunload listener ADDED.");
+                } else {
+                    window.removeEventListener('beforeunload', handleMainBeforeUnload);
+                    console.log("[DEBUG] Initial MAIN beforeunload listener NOT added (or removed).");
+                }
+
 
                 // Load games (handles first run) and categories
                 loadGames();
@@ -507,7 +591,7 @@
                 if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'none';
                 if (currentUserName) { console.log(`[DEBUG] User found: ${currentUserName}`); showSection('welcome'); }
                 else { console.log("[DEBUG] No user found, prompting."); if (welcomeAreaPlaceholder && mainContent) mainContent.appendChild(welcomeAreaPlaceholder); if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'flex'; promptForName(); }
-                updateFavicon(currentThemeColor);
+                updateFavicon(currentThemeColor); // Ensure favicon matches loaded theme
 
             } catch (e) { console.error("Error during loadSettingsAndInit:", e); if(mainContent) mainContent.innerHTML = `<h2 style="color: red; text-align: center; padding-top: 50px;">Error loading state: ${e.message}</h2>`; updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif"); if (!currentUserName) promptForName(); else showSection('welcome'); }
             updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim());
@@ -554,23 +638,31 @@
             if (gameModal) gameModal.addEventListener('click', (e) => { if (e.target === gameModal) closeGameModal(); }); else console.warn("Game modal not found.");
 
             // --- Attach listeners for Settings Panel controls ---
-             const fsSlider = document.getElementById('fontSizeSlider');
-             if (fsSlider) fsSlider.addEventListener('input', (e) => updateFontSize(e.target.value)); else console.warn("Font Size Slider not found.");
-             // (Theme/Font select listeners are inline HTML `onchange` - kept for simplicity)
+            const fsSlider = document.getElementById('fontSizeSlider');
+            if (fsSlider) fsSlider.addEventListener('input', (e) => updateFontSize(e.target.value)); else console.warn("Font Size Slider not found.");
+            // (Theme/Font select listeners are inline HTML `onchange` - kept for simplicity)
 
-             const warnSwitch = document.getElementById('warnOnCloseSwitch');
-             if (warnSwitch) {
-                 warnSwitch.addEventListener('change', (e) => {
-                     warnOnClose = e.target.checked;
-                     saveSetting(LS_WARNONCLOSE, warnOnClose);
-                     if (warnOnClose) { window.addEventListener('beforeunload', handleBeforeUnload); console.log("[DEBUG] Added beforeunload listener via toggle."); }
-                     else { window.removeEventListener('beforeunload', handleBeforeUnload); console.log("[DEBUG] Removed beforeunload listener via toggle."); }
-                 });
-             } else { console.warn("Warn on Close switch not found."); }
+            const warnSwitch = document.getElementById('warnOnCloseSwitch');
+            if (warnSwitch) {
+                warnSwitch.addEventListener('change', (e) => {
+                    warnOnClose = e.target.checked;
+                    saveSetting(LS_WARNONCLOSE, warnOnClose);
+                    // Update listener for the MAIN window immediately
+                    if (warnOnClose) {
+                        window.addEventListener('beforeunload', handleMainBeforeUnload);
+                        console.log("[DEBUG] Added MAIN beforeunload listener via toggle.");
+                    } else {
+                        window.removeEventListener('beforeunload', handleMainBeforeUnload);
+                        console.log("[DEBUG] Removed MAIN beforeunload listener via toggle.");
+                    }
+                    // Note: This toggle ONLY affects FUTURE game/proxy windows opened.
+                    // Existing ones retain the 'warnOnClose' state they were opened with.
+                });
+            } else { console.warn("Warn on Close switch not found."); }
 
-             const clearBtn = document.getElementById('clearDataBtn');
-             if (clearBtn) { clearBtn.addEventListener('click', clearAllData); }
-             else { console.warn("Clear Data button not found."); }
+            const clearBtn = document.getElementById('clearDataBtn');
+            if (clearBtn) { clearBtn.addEventListener('click', clearAllData); }
+            else { console.warn("Clear Data button not found."); }
 
             console.log("[DEBUG] Initialization complete.");
         });
