@@ -204,17 +204,6 @@
         // --- SVG Icons ---
         const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
 
-        // --- Broadcast Channel ---
-        let warningChannel;
-        try {
-             warningChannel = new BroadcastChannel('qbit_warn_channel'); // Define the channel
-             console.log("[DEBUG] Main: Broadcast channel created.");
-        } catch (e) {
-             console.error("Main: BroadcastChannel API not supported or failed.", e);
-             warningChannel = null; // Fallback if API not supported
-        }
-
-
         // --- Helper: Debounce ---
         function debounce(func, delay) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { func.apply(this, args); }, delay); }; }
 
@@ -243,11 +232,10 @@
         function handleSaveGame() { const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const ii=document.getElementById('gameIdInput'); if(!ni||!ui||!cs||!ii)return; const name=ni.value.trim(); const url=ui.value.trim(); const category=cs.value; const id=ii.value; let iv=true; if(!name){ni.style.borderColor='red';iv=false;}else{ni.style.borderColor='';} if(!url||!url.match(/^(https?:\/\/|.\/|..\/|\/)/)){ui.style.borderColor='red';iv=false;alert("Valid URL needed (http://, https://, /, ./, ../)");}else{ui.style.borderColor='';} if(!iv)return; if(isEditingGame&&id){const gi=games.findIndex(g=>g.id===id); if(gi>-1){games[gi]={...games[gi],name,url,category};}else{console.error("Edit fail: ID not found");closeGameModal();return;}}else{const ng={id:crypto.randomUUID(),name,url,category};games.push(ng);} saveGames();renderGames();closeGameModal();}
         function deleteGame(id, ce) { if (!confirm(`Delete this game?`)) return; if (ce) { ce.classList.add('deleting'); ce.addEventListener('animationend', () => { games = games.filter(g => g.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(g => g.id !== id); saveGames(); renderGames(); } }
 
-        // --- Function to open content in about:blank (WITH BROADCAST CHANNEL LISTENER) ---
+        // --- Function to open content in about:blank (Reverted Script) ---
         function openInAboutBlank(url, title = 'Content') {
             console.log(`[DEBUG] Creating about:blank wrapper for: ${url}. Initial Warn setting: ${warnOnClose}`);
             if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; }
-
             const newWindow = window.open('', '_blank');
             if (newWindow) {
                 try {
@@ -263,38 +251,21 @@
                         <body>
                             <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe>
                             <script>
-                                let __internalShouldWarnOnClose__ = ${warnOnClose};
-                                const __channelName__ = 'qbit_warn_channel';
-                                let __warningChannel__;
-                                console.log('Child window: Initial warn state:', __internalShouldWarnOnClose__);
-                                try {
-                                    __warningChannel__ = new BroadcastChannel(__channelName__);
-                                    console.log('Child window: Broadcast channel connected.');
-                                    __warningChannel__.onmessage = (event) => {
-                                        if (event.data && typeof event.data.warn === 'boolean') {
-                                            const newState = event.data.warn;
-                                            if (__internalShouldWarnOnClose__ !== newState) {
-                                                __internalShouldWarnOnClose__ = newState;
-                                                console.log('Child window: Received warn update via BroadcastChannel:', __internalShouldWarnOnClose__);
-                                            }
-                                        }
-                                    };
-                                    window.addEventListener('unload', () => { if (__warningChannel__) { __warningChannel__.close(); console.log('Child window: Broadcast channel closed.'); } });
-                                } catch (e) { console.error("Child window: BroadcastChannel API not supported or failed.", e); __warningChannel__ = null; }
-
+                                const shouldWarnOnClose = ${warnOnClose}; // Fixed value at time of creation
+                                console.log('Child window: Initial fixed warn state:', shouldWarnOnClose);
                                 window.addEventListener('beforeunload', (event) => {
-                                    if (__internalShouldWarnOnClose__) {
-                                        console.log('Child window: beforeunload triggered WITH warning (state:', __internalShouldWarnOnClose__, ')');
+                                    if (shouldWarnOnClose) {
+                                        console.log('Child window: beforeunload triggered WITH warning (fixed state:', shouldWarnOnClose, ')');
                                         const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?';
                                         event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage;
-                                    } else { console.log('Child window: beforeunload triggered WITHOUT warning (state:', __internalShouldWarnOnClose__, ')'); }
+                                    } else { console.log('Child window: beforeunload triggered WITHOUT warning (fixed state:', shouldWarnOnClose, ')'); }
                                 });
                             <\/script>
                             </body>
                             </html>
                     `);
                     newWindow.document.close();
-                    console.log("[DEBUG] about:blank wrapper written with updated embedded script.");
+                    console.log("[DEBUG] about:blank wrapper written with original embedded script.");
                 } catch (e) {
                     console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); }
                 }
@@ -336,8 +307,8 @@
 
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => { console.log("DOM ready."); try { mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); namePromptModal=document.getElementById('namePromptModal'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn'); const ce={mainContent,settingsPanel,settingsBtn,namePromptModal,gameModal,searchInput,themeSelector,fontSelector,fontSizeSlider,warnOnCloseSwitch,bgImageToggleSwitch,bgImageControlContainer,bgImageFileInput,clearBgImageBtn}; const m=Object.entries(ce).filter(([k,v])=>!v).map(([k])=>k); if(m.length>0) throw new Error(`Missing elements: ${m.join(', ')}`); } catch(e){ console.error("FATAL:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; } loadSettingsAndInit(); console.log("Attaching listeners."); settingsBtn.addEventListener('click',toggleSettings); searchInput.addEventListener('input',debouncedFilterGames); const sgb=document.getElementById('saveGameBtn');const cgb=document.getElementById('cancelGameBtn');const acb=document.getElementById('addCategoryBtn'); if(sgb)sgb.addEventListener('click',handleSaveGame); if(cgb)cgb.addEventListener('click',closeGameModal); if(acb)acb.addEventListener('click',handleAddCategory); if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();}); fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value));
-        // Warn on Close Listener with Broadcast
-        warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); try{ if(warningChannel) warningChannel.postMessage({warn:warnOnClose}); console.log(`[DEBUG] Broadcasted warn status: ${warnOnClose}`); } catch(be){ console.error("Warn broadcast err:", be); } });
+        // Warn on Close Listener (NO Broadcast)
+        warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); console.log("Main warn listener updated."); });
         // Background Listeners
         bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();}); bgImageFileInput.addEventListener('change',handleImageFileSelect); clearBgImageBtn.addEventListener('click',clearCustomBackground);
         // Clear All Data Listener
