@@ -220,7 +220,7 @@
         function updateWelcomeLogoColor(color) { const wa=document.getElementById('welcome-area'); if(!wa) return; const lse=wa.querySelector('#welcome-logo-container svg'); if(lse){ const sc=color||'#444444'; lse.setAttribute('fill', sc); lse.querySelectorAll('rect').forEach(r=>r.setAttribute('fill', sc)); } }
 
         // --- Game & Category Management ---
-        function loadGames() { const dg=[{id:crypto.randomUUID(),name:"N-GON",url:"https://landgreen.github.io/n-gon/index.html",category:"Strategy"},{id:crypto.randomUUID(),name:"Dead Shot",url:"https://deadshot.io/",category:"Action"},{id:crypto.randomUUID(),name:"Tik-Tok",url:"https://shop.lang.hm/&?q=TikTok",category:"Media"},{id:crypto.randomUUID(),name:"VS-Code",url:"https://shop.lang.hm/&?q=VS%20Code",category:"Coding"},{id:crypto.randomUUID(),name:"ChatGPT",url:"https://shop.lang.hm/&?q=ChatGPT",category:"Conversation"},{id:crypto.randomUUID(),name:"Netquel",url:"https://netquel.com/",category:"Strategy"},{id:crypto.randomUUID(),name:"MK48",url:"https://mk48.io/",category:"Strategy"},{id:crypto.randomUUID(),name:"Ships 3D",url:"https://yp3d.com/ships3d/",category:"Action"},{id:crypto.randomUUID(),name:"Geometry Dash",url:"https://geometrylite.github.io",category:"Action"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's",url:"https://wellsousaaa.github.io/Five-Nights-at-Freddys-Web/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Two",url:"https://ruihq.github.io/FNAF2/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Three",url:"https://sussygamedeveloper.github.io/fnaf3/",category:"Horror"}]; try { if(!localStorage.getItem(LS_INITIALIZED)){ console.log("[DEBUG] First run. Loading default games."); games=dg; saveGames(); localStorage.setItem(LS_INITIALIZED,'true'); } else { const sg=localStorage.getItem(LS_GAMES); try { games=sg?JSON.parse(sg):[]; } catch(pe){ console.error("Error parsing stored games:", pe); games=[]; } console.log("[DEBUG] Games loaded:", games.length); } } catch(e){ console.error("Error loading games:",e); if(localStorage.getItem(LS_INITIALIZED)){ games=[]; } else { console.warn("Error during initial load, using defaults."); games=dg; saveGames(); localStorage.setItem(LS_INITIALIZED,'true'); } } }
+        function loadGames() { const dg=[{id:crypto.randomUUID(),name:"N-GON",url:"https://landgreen.github.io/n-gon/index.html",category:"Strategy"},{id:crypto.randomUUID(),name:"Dead Shot",url:"https://deadshot.io/",category:"Action"},{id:crypto.randomUUID(),name:"Tik-Tok",url:"https://cars.happyforever.com/&?q=TikTok",category:"Media"},{id:crypto.randomUUID(),name:"VS-Code",url:"https://cars.happyforever.com/&?q=VS%20Code",category:"Coding"},{id:crypto.randomUUID(),name:"ChatGPT",url:"https://cars.happyforever.com/&?q=ChatGPT",category:"Conversation"},{id:crypto.randomUUID(),name:"Netquel",url:"https://netquel.com/",category:"Strategy"},{id:crypto.randomUUID(),name:"MK48",url:"https://mk48.io/",category:"Strategy"},{id:crypto.randomUUID(),name:"Ships 3D",url:"https://yp3d.com/ships3d/",category:"Action"},{id:crypto.randomUUID(),name:"Geometry Dash",url:"https://geometrylite.github.io",category:"Action"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's",url:"https://wellsousaaa.github.io/Five-Nights-at-Freddys-Web/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Two",url:"https://ruihq.github.io/FNAF2/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Three",url:"https://sussygamedeveloper.github.io/fnaf3/",category:"Horror"}]; try { if(!localStorage.getItem(LS_INITIALIZED)){ console.log("[DEBUG] First run. Loading default games."); games=dg; saveGames(); localStorage.setItem(LS_INITIALIZED,'true'); } else { const sg=localStorage.getItem(LS_GAMES); try { games=sg?JSON.parse(sg):[]; } catch(pe){ console.error("Error parsing stored games:", pe); games=[]; } console.log("[DEBUG] Games loaded:", games.length); } } catch(e){ console.error("Error loading games:",e); if(localStorage.getItem(LS_INITIALIZED)){ games=[]; } else { console.warn("Error during initial load, using defaults."); games=dg; saveGames(); localStorage.setItem(LS_INITIALIZED,'true'); } } }
         function saveGames() { try { saveSetting(LS_GAMES, JSON.stringify(games)); console.log("[DEBUG] Games saved."); } catch (e) { console.error("Failed to save games:", e); } }
         function loadCategories() { const dc=['Action','Puzzle','Strategy','Simulation','Misc','Horror','Media','Coding','Conversation']; try { const sc=localStorage.getItem(LS_CATEGORIES); categories=sc?JSON.parse(sc):dc; } catch (e){ console.error("Failed load categories:",e); categories=dc; } dc.forEach(c=>{if(!categories.includes(c))categories.push(c);}); categories.sort(); console.log("[DEBUG] Categories loaded:", categories); }
         function saveCategories() { try { saveSetting(LS_CATEGORIES, JSON.stringify(categories)); console.log("[DEBUG] Categories saved."); } catch (e) { console.error("Failed save categories:", e); } }
@@ -275,7 +275,60 @@
 
         // --- UI Section Management ---
         function showSection(section) { if(!mainContent) return; mainContent.style.opacity=0; setTimeout(()=>{ mainContent.innerHTML=''; mainContent.style.animation='none'; let sc=''; if(section==="welcome" && currentUserName){ displayWelcomeMessage(currentUserName); mainContent.style.opacity=1; return; } else if(section==="games"){ if(!currentUserName){ promptForName(); return; } sc=`<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML=sc; const ab=document.getElementById('addGameBtn'); if(ab) ab.onclick=()=>openGameModal(); renderGames(); } else if(section==="proxy"){ if(!currentUserName){ promptForName(); return; } sc=`<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`; mainContent.innerHTML=sc; renderProxySites(); } else if(section==="tools"){ if(!currentUserName){ promptForName(); return; } sc=`<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML=sc; } else if(!currentUserName){ if(welcomeAreaPlaceholder) mainContent.appendChild(welcomeAreaPlaceholder); if(welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display='flex'; promptForName(); mainContent.style.opacity=1; return; } else { displayWelcomeMessage(currentUserName); mainContent.style.opacity=1; return; } if(!mainContent.querySelector('#welcome-area') && !mainContent.querySelector('#namePromptModal')){ mainContent.style.opacity=0; void mainContent.offsetWidth; mainContent.style.animation="fadeIn 0.5s forwards"; mainContent.style.opacity=1; } }, 200); }
-        function renderProxySites() { const c=mainContent?mainContent.querySelector('.proxy-list-container'):null; if(!c)return; c.innerHTML=''; const ps=[{name:"Space",url:"https://shop.lang.hm/"},{name:"Transend",url:"https://hw.billigerhost.com/"},{name:"RammerHead",url:"https://pluh.root.sx/"},{name:"Utopia",url:"https://bio.write.examinedbytopmen.com/"}]; ps.forEach(s=>{const card=document.createElement('div');card.className='proxy-card';card.setAttribute('tabindex','0');card.innerHTML=`<div><h4></h4></div><div class="proxy-card-actions"><button class="play-btn" title="Open ${s.name.replace(/</g,"&lt;")}">${ICONS.play}</button></div>`;card.querySelector('h4').textContent=s.name.replace(/</g,"&lt;");card.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openInAboutBlank(s.url,s.name);}});card.querySelector('.play-btn').onclick=(e)=>{e.stopPropagation();openInAboutBlank(s.url,s.name);};c.appendChild(card);}); }
+        function renderProxySites() {
+    const c = mainContent ? mainContent.querySelector('.proxy-list-container') : null;
+    if (!c) return;
+    c.innerHTML = '';
+
+    const spaceUrls = [
+        "https://yessir.happyforever.com/",
+        "https://fish.happyforever.com/",
+        "https://turtle.happyforever.com/",
+        "https://cars.happyforever.com/"
+    ];
+
+    const ps = [
+        { name: "Space", url: null }, // URL will be selected on click
+        { name: "Transend", url: "https://hw.billigerhost.com/" },
+        { name: "RammerHead", url: "https://pluh.root.sx/" },
+        { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" }
+    ];
+
+    ps.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'proxy-card';
+        card.setAttribute('tabindex', '0');
+        card.innerHTML = `
+            <div><h4></h4></div>
+            <div class="proxy-card-actions">
+                <button class="play-btn" title="Open ${s.name.replace(/</g, "&lt;")}">${ICONS.play}</button>
+            </div>
+        `;
+        card.querySelector('h4').textContent = s.name.replace(/</g, "&lt;");
+
+        const handleOpen = () => {
+            const urlToOpen = s.name === "Space"
+                ? spaceUrls[Math.floor(Math.random() * spaceUrls.length)]
+                : s.url;
+            openInAboutBlank(urlToOpen, s.name);
+        };
+
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleOpen();
+            }
+        });
+
+        card.querySelector('.play-btn').onclick = (e) => {
+            e.stopPropagation();
+            handleOpen();
+        };
+
+        c.appendChild(card);
+    });
+}
+
         function openChat() { alert("Chat feature placeholder."); }
 
         // --- Settings Panel & Controls ---
