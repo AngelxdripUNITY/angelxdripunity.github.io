@@ -11,27 +11,33 @@
 
     <style>
         /* Base Styles */
-         :root { /* Theme Variables */ --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff; --font-size: 16px; --font-family: 'Segoe UI', sans-serif; /* Radii */ --radius-std: 8px; --radius-lg: 12px; /* Slider */ --slider-track-bg: var(--accent); --slider-thumb-bg: var(--text); --slider-progress-color: var(--text); --slider-track-height: 6px; --slider-thumb-size: 16px; /* Games Section Specific */ --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent); --delete-color: #e53e3e; --edit-color: #4299e1; --play-color: #48bb78; /* Custom Background */ --custom-bg-image: none; }
-         body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .settings-panel input[type="file"], .settings-panel button, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .game-card, .game-card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn, .proxy-card, .proxy-card button, #clearDataBtn { box-sizing: border-box; }
-         body { margin: 0; font-family: var(--font-family); display: flex; height: 100vh; overflow: hidden; background-color: var(--bg); color: var(--text); font-size: var(--font-size); transition: background-color 0.3s, color 0.3s; background-image: var(--custom-bg-image); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed; }
-        .sidebar { width: 200px; background-color: var(--sidebar); flex-shrink: 0; animation: slideInLeft 0.5s ease forwards; transition: background-color 0.3s; display:flex; flex-direction:column; padding: 20px 10px; gap: 20px; }
+        :root { /* Theme Variables */ --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff; --font-size: 16px; --font-family: 'Segoe UI', sans-serif; /* Radii */ --radius-std: 8px; --radius-lg: 12px; /* Slider */ --slider-track-bg: var(--accent); --slider-thumb-bg: var(--text); --slider-progress-color: var(--text); --slider-track-height: 6px; --slider-thumb-size: 16px; /* Games Section Specific */ --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent); --delete-color: #e53e3e; --edit-color: #4299e1; --play-color: #48bb78; /* Custom Background */ --custom-bg-image: none; }
+        html, body { height: 100%; margin: 0; overflow: hidden; }
+        body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .settings-panel input[type="file"], .settings-panel button, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .game-card, .game-card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn, .proxy-card, .proxy-card button, #clearDataBtn, .chat-panel, .chat-section, .chat-log-container, .chat-input-area input, .chat-input-area button { box-sizing: border-box; }
+        body { font-family: var(--font-family); display: flex; background-color: var(--bg); color: var(--text); font-size: var(--font-size); transition: background-color 0.3s, color 0.3s; background-image: var(--custom-bg-image); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed; }
+        .sidebar { width: 200px; background-color: var(--sidebar); flex-shrink: 0; animation: slideInLeft 0.5s ease forwards; transition: background-color 0.3s; display:flex; flex-direction:column; padding: 20px 10px; gap: 20px; height: 100vh; }
         .sidebar h2 { font-size: 1.1em; border-bottom: 1px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px; color: var(--text);}
         .sidebar button { background: var(--accent); border: none; padding: 0.6em 0.8em; text-align: left; color: var(--text); cursor: pointer; border-radius: var(--radius-std); transition: background 0.3s, transform 0.2s, color 0.3s; font-size: 0.9em; display: block; width: 100%; }
         .sidebar button:hover { filter: brightness(1.1); transform: scale(1.03); }
-        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .topbar { background-color: var(--topbar); animation: slideDown 0.5s ease forwards; transition: background-color 0.3s; display:flex; align-items:center; justify-content: space-between; padding: 10px 20px; position: sticky; top:0; z-index: 2; }
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; height: 100vh; }
+        .topbar { background-color: var(--topbar); animation: slideDown 0.5s ease forwards; transition: background-color 0.3s; display:flex; align-items:center; justify-content: space-between; padding: 10px 20px; flex-shrink: 0; z-index: 2; }
         .search { flex-grow: 1; margin-right: 10px; }
         .search input { width: 100%; padding: 8px 12px; background-color: var(--bg); color: var(--text); border: 1px solid var(--accent); border-radius: var(--radius-std); font-size: 0.9em; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         .top-buttons { display: flex; gap: 10px; }
-        .icon-btn { width: 38px; height: 38px; border-radius: 50%; background-color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, transform 0.2s; padding: 0; }
-        .icon-btn:hover { filter: brightness(1.1); transform: scale(1.1); }
+        .icon-btn { width: 38px; height: 38px; border-radius: 50%; background-color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, transform 0.2s, filter 0.2s; padding: 0; }
+         .icon-btn:disabled { filter: grayscale(70%) opacity(50%); cursor: not-allowed; transform: none; }
+        .icon-btn:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.1); }
         .icon-btn svg { width: 18px; height: 18px; fill: var(--text); display: block; }
-        .content { padding: 25px; overflow-y: auto; flex-grow: 1; line-height: 1.6; position: relative; z-index: 1; color: var(--text); }
+
+        /* Content Area Styling */
+        .content { padding: 25px; overflow-y: auto; flex-grow: 1; line-height: 1.6; color: var(--text); display: block; height: calc(100% - 58px); }
         .content h1 { font-size: 1.8em; margin-bottom: 0.5em; color: var(--text);} .content h2 { font-size: 1.4em; margin-bottom: 0.4em; margin-top: 1em; color: var(--text);} .content p { font-size: 1em; margin-bottom: 1em; color: var(--text);}
         #welcome-area { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; opacity: 0; animation: fadeIn 1s 0.2s forwards; }
         #welcome-logo-container { width: 64px; height: 64px; margin-bottom: 20px; opacity: 0; transform: scale(0.5); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards; }
         #welcome-logo-container svg { display: block; width: 100%; height: 100%; }
         #welcome-message { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s ease-out 0.8s forwards; color: var(--text); }
+
+        /* Settings Panel (remains fixed) */
         .settings-panel { position: fixed; top: 55px; right: 20px; background-color: var(--topbar); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 280px; z-index: 10; opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s, visibility 0s linear 0.4s; display: none; flex-direction: column; gap: 15px; color: var(--text); }
         .settings-panel.show { display: flex; opacity: 1; transform: translateY(0); visibility: visible; transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s; }
         .settings-panel label:not(.toggle-switch-label) { font-size: 0.9em; display: flex; flex-direction: column; gap: 8px; color: var(--text); }
@@ -44,6 +50,8 @@
         .slider-progress { position: absolute; height: var(--slider-track-height); background-color: var(--slider-progress-color); border-radius: var(--slider-track-height); top: calc(50% - var(--slider-track-height) / 2); left: 0; z-index: 1; width: 50%; transition: background-color 0.3s; opacity: 0.7; }
         .slider-thumb { position: absolute; width: var(--slider-thumb-size); height: var(--slider-thumb-size); background-color: var(--slider-thumb-bg); border-radius: 50%; border: 1px solid var(--accent); top: calc(50% - var(--slider-thumb-size) / 2); left: 50%; transform: translateX(-50%); z-index: 3; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: background-color 0.3s, border-color 0.3s; }
         .slider-value-display { margin-left: 10px; font-size: 0.85em; color: var(--text); opacity: 0.8; position: absolute; right: 0; top: -1.5em; min-width: 30px; text-align: right; }
+
+        /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 100; opacity: 0; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
         .modal-overlay.visible { display: flex; opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
         .modal-box { background-color: var(--topbar); padding: 30px 40px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 20px rgba(0,0,0,0.4); text-align: center; color: var(--text); transform: scale(0.9); transition: transform 0.3s ease, background-color 0.3s, color 0.3s; max-width: 450px; width: 90%; }
@@ -66,6 +74,8 @@
         .modal-box button.primary { background-color: var(--accent); }
         .modal-box button.secondary { background-color: transparent; border: 1px solid var(--accent); }
         .modal-box button:hover { filter: brightness(1.2); } .modal-box button:active { transform: scale(0.95); }
+
+        /* Game/Proxy Card Styles */
         #games-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--accent); }
         #addGameBtn { background-color: var(--accent); color: var(--text); border: none; padding: 8px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; transition: background-color 0.3s, transform 0.1s; }
         #addGameBtn:hover { filter: brightness(1.2); } #addGameBtn:active { transform: scale(0.95); }
@@ -85,6 +95,12 @@
         .game-card-actions button.delete-btn:hover svg { fill: var(--delete-color); }
         .game-card.deleting { animation: cardFadeOut 0.4s ease forwards; }
         #no-games-found { display: none; grid-column: 1 / -1; text-align: center; opacity: 0.7; padding: 20px; color: var(--text);}
+        /* Game Card Favicon Styles */
+        .game-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 20px; }
+        .game-favicon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; background-color: rgba(128, 128, 128, 0.1); display: inline-block; vertical-align: middle; }
+        .game-card-header h4 { margin: 0; flex-grow: 1; line-height: 1.2; color: var(--text); word-break: break-word; }
+
+        /* Focus Styles */
         *:focus { outline: none; }
         button:focus-visible, input:focus-visible, select:focus-visible, iframe:focus-visible, .game-card:focus-visible, .proxy-card:focus-visible, input[type="file"]:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); transition: box-shadow 0.2s ease-in-out; }
         .settings-panel:focus-visible { border-radius: var(--radius-lg); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
@@ -106,7 +122,7 @@
         .toggle-switch:checked + .toggle-slider::before { transform: translateX(20px); }
         .toggle-switch:focus-visible + .toggle-slider { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
 
-        /* Clear Data Button Style (Themed) */
+        /* Clear Data Button Style */
         .danger-btn { background-color: var(--accent); color: var(--text); border: none; padding: 10px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; font-weight: bold; text-align: center; transition: background-color 0.3s, transform 0.1s, filter 0.3s; margin-top: 10px; width: 100%; }
         .danger-btn:hover { filter: brightness(0.85); }
         .danger-btn:active { transform: scale(0.98); }
@@ -121,85 +137,351 @@
         #clearBgImageBtn { font-size: 0.8em; padding: 4px 10px; background-color: transparent; color: var(--text); border: 1px solid var(--accent); border-radius: var(--radius-std); cursor: pointer; opacity: 0.8; transition: opacity 0.3s, background-color 0.3s; align-self: flex-start; }
         #clearBgImageBtn:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.1); }
 
-        /* Game Card Favicon Styles */
-        .game-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 20px; }
-        .game-favicon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; background-color: rgba(128, 128, 128, 0.1); display: inline-block; vertical-align: middle; }
-        .game-card-header h4 { margin: 0; flex-grow: 1; line-height: 1.2; color: var(--text); word-break: break-word; }
 
-        /* --- Specific Overrides for Trigonometrical Red Theme --- */
+        /* --- Specific Theme Overrides (Trigonometrical Red Example) --- */
         [data-theme="trigonometrical-red"] .modal-box,
         [data-theme="trigonometrical-red"] .settings-panel,
         [data-theme="trigonometrical-red"] .sidebar button,
         [data-theme="trigonometrical-red"] .sidebar h2,
         [data-theme="trigonometrical-red"] .icon-btn svg,
-        [data-theme="trigonometrical-red"] .slider-value-display,
-        [data-theme="trigonometrical-red"] #addCategoryBtn,
-        [data-theme="trigonometrical-red"] .modal-box button,
-        [data-theme="trigonometrical-red"] .game-card,
-        [data-theme="trigonometrical-red"] .proxy-card
+        [data-theme="trigonometrical-red"] .slider-value-display
         { color: #ffffff; fill: #ffffff; }
-
+        [data-theme="trigonometrical-red"] #addCategoryBtn,
+        [data-theme="trigonometrical-red"] .modal-box button { color: #ffffff; } /* Keep button text white */
+        [data-theme="trigonometrical-red"] .game-card,
+        [data-theme="trigonometrical-red"] .proxy-card { color: #1a1a1a; } /* Text inside cards should be dark */
         [data-theme="trigonometrical-red"] .modal-box input[type="text"],
         [data-theme="trigonometrical-red"] .modal-box input[type="url"],
         [data-theme="trigonometrical-red"] .modal-box select,
         [data-theme="trigonometrical-red"] .settings-panel select,
         [data-theme="trigonometrical-red"] #bgImageFileInput
         { color: #ffffff; background-color: #801818; border-color: var(--accent); }
-
         [data-theme="trigonometrical-red"] .modal-box input::placeholder,
         [data-theme="trigonometrical-red"] .settings-panel input::placeholder,
         [data-theme="trigonometrical-red"] #nameInput::placeholder
         { color: #ffffff; opacity: 0.7; }
-
         [data-theme="trigonometrical-red"] .search input { color: #1a1a1a; background-color: #ffffff;}
         [data-theme="trigonometrical-red"] .search input::placeholder { color: #1a1a1a; opacity: 0.6;}
-        [data-theme="trigonometrical-red"] #nameInput { color: #1a1a1a; background-color: #ffffff;}
-
+        [data-theme="trigonometrical-red"] #nameInput { color: #1a1a1a; background-color: #ffffff;} /* Name prompt input */
         [data-theme="trigonometrical-red"] #bgImageFileInput::file-selector-button { color: #ffffff; }
-
         [data-theme="trigonometrical-red"] .modal-box button.secondary { color: #ffffff; border-color: #ffffff; }
         [data-theme="trigonometrical-red"] .modal-box button.secondary:hover { border-color: var(--accent); background-color: rgba(255,255,255,0.1); }
         [data-theme="trigonometrical-red"] #clearBgImageBtn { color: #ffffff; border-color: #ffffff; }
         [data-theme="trigonometrical-red"] #clearBgImageBtn:hover { border-color: var(--accent); background-color: rgba(255,255,255,0.1); }
-
         [data-theme="trigonometrical-red"] .slider-thumb,
         [data-theme="trigonometrical-red"] .slider-progress { background-color: #ffffff; }
 
+
+        /* Chat Panel Base Styles */
+        .chat-panel {
+            background-color: var(--bg);
+            padding: 0px 15px 15px 15px; /* Remove top padding, add others */
+            border: none;
+            border-radius: 0;
+            width: 100%;
+            height: 100%; /* Occupy full height within .main */
+            flex-grow: 1;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            color: var(--text);
+            overflow: hidden; /* Prevent overall panel scroll */
+        }
+
+        /* Active chat section takes full height */
+        #chatActiveSection {
+            display: flex; /* Use flex */
+            flex-direction: column;
+            height: 100%; /* Fill the panel */
+            flex-grow: 1;
+            min-height: 0; /* Allow shrinking */
+        }
+
+        /* --- New Discord-like Chat Message Styles --- */
+        .chat-log-container {
+            flex-grow: 1; /* Takes up available space */
+            overflow-y: auto; /* Allows scrolling of messages */
+            margin-bottom: 15px;
+            background-color: transparent; /* Container itself is transparent */
+            border: none; /* Removed border here, maybe add to panel */
+            padding: 10px 5px 10px 10px; /* Adjust padding */
+            display: flex;
+            flex-direction: column;
+            gap: 0px; /* Remove gap, handled by group margin */
+        }
+
+        .chat-message-group {
+            display: flex;
+            padding: 8px 0; /* Add padding top/bottom */
+            margin-bottom: 4px; /* Small space between groups */
+            border-radius: var(--radius-std);
+            transition: background-color 0.2s;
+        }
+        /* Optional: Subtle background on hover */
+        .chat-message-group:hover {
+            /* Use a very subtle background, adjust alpha as needed */
+            background-color: rgba(128, 128, 128, 0.08);
+        }
+
+
+        .chat-pfp-container {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            border-radius: 50%; /* Circular PFP */
+            overflow: hidden;
+            background-color: var(--accent); /* Fallback background */
+            align-self: flex-start; /* Align PFP to the top */
+            margin-top: 2px; /* Align slightly with username */
+        }
+
+        .chat-pfp-container svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .chat-message-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message-header {
+            display: flex;
+            align-items: baseline; /* Align username and timestamp */
+            margin-bottom: 3px;
+        }
+
+        .chat-username {
+            font-weight: 700; /* Bolder username */
+            margin-right: 8px;
+            font-size: 0.98em;
+            color: var(--text); /* Default color, JS will override */
+            cursor: default; /* Indicate non-clickable */
+        }
+
+        .chat-timestamp {
+            font-size: 0.75em;
+            color: var(--text);
+            opacity: 0.6;
+            /* margin-left: auto; Pushes timestamp to the right */
+            padding-left: 8px; /* Space from username */
+            cursor: default;
+            white-space: nowrap;
+        }
+
+        .chat-message-text {
+            margin: 0 0 2px 0; /* Small space between consecutive messages */
+            font-size: 0.95em;
+            word-wrap: break-word; /* Ensure long words break */
+            white-space: pre-wrap; /* Respect whitespace/newlines */
+            line-height: 1.45;
+            color: var(--text);
+        }
+
+        /* Hide old direct message styling */
+        .chat-message.user-message,
+        .chat-message.other-message {
+            display: none;
+        }
+
+        /* System messages remain centered */
+        .chat-system-message {
+            font-style: italic;
+            font-size: 0.85em;
+            color: var(--text);
+            opacity: 0.7;
+            text-align: center;
+            margin: 8px 0; /* Give system messages some space */
+            padding: 2px 10px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: rgba(128, 128, 128, 0.1);
+            border-radius: var(--radius-std);
+        }
+
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: auto; /* Pushes input to bottom */
+            flex-shrink: 0; /* Prevent shrinking */
+            padding-top: 10px; /* Space above input */
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            margin: 0;
+            background-color: var(--topbar);
+            padding: 10px;
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-std);
+            color: var(--text);
+            font-size: 1em;
+        }
+         /* Style for when input is for key entry */
+         .chat-input-area input:disabled:not([placeholder="Enter message..."]) {
+             background-color: var(--sidebar); /* Darker background */
+             cursor: default; /* Not exactly not-allowed, user CAN type */
+             opacity: 0.8;
+         }
+         .chat-input-area input:disabled:not([placeholder="Enter message..."])::placeholder {
+             color: var(--text);
+             opacity: 0.5;
+         }
+
+
+        .chat-input-area .icon-btn {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+        }
+        .chat-input-area .icon-btn svg {
+            fill: var(--text);
+        }
+        /* Hide buttons by default, JS will show the correct one */
+        #sendMessageBtn, #validateKeyBtn {
+            display: none;
+        }
+
+        /* Theme Overrides for Integrated Chat */
+        [data-theme="trigonometrical-red"] .chat-panel { background-color: #ffffff; color: #1a1a1a; }
+        [data-theme="trigonometrical-red"] .chat-log-container { background-color: #f8f8f8; } /* Slightly off-white */
+        /* [data-theme="trigonometrical-red"] .chat-section h3, [data-theme="trigonometrical-red"] .chat-section p, [data-theme="trigonometrical-red"] .chat-section label, */
+        [data-theme="trigonometrical-red"] .chat-system-message { color: #1a1a1a; background-color: rgba(0, 0, 0, 0.08); }
+        [data-theme="trigonometrical-red"] .chat-input-area input { background-color: #f0f0f0; border-color: #d0d0d0; color: #1a1a1a; }
+        [data-theme="trigonometrical-red"] .chat-input-area input:disabled:not([placeholder="Enter message..."]) { background-color: #e0e0e0; }
+        [data-theme="trigonometrical-red"] .chat-input-area input::placeholder { color: #1a1a1a; opacity: 0.6; }
+        [data-theme="trigonometrical-red"] .chat-input-area input:disabled::placeholder { opacity: 0.4; }
+        [data-theme="trigonometrical-red"] .chat-input-area .icon-btn svg { fill: #1a1a1a; }
+        /* New chat format theme overrides */
+        [data-theme="trigonometrical-red"] .chat-username { color: var(--accent); /* Use accent for name color */ }
+        [data-theme="trigonometrical-red"] .chat-timestamp { color: #1a1a1a; opacity: 0.7; }
+        [data-theme="trigonometrical-red"] .chat-message-text { color: #1a1a1a; }
+        [data-theme="trigonometrical-red"] .chat-pfp-container { background-color: #f0f0f0; } /* Lighter fallback PFP bg */
+        [data-theme="trigonometrical-red"] .chat-message-group:hover { background-color: rgba(0, 0, 0, 0.05); }
+
+
         /* Animations */
-        @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } } @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } @keyframes cardFadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } @keyframes cardFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+        @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes cardFadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes cardFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+
     </style>
 </head>
 <body data-theme="dark">
     <div class="modal-overlay" id="namePromptModal"> <div class="modal-box"> <h3>Welcome to Qbit!</h3> <p>Please enter your name:</p> <div class="form-field"> <input type="text" id="nameInput" placeholder="Your Name" maxlength="50"> </div> <div class="modal-actions"> <button id="submitNameBtn" class="primary">Continue</button> </div> </div> </div>
+
     <div class="modal-overlay" id="gameModal"> <div class="modal-box"> <h3 id="gameModalTitle">Add New Game</h3> <input type="hidden" id="gameIdInput"> <div class="form-field"> <label for="gameNameInput">Name:</label> <input type="text" id="gameNameInput" placeholder="e.g., 2048" required> </div> <div class="form-field"> <label for="gameUrlInput">URL:</label> <input type="url" id="gameUrlInput" placeholder="https://play2048.co/" required> </div> <div class="form-field"> <label for="gameCategorySelect">Category:</label> <div class="category-field"> <select id="gameCategorySelect"> <option value="">Uncategorized</option> </select> <button id="addCategoryBtn" title="Add New Category">+</button> </div> </div> <div class="modal-actions"> <button type="button" class="secondary" id="cancelGameBtn">Cancel</button> <button type="button" class="primary" id="saveGameBtn">Save Game</button> </div> </div> </div>
 
-    <div class="sidebar"> <h2>Qbit</h2> <button onclick="showSection('games')">Games</button> <button onclick="showSection('proxy')">Proxy</button> <button onclick="showSection('tools')">Tools</button> </div>
-
-    <div class="main">
-        <div class="topbar"> <div class="search"> <input type="text" id="search" placeholder="Search Games or..." /> </div> <div class="top-buttons"> <button class="icon-btn" onclick="openChat()" title="Open Chat"> <svg viewBox="0 0 24 24"><path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"/></svg> </button> <button class="icon-btn" title="Settings" id="settingsBtn"> <svg viewBox="0 0 24 24"><path d="M12 15.5C10.07 15.5 8.5 13.93 8.5 12S10.07 8.5 12 8.5 15.5 10.07 15.5 12 13.93 15.5 12 15.5ZM19.43 12.98C19.46 12.66 19.5 12.34 19.5 12S19.46 11.34 19.43 11.02L21.54 9.37C21.73 9.21 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.06 19.3 4.97 19.07 5.03L16.56 5.67C16.04 5.25 15.47 4.89 14.85 4.6L14.5 2H9.5L9.15 4.6C8.53 4.89 7.96 5.25 7.44 5.67L4.93 5.03C4.7 4.97 4.46 5.06 4.34 5.27L2.34 8.73C2.22 8.95 2.27 9.21 2.46 9.37L4.57 11.02C4.54 11.34 4.5 11.66 4.5 12S4.54 12.66 4.57 12.98L2.46 14.63C2.27 14.79 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.94 4.7 19.03 4.93 18.97L7.44 18.33C7.96 18.75 8.53 19.11 9.15 19.4L9.5 22H14.5L14.85 19.4C15.47 19.11 16.04 18.75 16.56 18.33L19.07 18.97C19.3 19.03 19.54 18.94 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.79 21.54 14.63L19.43 12.98Z"/></svg> </button> </div> </div>
-        <div class="content" id="main-content"> <div id="welcome-area-placeholder" style="display: none;">Loading...</div> </div>
+    <div class="sidebar">
+        <h2>Qbit</h2>
+        <button onclick="showSection('games')">Games</button>
+        <button onclick="showSection('proxy')">Proxy</button>
+        <button onclick="showSection('tools')">Tools</button>
     </div>
 
-    <div class="settings-panel" id="settingsPanel">
-        <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span> <div class="custom-slider-container"> <div class="slider-track"></div> <div class="slider-progress" id="fontSizeProgress"></div> <div class="slider-thumb" id="fontSizeThumb"></div> <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16"> </div> </label>
-        <label>Color Scheme: <select id="themeSelector" onchange="updateTheme(this.value)"> <option value="dark">Dark</option> <option value="light">Light</option> <option value="blue">Cool Blue</option> <option value="forest">Forest Green</option> <option value="sunset">Sunset Orange</option> <option value="trigonometrical-red">Trigonometrical Red</option> </select> </label>
-        <label>Font Family: <select id="fontSelector" onchange="updateFontFamily(this.value)"> <option value="'Segoe UI', sans-serif">Segoe UI</option> <option value="Arial, sans-serif">Arial</option> <option value="Verdana, sans-serif">Verdana</option> <option value="'Times New Roman', Times, serif">Times New Roman</option> <option value="'Courier New', Courier, monospace">Courier New</option> <option value="Georgia, serif">Georgia</option> <option value="'Roboto', sans-serif">Roboto</option> <option value="'Lato', sans-serif">Lato</option> </select> </label>
-        <label class="toggle-switch-label"> <span>Custom Background:</span> <input type="checkbox" id="bgImageToggleSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
-        <div id="bgImageControlContainer"> <label for="bgImageFileInput">Select Image (Max 2MB):</label> <input type="file" id="bgImageFileInput" accept="image/*"> <button id="clearBgImageBtn" title="Remove custom background">Clear Background</button> </div>
-        <label class="toggle-switch-label"> Warn on Close: <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
-        <button id="clearDataBtn" class="danger-btn">Clear All Data</button>
+    <div class="main">
+        <div class="topbar">
+            <div class="search"> <input type="text" id="search" placeholder="Search Games or..." /> </div>
+            <div class="top-buttons">
+                <button class="icon-btn" onclick="toggleChatView()" title="Toggle Chat View">
+                    <svg viewBox="0 0 24 24"><path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"/></svg>
+                </button>
+                <button class="icon-btn" title="Settings" id="settingsBtn">
+                    <svg viewBox="0 0 24 24"><path d="M12 15.5C10.07 15.5 8.5 13.93 8.5 12S10.07 8.5 12 8.5 15.5 10.07 15.5 12 13.93 15.5 12 15.5ZM19.43 12.98C19.46 12.66 19.5 12.34 19.5 12S19.46 11.34 19.43 11.02L21.54 9.37C21.73 9.21 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.06 19.3 4.97 19.07 5.03L16.56 5.67C16.04 5.25 15.47 4.89 14.85 4.6L14.5 2H9.5L9.15 4.6C8.53 4.89 7.96 5.25 7.44 5.67L4.93 5.03C4.7 4.97 4.46 5.06 4.34 5.27L2.34 8.73C2.22 8.95 2.27 9.21 2.46 9.37L4.57 11.02C4.54 11.34 4.5 11.66 4.5 12S4.54 12.66 4.57 12.98L2.46 14.63C2.27 14.79 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.94 4.7 19.03 4.93 18.97L7.44 18.33C7.96 18.75 8.53 19.11 9.15 19.4L9.5 22H14.5L14.85 19.4C15.47 19.11 16.04 18.75 16.56 18.33L19.07 18.97C19.3 19.03 19.54 18.94 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.79 21.54 14.63L19.43 12.98Z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="content" id="main-content">
+             <div id="welcome-area-placeholder" style="display: none;">Loading...</div>
+             </div>
+
+        <div class="chat-panel" id="chatPanel">
+             <div class="chat-section" id="chatActiveSection">
+                 <div class="chat-log-container" id="chatLogContainer">
+                     </div>
+                 <div class="chat-input-area">
+                     <input type="text" id="chatMessageInput" placeholder="Enter key to send messages..." disabled>
+                     <button id="sendMessageBtn" class="icon-btn" title="Send Message">
+                         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                     </button>
+                      <button id="validateKeyBtn" class="icon-btn" title="Validate Key / Send Message">
+                         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                      </button>
+                 </div>
+             </div>
+        </div>
+
+        <div class="settings-panel" id="settingsPanel">
+            <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span> <div class="custom-slider-container"> <div class="slider-track"></div> <div class="slider-progress" id="fontSizeProgress"></div> <div class="slider-thumb" id="fontSizeThumb"></div> <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16"> </div> </label>
+            <label>Color Scheme: <select id="themeSelector" onchange="updateTheme(this.value)"> <option value="dark">Dark</option> <option value="light">Light</option> <option value="blue">Cool Blue</option> <option value="forest">Forest Green</option> <option value="sunset">Sunset Orange</option> <option value="trigonometrical-red">Trigonometrical Red</option> </select> </label>
+            <label>Font Family: <select id="fontSelector" onchange="updateFontFamily(this.value)"> <option value="'Segoe UI', sans-serif">Segoe UI</option> <option value="Arial, sans-serif">Arial</option> <option value="Verdana, sans-serif">Verdana</option> <option value="'Times New Roman', Times, serif">Times New Roman</option> <option value="'Courier New', Courier, monospace">Courier New</option> <option value="Georgia, serif">Georgia</option> <option value="'Roboto', sans-serif">Roboto</option> <option value="'Lato', sans-serif">Lato</option> </select> </label>
+            <label class="toggle-switch-label"> <span>Custom Background:</span> <input type="checkbox" id="bgImageToggleSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
+            <div id="bgImageControlContainer"> <label for="bgImageFileInput">Select Image (Max 2MB):</label> <input type="file" id="bgImageFileInput" accept="image/*"> <button id="clearBgImageBtn" title="Remove custom background">Clear Background</button> </div>
+            <label class="toggle-switch-label"> Warn on Close: <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
+            <button id="clearDataBtn" class="danger-btn">Clear All Data</button>
+        </div>
     </div>
 
     <script>
+        // --- Constants ---
+        const BACKEND_URL = 'https://auckland-previous-sender-popular.trycloudflare.com'; // Adjust if your backend runs elsewhere
+        const CHAT_POLL_INTERVAL = 3000; // Poll for new messages every 3 seconds
+        const SESSION_STORAGE_KEY_VALIDATED = 'qbit_chat_key_validated_v3.4'; // Key for session storage flag
+
         // --- DOM Element References ---
-        let mainContent, settingsPanel, root, body, faviconLink, namePromptModal, nameInput, submitNameBtn, welcomeAreaPlaceholder, gameModal, gameModalTitle, gameIdInput, gameNameInput, gameUrlInput, gameCategorySelect, addCategoryBtn, saveGameBtn, cancelGameBtn, fontSizeSlider, fontSizeThumb, fontSizeValueDisplay, fontSizeProgress, themeSelector, fontSelector, settingsBtn, searchInput, warnOnCloseSwitch, bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn;
+        let mainContent, settingsPanel, root, body, faviconLink,
+            namePromptModal, nameInput, submitNameBtn, welcomeAreaPlaceholder,
+            gameModal, gameModalTitle, gameIdInput, gameNameInput, gameUrlInput,
+            gameCategorySelect, addCategoryBtn, saveGameBtn, cancelGameBtn,
+            fontSizeSlider, fontSizeThumb, fontSizeValueDisplay, fontSizeProgress,
+            themeSelector, fontSelector, settingsBtn, searchInput, warnOnCloseSwitch,
+            bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn,
+            // --- Chat Elements ---
+            chatPanel, chatActiveSection, chatLogContainer, chatMessageInput, sendMessageBtn,
+            chatActiveUserNameSpan, validateKeyBtn; // Added validateKeyBtn
 
         // --- Global State ---
-        let currentUserName = null; let currentThemeColor = '#444444'; let games = []; let categories = []; let isEditingGame = false; let warnOnClose = false; let bgImageEnabled = false; let bgImageUrl = ''; let debounceTimer;
-        const MAX_IMAGE_SIZE_MB = 2; const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+        let currentUserName = null; // Qbit site user name
+        let currentThemeColor = '#444444';
+        let games = [];
+        let categories = [];
+        let isEditingGame = false;
+        let warnOnClose = false;
+        let bgImageEnabled = false;
+        let bgImageUrl = '';
+        let debounceTimer;
+        const MAX_IMAGE_SIZE_MB = 2;
+        const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+        // --- Chat State ---
+        let currentChatKey = null; // Store the *last successfully used* key (loaded/validated)
+        let chatPollIntervalId = null; // ID for the polling timer
+        let lastMessageTimestamp = 0; // Track last received message time
+        let isChatViewActive = false; // Track if chat is the current view
+        let hasValidatedKeyThisSession = false; // Track session validation status
 
         // --- LocalStorage Keys ---
-        const LS_PREFIX = 'qbit_v3.1_'; const LS_USERNAME = LS_PREFIX + 'userName'; const LS_THEME = LS_PREFIX + 'theme'; const LS_FONTSIZE = LS_PREFIX + 'fontSize'; const LS_FONTFAMILY = LS_PREFIX + 'fontFamily'; const LS_GAMES = LS_PREFIX + 'games'; const LS_CATEGORIES = LS_PREFIX + 'categories'; const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose'; const LS_INITIALIZED = LS_PREFIX + 'initialized'; const LS_BGIMAGE_ENABLED = LS_PREFIX + 'bgImageEnabled'; const LS_BGIMAGE_URL = LS_PREFIX + 'bgImageUrl';
+        const LS_PREFIX = 'qbit_dont_change_this_'; // Updated prefix
+        const LS_USERNAME = LS_PREFIX + 'userName';
+        const LS_THEME = LS_PREFIX + 'theme';
+        const LS_FONTSIZE = LS_PREFIX + 'fontSize';
+        const LS_FONTFAMILY = LS_PREFIX + 'fontFamily';
+        const LS_GAMES = LS_PREFIX + 'games';
+        const LS_CATEGORIES = LS_PREFIX + 'categories';
+        const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose';
+        const LS_INITIALIZED = LS_PREFIX + 'initialized';
+        const LS_BGIMAGE_ENABLED = LS_PREFIX + 'bgImageEnabled';
+        const LS_BGIMAGE_URL = LS_PREFIX + 'bgImageUrl';
+        const LS_CHATKEY = LS_PREFIX + 'chatKey'; // <-- New key for remembering the chat key
 
         // --- SVG Icons ---
         const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
@@ -207,8 +489,38 @@
         // --- Helper: Debounce ---
         function debounce(func, delay) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { func.apply(this, args); }, delay); }; }
 
+        // --- Helper: Generate Hash (Simple djb2) ---
+        function simpleHash(str) {
+            let hash = 5381;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) + hash) + char; /* hash * 33 + c */
+            }
+            return Math.abs(hash); // Ensure positive value
+        }
+
+        // --- Helper: Generate HSL Color from String ---
+        function stringToHslColor(str, s = 65, l = 55) {
+            // Use saturation=65, lightness=55 for generally pleasant, distinct colors
+            if (!str) str = "default"; // Handle empty string case
+            const hash = simpleHash(str);
+            const h = hash % 360; // Hue based on hash
+            return `hsl(${h}, ${s}%, ${l}%)`;
+        }
+
         // --- General Function Definitions ---
-        function getLogoSvg(color) { const safeColor = color || '#444444'; return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="10" width="6" height="12" rx="2"/><rect x="13" y="10" width="6" height="12" rx="2"/><rect x="21" y="10" width="6" height="12" rx="2"/></svg>`; }
+        function getLogoSvg(color) {
+            const safeColor = color || '#444444'; // Use provided color
+            // Adjusted SVG for slightly bolder look in PFP
+             return `<svg width="40" height="40" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="9" width="7" height="14" rx="2.5"/><rect x="13" y="9" width="7" height="14" rx="2.5"/><rect x="21" y="9" width="7" height="14" rx="2.5"/></svg>`;
+        }
+         // --- Generate User PFP SVG ---
+         function generateUserPfpSvg(username) {
+            const userColor = stringToHslColor(username, 65, 55); // Use consistent HSL generation
+            // Use the existing getLogoSvg function with the generated color
+            return getLogoSvg(userColor);
+         }
+
         function updateFavicon(color) { if (!faviconLink) return; const svgString = getLogoSvg(color); const dataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`; faviconLink.href = dataUri; }
         function saveSetting(key, value) { try { localStorage.setItem(key, value); } catch (e) { console.error(`LS Save Error for key "${key}":`, e); if (e.name === 'QuotaExceededError') { alert(`Could not save setting. Storage limit reached. Try clearing the custom background or removing some games.`); } } }
         function removeSetting(key) { try { localStorage.removeItem(key); } catch (e) { console.error(`LS Remove Error for key "${key}":`, e); } }
@@ -232,104 +544,13 @@
         function handleSaveGame() { const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const ii=document.getElementById('gameIdInput'); if(!ni||!ui||!cs||!ii)return; const name=ni.value.trim(); const url=ui.value.trim(); const category=cs.value; const id=ii.value; let iv=true; if(!name){ni.style.borderColor='red';iv=false;}else{ni.style.borderColor='';} if(!url||!url.match(/^(https?:\/\/|.\/|..\/|\/)/)){ui.style.borderColor='red';iv=false;alert("Valid URL needed (http://, https://, /, ./, ../)");}else{ui.style.borderColor='';} if(!iv)return; if(isEditingGame&&id){const gi=games.findIndex(g=>g.id===id); if(gi>-1){games[gi]={...games[gi],name,url,category};}else{console.error("Edit fail: ID not found");closeGameModal();return;}}else{const ng={id:crypto.randomUUID(),name,url,category};games.push(ng);} saveGames();renderGames();closeGameModal();}
         function deleteGame(id, ce) { if (!confirm(`Delete this game?`)) return; if (ce) { ce.classList.add('deleting'); ce.addEventListener('animationend', () => { games = games.filter(g => g.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(g => g.id !== id); saveGames(); renderGames(); } }
 
-        // --- Function to open content in about:blank (Reverted Script) ---
-        function openInAboutBlank(url, title = 'Content') {
-            console.log(`[DEBUG] Creating about:blank wrapper for: ${url}. Initial Warn setting: ${warnOnClose}`);
-            if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; }
-            const newWindow = window.open('', '_blank');
-            if (newWindow) {
-                try {
-                    newWindow.document.open();
-                    newWindow.document.write(`
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <title>${title.replace(/</g, "&lt;")}</title>
-                            <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style>
-                        </head>
-                        <body>
-                            <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe>
-                            <script>
-                                const shouldWarnOnClose = ${warnOnClose}; // Fixed value at time of creation
-                                console.log('Child window: Initial fixed warn state:', shouldWarnOnClose);
-                                window.addEventListener('beforeunload', (event) => {
-                                    if (shouldWarnOnClose) {
-                                        console.log('Child window: beforeunload triggered WITH warning (fixed state:', shouldWarnOnClose, ')');
-                                        const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?';
-                                        event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage;
-                                    } else { console.log('Child window: beforeunload triggered WITHOUT warning (fixed state:', shouldWarnOnClose, ')'); }
-                                });
-                            <\/script>
-                            </body>
-                            </html>
-                    `);
-                    newWindow.document.close();
-                    console.log("[DEBUG] about:blank wrapper written with original embedded script.");
-                } catch (e) {
-                    console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); }
-                }
-            } else { console.error("Failed to open new window. Pop-up blocker?"); alert("Could not open link. Please check pop-up blocker."); }
-        }
+        // --- Function to open content in about:blank ---
+        function openInAboutBlank(url, title = 'Content') { console.log(`[DEBUG] Creating about:blank wrapper for: ${url}. Initial Warn setting: ${warnOnClose}`); if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; } const newWindow = window.open('', '_blank'); if (newWindow) { try { newWindow.document.open(); newWindow.document.write(` <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>${title.replace(/</g, "&lt;")}</title> <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style> </head> <body> <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe> <script> const shouldWarnOnClose = ${warnOnClose}; console.log('Child window: Initial fixed warn state:', shouldWarnOnClose); window.addEventListener('beforeunload', (event) => { if (shouldWarnOnClose) { console.log('Child window: beforeunload triggered WITH warning (fixed state:', shouldWarnOnClose, ')'); const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?'; event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage; } else { console.log('Child window: beforeunload triggered WITHOUT warning (fixed state:', shouldWarnOnClose, ')'); } }); <\/script> </body> </html> `); newWindow.document.close(); console.log("[DEBUG] about:blank wrapper written with original embedded script."); } catch (e) { console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); } } } else { console.error("Failed to open new window. Pop-up blocker?"); alert("Could not open link. Please check pop-up blocker."); } }
         const playGame = openInAboutBlank;
 
         // --- UI Section Management ---
-        function showSection(section) { if(!mainContent) return; mainContent.style.opacity=0; setTimeout(()=>{ mainContent.innerHTML=''; mainContent.style.animation='none'; let sc=''; if(section==="welcome" && currentUserName){ displayWelcomeMessage(currentUserName); mainContent.style.opacity=1; return; } else if(section==="games"){ if(!currentUserName){ promptForName(); return; } sc=`<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML=sc; const ab=document.getElementById('addGameBtn'); if(ab) ab.onclick=()=>openGameModal(); renderGames(); } else if(section==="proxy"){ if(!currentUserName){ promptForName(); return; } sc=`<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`; mainContent.innerHTML=sc; renderProxySites(); } else if(section==="tools"){ if(!currentUserName){ promptForName(); return; } sc=`<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML=sc; } else if(!currentUserName){ if(welcomeAreaPlaceholder) mainContent.appendChild(welcomeAreaPlaceholder); if(welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display='flex'; promptForName(); mainContent.style.opacity=1; return; } else { displayWelcomeMessage(currentUserName); mainContent.style.opacity=1; return; } if(!mainContent.querySelector('#welcome-area') && !mainContent.querySelector('#namePromptModal')){ mainContent.style.opacity=0; void mainContent.offsetWidth; mainContent.style.animation="fadeIn 0.5s forwards"; mainContent.style.opacity=1; } }, 200); }
-        function renderProxySites() {
-    const c = mainContent ? mainContent.querySelector('.proxy-list-container') : null;
-    if (!c) return;
-    c.innerHTML = '';
-
-    const spaceUrls = [
-        "https://yessir.happyforever.com/",
-        "https://fish.happyforever.com/",
-        "https://turtle.happyforever.com/",
-        "https://cars.happyforever.com/"
-    ];
-
-    const ps = [
-        { name: "Space", url: null }, // URL will be selected on click
-        { name: "Transend", url: "https://hw.billigerhost.com/" },
-        { name: "RammerHead", url: "https://pluh.root.sx/" },
-        { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" }
-    ];
-
-    ps.forEach(s => {
-        const card = document.createElement('div');
-        card.className = 'proxy-card';
-        card.setAttribute('tabindex', '0');
-        card.innerHTML = `
-            <div><h4></h4></div>
-            <div class="proxy-card-actions">
-                <button class="play-btn" title="Open ${s.name.replace(/</g, "&lt;")}">${ICONS.play}</button>
-            </div>
-        `;
-        card.querySelector('h4').textContent = s.name.replace(/</g, "&lt;");
-
-        const handleOpen = () => {
-            const urlToOpen = s.name === "Space"
-                ? spaceUrls[Math.floor(Math.random() * spaceUrls.length)]
-                : s.url;
-            openInAboutBlank(urlToOpen, s.name);
-        };
-
-        card.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleOpen();
-            }
-        });
-
-        card.querySelector('.play-btn').onclick = (e) => {
-            e.stopPropagation();
-            handleOpen();
-        };
-
-        c.appendChild(card);
-    });
-}
-
-        function openChat() { alert("Chat feature placeholder."); }
+        function showSection(section) { if (!mainContent || !chatPanel) return; if (isChatViewActive) { toggleChatView(); } mainContent.style.display = 'block'; chatPanel.style.display = 'none'; mainContent.style.opacity = 0; setTimeout(() => { mainContent.innerHTML = ''; mainContent.style.animation = 'none'; let sectionContent = ''; if (section === "welcome" && currentUserName) { displayWelcomeMessage(currentUserName); } else if (section === "games") { if (!currentUserName) { promptForName(); return; } sectionContent = `<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML = sectionContent; const addBtn = document.getElementById('addGameBtn'); if (addBtn) addBtn.onclick = () => openGameModal(); renderGames(); } else if (section === "proxy") { if (!currentUserName) { promptForName(); return; } sectionContent = `<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`; mainContent.innerHTML = sectionContent; renderProxySites(); } else if (section === "tools") { if (!currentUserName) { promptForName(); return; } sectionContent = `<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML = sectionContent; } else { if (!currentUserName) { if (welcomeAreaPlaceholder) mainContent.appendChild(welcomeAreaPlaceholder); if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'flex'; promptForName(); } else { displayWelcomeMessage(currentUserName); } } if (!mainContent.querySelector('#welcome-area') && !mainContent.querySelector('#namePromptModal')) { mainContent.style.opacity = 0; void mainContent.offsetWidth; mainContent.style.animation = "fadeIn 0.5s forwards"; mainContent.style.opacity = 1; } else { mainContent.style.opacity = 1; } }, 200); }
+        function renderProxySites() { const c = mainContent ? mainContent.querySelector('.proxy-list-container') : null; if (!c) return; c.innerHTML = ''; const spaceUrls = [ "https://yessir.happyforever.com/", "https://fish.happyforever.com/", "https://turtle.happyforever.com/", "https://cars.happyforever.com/" ]; const ps = [ { name: "Space", url: null }, { name: "Transend", url: "https://hw.billigerhost.com/" }, { name: "RammerHead", url: "https://pluh.root.sx/" }, { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" } ]; ps.forEach(s => { const card = document.createElement('div'); card.className = 'proxy-card'; card.setAttribute('tabindex', '0'); card.innerHTML = ` <div><h4></h4></div> <div class="proxy-card-actions"> <button class="play-btn" title="Open ${s.name.replace(/</g, "&lt;")}">${ICONS.play}</button> </div> `; card.querySelector('h4').textContent = s.name.replace(/</g, "&lt;"); const handleOpen = () => { const urlToOpen = s.name === "Space" ? spaceUrls[Math.floor(Math.random() * spaceUrls.length)] : s.url; openInAboutBlank(urlToOpen, s.name); }; card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOpen(); } }); card.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); handleOpen(); }; c.appendChild(card); }); }
 
         // --- Settings Panel & Controls ---
         function toggleSettings() { if(settingsPanel) settingsPanel.classList.toggle("show"); }
@@ -353,19 +574,527 @@
         function handleMainBeforeUnload(e) { if(warnOnClose){const cm='Close Qbit?';e.preventDefault();e.returnValue=cm;return cm;} }
 
         // --- Function to Clear All Local Storage Data ---
-        function clearAllData() { if(confirm("Clear ALL saved data (name, settings, games, background)? Cannot be undone.")){console.log("[DEBUG] Clearing all data..."); try{const ktr=[LS_USERNAME,LS_THEME,LS_FONTSIZE,LS_FONTFAMILY,LS_GAMES,LS_CATEGORIES,LS_WARNONCLOSE,LS_INITIALIZED,LS_BGIMAGE_ENABLED,LS_BGIMAGE_URL];ktr.forEach(k=>{removeSetting(k);console.log(`Removed: ${k}`);});alert("Data cleared. Reloading.");window.location.reload();}catch(e){console.error("Clear data err:", e);alert("Error clearing data.");}}else{console.log("Clear cancelled.");}}
+        function clearAllData() {
+            if(confirm("Clear ALL saved data (name, settings, games, background, chat key)? Cannot be undone.")){
+                console.log("[DEBUG] Clearing all data...");
+                try{
+                    const ktr=[
+                        LS_USERNAME,LS_THEME,LS_FONTSIZE,LS_FONTFAMILY,
+                        LS_GAMES,LS_CATEGORIES,LS_WARNONCLOSE,LS_INITIALIZED,
+                        LS_BGIMAGE_ENABLED,LS_BGIMAGE_URL,
+                        LS_CHATKEY // <-- Include chat key
+                    ];
+                    ktr.forEach(k=>{
+                        removeSetting(k);
+                        console.log(`Removed: ${k}`);
+                    });
+                    sessionStorage.removeItem(SESSION_STORAGE_KEY_VALIDATED); // Clear session key flag
+                    alert("Data cleared. Reloading.");
+                    window.location.reload();
+                } catch(e){
+                    console.error("Clear data err:", e);
+                    alert("Error clearing data.");
+                }
+            } else {
+                console.log("Clear cancelled.");
+            }
+        }
+
+        // --- Chat View Toggle and Panel Functions ---
+        function toggleChatView() {
+            if (!mainContent || !chatPanel) return;
+
+            if (isChatViewActive) {
+                // Switch from Chat to Main Content (Home)
+                chatPanel.style.display = 'none';
+                mainContent.style.display = 'block';
+                isChatViewActive = false;
+                stopChatPolling();
+                showSection(currentUserName ? 'welcome' : ''); // Show welcome/prompt
+            } else {
+                // Switch from Main Content to Chat
+                if (!currentUserName) { promptForName(); return; } // Need site username
+
+                mainContent.style.display = 'none';
+                chatPanel.style.display = 'flex'; // Show chat panel
+                isChatViewActive = true;
+
+                // Initial fetch/setup for chat log - fetchAllMessages handles clearing/welcome message
+                fetchAllMessages(); // Fetch initial history (includes clearing log and adding welcome)
+                startChatPolling(); // Start polling
+
+                checkSessionKeyValidation(); // Update UI based on stored session status
+
+                // Auto-fill key if not validated this session but key exists in localStorage
+                if (!hasValidatedKeyThisSession && currentChatKey && chatMessageInput) {
+                     updateChatInputState(); // Let this function handle placeholder and value
+                }
+
+                scrollToChatBottom();
+                if(chatMessageInput) chatMessageInput.focus();
+            }
+        }
+
+        // Updates chat input UI based on session validation status
+        function checkSessionKeyValidation() {
+            hasValidatedKeyThisSession = sessionStorage.getItem(SESSION_STORAGE_KEY_VALIDATED) === 'true';
+            updateChatInputState(); // Update input state based on session status
+        }
+
+        // Enables/disables input and shows correct button
+        function updateChatInputState() {
+             if (!chatMessageInput || !sendMessageBtn || !validateKeyBtn) return;
+
+             if (hasValidatedKeyThisSession) {
+                 chatMessageInput.disabled = false;
+                 chatMessageInput.placeholder = 'Enter message...';
+                 sendMessageBtn.style.display = 'flex'; // Show send button
+                 validateKeyBtn.style.display = 'none'; // Hide validate button
+                 // chatMessageInput.value = ''; // Clear input field when switching to send mode - maybe not needed if user was typing?
+             } else {
+                 // State for entering/confirming key
+                 chatMessageInput.disabled = false; // Enable input for key entry
+                 if (currentChatKey) {
+                     chatMessageInput.placeholder = 'Confirm stored key or enter new one...';
+                     chatMessageInput.value = currentChatKey; // Pre-fill with stored key
+                 } else {
+                     chatMessageInput.placeholder = 'Enter key to send messages...';
+                     chatMessageInput.value = ''; // Clear value if no key stored
+                 }
+                 sendMessageBtn.style.display = 'none'; // Hide send button
+                 validateKeyBtn.style.display = 'flex'; // Show validate button
+             }
+        }
+
+        // Use input field value first, then prompt as fallback
+        function attemptKeyValidationFromInput() {
+             if (hasValidatedKeyThisSession) return; // Already validated
+
+             let keyToValidate = chatMessageInput.value.trim();
+
+             if (keyToValidate) {
+                 handleKeyValidation(keyToValidate);
+             } else {
+                 // Fallback to prompt if input is empty
+                 const enteredKeyViaPrompt = prompt("Please enter your chat key to enable sending messages:");
+                 if (enteredKeyViaPrompt === null) {
+                     console.log("Key prompt cancelled.");
+                     return;
+                 }
+                 if (enteredKeyViaPrompt.trim() === "") {
+                     alert("Key cannot be empty.");
+                     return;
+                 }
+                 handleKeyValidation(enteredKeyViaPrompt.trim());
+             }
+        }
+
+        // Validate key with backend
+        async function handleKeyValidation(enteredKey) {
+            console.log("Attempting to validate key...");
+            if(validateKeyBtn) validateKeyBtn.disabled = true;
+            if(chatMessageInput) chatMessageInput.disabled = true; // Disable while checking
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/validate-key`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: enteredKey })
+                });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    console.log("Key validation successful for this session.");
+                    alert("Key validated successfully! You can now send messages.");
+                    sessionStorage.setItem(SESSION_STORAGE_KEY_VALIDATED, 'true'); // Store session flag
+                    saveSetting(LS_CHATKEY, enteredKey); // Store key in localStorage
+                    currentChatKey = enteredKey; // Update global state variable
+                    hasValidatedKeyThisSession = true;
+                    updateChatInputState(); // Update UI (enables input, shows send btn)
+                    if(chatMessageInput) chatMessageInput.focus();
+                } else {
+                    console.warn("Key validation failed:", data.message);
+                    alert(`Key validation failed: ${data.message || 'Invalid Key'}`);
+                    sessionStorage.removeItem(SESSION_STORAGE_KEY_VALIDATED); // Ensure session flag is removed
+                    hasValidatedKeyThisSession = false;
+                    updateChatInputState(); // Keep UI in key-entry state
+                }
+            } catch (error) {
+                console.error("Error during key validation request:", error);
+                alert("Error connecting to the server to validate the key.");
+                sessionStorage.removeItem(SESSION_STORAGE_KEY_VALIDATED);
+                hasValidatedKeyThisSession = false;
+                updateChatInputState();
+            } finally {
+                 if(validateKeyBtn) validateKeyBtn.disabled = false;
+                 updateChatInputState(); // Call again to set correct enabled/disabled state
+            }
+        }
+
+        // Send message to backend
+        async function sendMessage() {
+            if (!hasValidatedKeyThisSession || !currentChatKey) {
+                alert("You must validate your key first to send messages. Enter the key and click the arrow icon or press Enter.");
+                console.log("Attempted to send message without validated key for this session.");
+                updateChatInputState();
+                return;
+            }
+            if (!chatMessageInput || !currentUserName) {
+                console.error("Cannot send message. Input or site username missing.");
+                return;
+            }
+            const messageText = chatMessageInput.value.trim();
+
+            if (messageText) {
+                const messageData = {
+                    key: currentChatKey, // Send the currently validated key
+                    message: messageText,
+                    siteUsername: currentUserName
+                };
+                chatMessageInput.disabled = true;
+                sendMessageBtn.disabled = true;
+                chatMessageInput.value = ''; // Clear input immediately
+
+                try {
+                    const response = await fetch(`${BACKEND_URL}/send-message`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(messageData)
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        console.log("Message sent successfully.");
+                        fetchNewMessages(); // Poll immediately
+                    } else {
+                        console.error("Failed to send message:", data.message);
+                        alert(`Failed to send message: ${data.message || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error("Error sending message:", error);
+                    alert("Error connecting to server to send message.");
+                } finally {
+                     chatMessageInput.disabled = false;
+                     sendMessageBtn.disabled = false;
+                     if (chatMessageInput) chatMessageInput.focus();
+                }
+            }
+        }
+
+        // Append message to log with Discord-like grouping
+         function appendMessageToLog(sender, message, timestamp) {
+             if (!chatLogContainer || !currentUserName) return;
+
+             const lastMessageGroup = chatLogContainer.lastElementChild;
+             let isNewGroup = true;
+             const MAX_GROUP_TIME_MINUTES = 5; // Messages within 5 mins are grouped
+
+             // Determine if the last element is a valid group from the same sender within the time limit
+             if (lastMessageGroup &&
+                 lastMessageGroup.classList.contains('chat-message-group') &&
+                 lastMessageGroup.dataset.sender === sender) {
+
+                 const lastTimestamp = parseInt(lastMessageGroup.dataset.timestamp || '0');
+                 const timeDiffMinutes = (timestamp - lastTimestamp) / (1000 * 60);
+
+                 if (!isNaN(timeDiffMinutes) && timeDiffMinutes < MAX_GROUP_TIME_MINUTES) {
+                     isNewGroup = false;
+                 }
+             }
+
+             // Sanitize inputs
+             const safeSender = sender.replace(/</g, "&lt;");
+             const safeMessage = message.replace(/</g, "&lt;");
+             const messageDate = new Date(timestamp);
+             const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+             const formattedDateTime = messageDate.toLocaleString(); // For tooltip
+
+             if (isNewGroup) {
+                 // --- Create a new message group ---
+                 const messageGroupDiv = document.createElement('div');
+                 messageGroupDiv.classList.add('chat-message-group');
+                 messageGroupDiv.dataset.sender = sender; // Store sender for grouping check
+                 messageGroupDiv.dataset.timestamp = timestamp; // Store timestamp for grouping check
+
+                 // PFP Container
+                 const pfpContainer = document.createElement('div');
+                 pfpContainer.classList.add('chat-pfp-container');
+                 pfpContainer.innerHTML = generateUserPfpSvg(sender); // Generate PFP
+                 messageGroupDiv.appendChild(pfpContainer);
+
+                 // Message Content Area (holds header and text blocks)
+                 const messageContentDiv = document.createElement('div');
+                 messageContentDiv.classList.add('chat-message-content');
+
+                 // Header (Username + Timestamp)
+                 const messageHeaderDiv = document.createElement('div');
+                 messageHeaderDiv.classList.add('chat-message-header');
+
+                 // Username Span
+                 const usernameSpan = document.createElement('span');
+                 usernameSpan.classList.add('chat-username');
+                 usernameSpan.textContent = safeSender;
+                 // Apply unique color derived from username
+                 usernameSpan.style.color = stringToHslColor(sender, 65, 55);
+                 messageHeaderDiv.appendChild(usernameSpan);
+
+                 // Timestamp Span
+                 const timestampSpan = document.createElement('span');
+                 timestampSpan.classList.add('chat-timestamp');
+                 timestampSpan.textContent = formattedTime;
+                 timestampSpan.title = formattedDateTime; // Full date/time on hover
+                 messageHeaderDiv.appendChild(timestampSpan);
+
+                 messageContentDiv.appendChild(messageHeaderDiv);
+
+                 // Message Text (first message of the new group)
+                 const messageP = document.createElement('p');
+                 messageP.classList.add('chat-message-text');
+                 messageP.textContent = safeMessage;
+                 messageContentDiv.appendChild(messageP);
+
+                 messageGroupDiv.appendChild(messageContentDiv);
+                 chatLogContainer.appendChild(messageGroupDiv);
+
+             } else {
+                 // --- Append message text to the existing group ---
+                 const existingContentDiv = lastMessageGroup.querySelector('.chat-message-content');
+                 if (existingContentDiv) {
+                     const messageP = document.createElement('p');
+                     messageP.classList.add('chat-message-text');
+                     messageP.textContent = safeMessage;
+                     existingContentDiv.appendChild(messageP);
+                     // Update the group's timestamp to the latest message for time-based grouping logic
+                     lastMessageGroup.dataset.timestamp = timestamp;
+                 } else {
+                      console.warn("Could not find content div in last message group. Creating new group.");
+                      // Force creation of a new group by effectively making isNewGroup true for this call
+                      // This recursive call needs careful handling to avoid infinite loops if something is very wrong
+                      // A simpler approach might be to just log the error and potentially lose the message display grouping
+                      // For now, let's just log and proceed, updating the main timestamp tracker
+                 }
+             }
+
+             // Keep track of the overall latest message timestamp for polling
+              if (timestamp > lastMessageTimestamp) {
+                  lastMessageTimestamp = timestamp;
+              }
+         }
+
+        function scrollToChatBottom() { if (chatLogContainer) { setTimeout(() => { chatLogContainer.scrollTop = chatLogContainer.scrollHeight; }, 50); } }
+
+        // --- Chat Polling Functions ---
+        async function fetchNewMessages() {
+            if (!isChatViewActive) return;
+            try {
+                const response = await fetch(`${BACKEND_URL}/get-messages?since=${lastMessageTimestamp}`);
+                if (!response.ok) {
+                    console.error(`Error fetching messages: ${response.statusText}`);
+                    return;
+                }
+                const messages = await response.json();
+                if (messages && messages.length > 0) {
+                    let scrolled = false;
+                    // Sort just to be sure order is correct from server/polling
+                    messages.sort((a, b) => a.timestamp - b.timestamp);
+                    messages.forEach(msg => {
+                         // Simple duplicate check based on timestamp and sender/text - might need refinement
+                         const alreadyExists = Array.from(chatLogContainer.querySelectorAll('.chat-message-group'))
+                                               .some(group => group.dataset.timestamp >= msg.timestamp && group.dataset.sender === msg.sender); // Basic check
+
+                         if (!alreadyExists || msg.timestamp > lastMessageTimestamp) { // Append if new or definitely later than last known
+                             appendMessageToLog(msg.sender, msg.text, msg.timestamp);
+                             scrolled = true;
+                         } else {
+                            // This case is less likely if lastMessageTimestamp is updated correctly
+                            // but good to handle potential overlap/re-fetch edge cases
+                            // console.log("Skipping potentially duplicate message:", msg.timestamp);
+                         }
+
+                    });
+                    if (scrolled) {
+                        scrollToChatBottom();
+                    }
+                }
+            } catch (error) {
+                console.error("Error polling for messages:", error);
+            }
+        }
+
+        async function fetchAllMessages() {
+             if (!chatLogContainer) return;
+             console.log("Fetching all messages...");
+
+             // Add Welcome Message before loading history
+             const welcomeName = currentUserName || 'User';
+             const welcomeHTML = `<p class="chat-system-message">Welcome to the chat, <span id="chatActiveUserName">${welcomeName.replace(/</g, "&lt;")}</span>!</p>`;
+             // Store the welcome message element if we need to re-insert it later
+             // chatLogContainer.innerHTML = ''; // Clear previous content
+
+             try {
+                 const response = await fetch(`${BACKEND_URL}/get-all-messages`);
+                  if (!response.ok) {
+                      console.error(`Error fetching all messages: ${response.statusText}`);
+                      chatLogContainer.innerHTML = welcomeHTML + `<p class="chat-system-message" style="color: var(--delete-color);">Error loading history.</p>`; // Show welcome + error
+                      return;
+                  }
+                  const messages = await response.json();
+
+                   // Clear log AFTER successful fetch, before appending
+                   chatLogContainer.innerHTML = welcomeHTML;
+                   lastMessageTimestamp = 0; // Reset timestamp before loading history
+
+                  if (messages && messages.length > 0) {
+                      messages.sort((a, b) => a.timestamp - b.timestamp);
+                      messages.forEach(msg => {
+                          appendMessageToLog(msg.sender, msg.text, msg.timestamp);
+                      });
+                      console.log(`Loaded ${messages.length} historical messages.`);
+                  } else {
+                      console.log("No historical messages found.");
+                  }
+                  scrollToChatBottom(); // Scroll after adding all messages
+             } catch (error) {
+                  console.error("Error fetching all messages:", error);
+                  chatLogContainer.innerHTML = welcomeHTML + `<p class="chat-system-message" style="color: var(--delete-color);">Error connecting to load history.</p>`; // Show welcome + error
+             }
+         }
+
+        function startChatPolling() { if (chatPollIntervalId) clearInterval(chatPollIntervalId); if (!isChatViewActive) return; console.log("Starting chat polling..."); fetchNewMessages(); chatPollIntervalId = setInterval(fetchNewMessages, CHAT_POLL_INTERVAL); }
+        function stopChatPolling() { if (chatPollIntervalId) { console.log("Stopping chat polling."); clearInterval(chatPollIntervalId); chatPollIntervalId = null; } }
+
+        // --- Backend Command Explanation (Conceptual) ---
+        function explainBackendCommands() { console.log(` --- Backend Chat Key Management (Conceptual) --- The following commands would be executed on the SERVER-SIDE, likely via a command-line interface or a secure admin panel, NOT typed into the chat input by users. /key create <key_value> [<description>] - Generates a new key on the backend. - Example: '/key create ALPHA_KEY Alice Key' /key remove <key_to_remove> - Deletes an existing key from the backend. - Example: '/key remove BETA_KEY' /key list - Lists all currently valid keys stored on the backend. --- Chat Log Saving (Conceptual) --- The backend server intercepts messages sent by validated users. It appends each message (with timestamp, sender name from frontend, and message text) to a persistent storage medium (like the chat_log.jsonl file). `); }
 
         // --- Load Settings & Initial Setup ---
-        function loadSettingsAndInit() { console.log("[DEBUG] Init."); try { const t=localStorage.getItem(LS_THEME)||'dark'; const fs=localStorage.getItem(LS_FONTSIZE)||'16'; const ff=localStorage.getItem(LS_FONTFAMILY)||"'Segoe UI', sans-serif"; currentUserName=localStorage.getItem(LS_USERNAME); warnOnClose=localStorage.getItem(LS_WARNONCLOSE)==='true'; bgImageEnabled=localStorage.getItem(LS_BGIMAGE_ENABLED)==='true'; bgImageUrl=localStorage.getItem(LS_BGIMAGE_URL)||''; if(themeSelector)themeSelector.value=t; if(fontSelector)fontSelector.value=ff; if(fontSizeSlider)fontSizeSlider.value=fs; if(warnOnCloseSwitch)warnOnCloseSwitch.checked=warnOnClose; if(bgImageToggleSwitch)bgImageToggleSwitch.checked=bgImageEnabled; updateTheme(t); updateFontSize(fs); updateFontFamily(ff); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); loadGames(); loadCategories(); if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='none'; if(currentUserName)showSection('welcome'); else { if(welcomeAreaPlaceholder&&mainContent)mainContent.appendChild(welcomeAreaPlaceholder); if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='flex'; promptForName(); } updateFavicon(currentThemeColor); } catch(e){ console.error("Init err:", e); if(mainContent)mainContent.innerHTML=`<h2 style="color:red;text-align:center;">Error loading state: ${e.message}</h2>`; updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif"); if(!currentUserName)promptForName(); else showSection('welcome'); } updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim()); console.log("Init complete."); }
+        function loadSettingsAndInit() {
+            console.log("[DEBUG] Init.");
+            try {
+                // Load standard settings...
+                const t=localStorage.getItem(LS_THEME)||'dark';
+                const fs=localStorage.getItem(LS_FONTSIZE)||'16';
+                const ff=localStorage.getItem(LS_FONTFAMILY)||"'Segoe UI', sans-serif";
+                currentUserName=localStorage.getItem(LS_USERNAME); // Qbit username
+                warnOnClose=localStorage.getItem(LS_WARNONCLOSE)==='true';
+                bgImageEnabled=localStorage.getItem(LS_BGIMAGE_ENABLED)==='true';
+                bgImageUrl=localStorage.getItem(LS_BGIMAGE_URL)||'';
+                currentChatKey = localStorage.getItem(LS_CHATKEY); // Load stored chat key
+
+                if(themeSelector)themeSelector.value=t;
+                if(fontSelector)fontSelector.value=ff;
+                if(fontSizeSlider)fontSizeSlider.value=fs;
+                if(warnOnCloseSwitch)warnOnCloseSwitch.checked=warnOnClose;
+                if(bgImageToggleSwitch)bgImageToggleSwitch.checked=bgImageEnabled;
+
+                updateTheme(t);
+                updateFontSize(fs);
+                updateFontFamily(ff);
+
+                if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload);
+
+                loadGames();
+                loadCategories();
+
+                // Initial view setup
+                if(chatPanel) chatPanel.style.display = 'none';
+                if(mainContent) mainContent.style.display = 'block';
+                isChatViewActive = false;
+                checkSessionKeyValidation(); // Check session storage on load
+
+                if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='none';
+                if(currentUserName) { showSection('welcome'); }
+                else { if(welcomeAreaPlaceholder&&mainContent)mainContent.appendChild(welcomeAreaPlaceholder); if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='flex'; promptForName(); }
+                updateFavicon(currentThemeColor);
+
+                if (currentChatKey) {
+                    console.log("Loaded chat key from localStorage. Ready for session validation.");
+                }
+
+            } catch(e){
+                console.error("Init err:", e);
+                if(mainContent)mainContent.innerHTML=`<h2 style="color:red;text-align:center;">Error loading state: ${e.message}</h2>`;
+                updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif");
+                if(!currentUserName)promptForName(); else showSection('welcome');
+            }
+            updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim());
+            console.log("Init complete.");
+        }
 
         // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => { console.log("DOM ready."); try { mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); namePromptModal=document.getElementById('namePromptModal'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn'); const ce={mainContent,settingsPanel,settingsBtn,namePromptModal,gameModal,searchInput,themeSelector,fontSelector,fontSizeSlider,warnOnCloseSwitch,bgImageToggleSwitch,bgImageControlContainer,bgImageFileInput,clearBgImageBtn}; const m=Object.entries(ce).filter(([k,v])=>!v).map(([k])=>k); if(m.length>0) throw new Error(`Missing elements: ${m.join(', ')}`); } catch(e){ console.error("FATAL:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; } loadSettingsAndInit(); console.log("Attaching listeners."); settingsBtn.addEventListener('click',toggleSettings); searchInput.addEventListener('input',debouncedFilterGames); const sgb=document.getElementById('saveGameBtn');const cgb=document.getElementById('cancelGameBtn');const acb=document.getElementById('addCategoryBtn'); if(sgb)sgb.addEventListener('click',handleSaveGame); if(cgb)cgb.addEventListener('click',closeGameModal); if(acb)acb.addEventListener('click',handleAddCategory); if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();}); fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value));
-        // Warn on Close Listener (NO Broadcast)
-        warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); console.log("Main warn listener updated."); });
-        // Background Listeners
-        bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();}); bgImageFileInput.addEventListener('change',handleImageFileSelect); clearBgImageBtn.addEventListener('click',clearCustomBackground);
-        // Clear All Data Listener
-        const cdb=document.getElementById('clearDataBtn'); if(cdb)cdb.addEventListener('click',clearAllData); else console.warn("Clear Data btn not found."); console.log("Listeners attached."); });
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM ready.");
+            try {
+                // --- Get Standard Elements ---
+                mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); namePromptModal=document.getElementById('namePromptModal'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn');
+
+                // --- Get Chat Elements ---
+                chatPanel = document.getElementById('chatPanel');
+                chatActiveSection = document.getElementById('chatActiveSection');
+                chatLogContainer = document.getElementById('chatLogContainer');
+                chatMessageInput = document.getElementById('chatMessageInput');
+                sendMessageBtn = document.getElementById('sendMessageBtn');
+                // chatActiveUserNameSpan is now dynamically created/updated in fetchAllMessages welcome message
+                validateKeyBtn = document.getElementById('validateKeyBtn');
+
+                // --- Check if all elements exist ---
+                const coreElements = { mainContent, settingsPanel, root, body, faviconLink, namePromptModal, gameModal, settingsBtn, searchInput, welcomeAreaPlaceholder, themeSelector, fontSelector, fontSizeSlider, warnOnCloseSwitch, bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn };
+                 // Removed chatActiveUserNameSpan from this check
+                const chatElements = { chatPanel, chatActiveSection, chatLogContainer, chatMessageInput, sendMessageBtn, validateKeyBtn };
+                const missingCore = Object.entries(coreElements).filter(([k, v]) => !v).map(([k]) => k);
+                const missingChat = Object.entries(chatElements).filter(([k, v]) => !v).map(([k]) => k);
+
+                if (missingCore.length > 0) throw new Error(`Missing core elements: ${missingCore.join(', ')}`);
+                if (missingChat.length > 0) {
+                    console.warn(`Missing chat elements: ${missingChat.join(', ')}. Chat will be disabled.`);
+                    const chatIconBtn = document.querySelector('.topbar .icon-btn[title="Toggle Chat View"]');
+                    if (chatIconBtn) chatIconBtn.style.display = 'none';
+                }
+
+            } catch(e){
+                console.error("FATAL: Element finding error during DOMContentLoaded:", e);
+                document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p><p>Check the browser console for details.</p></div>`;
+                return;
+            }
+
+            // --- Load Settings and Initial UI ---
+            loadSettingsAndInit();
+
+            console.log("Attaching listeners.");
+            // --- Standard Listeners ---
+            settingsBtn.addEventListener('click',toggleSettings);
+            searchInput.addEventListener('input',debouncedFilterGames);
+            const sgb=document.getElementById('saveGameBtn');const cgb=document.getElementById('cancelGameBtn');const acb=document.getElementById('addCategoryBtn');
+            if(sgb)sgb.addEventListener('click',handleSaveGame);
+            if(cgb)cgb.addEventListener('click',closeGameModal);
+            if(acb)acb.addEventListener('click',handleAddCategory);
+            if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();});
+            fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value));
+            warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); console.log("Main warn listener updated."); });
+            bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();});
+            bgImageFileInput.addEventListener('change',handleImageFileSelect);
+            clearBgImageBtn.addEventListener('click',clearCustomBackground);
+            const cdb=document.getElementById('clearDataBtn'); if(cdb)cdb.addEventListener('click',clearAllData); else console.warn("Clear Data btn not found.");
+
+            // --- Attach Chat Listeners (only if elements were found) ---
+             if (validateKeyBtn) {
+                  validateKeyBtn.addEventListener('click', attemptKeyValidationFromInput);
+             }
+             if (sendMessageBtn) {
+                 sendMessageBtn.addEventListener('click', sendMessage);
+             }
+             if (chatMessageInput) {
+                 chatMessageInput.addEventListener('keypress', (e) => {
+                     if (e.key === 'Enter') {
+                         if (hasValidatedKeyThisSession) {
+                             sendMessage(); // Send message if session key is valid
+                         } else {
+                             attemptKeyValidationFromInput(); // Try validating the input content
+                         }
+                     }
+                 });
+             }
+
+            console.log("Listeners attached.");
+        }); // End of DOMContentLoaded listener
     </script>
 
 </body>
