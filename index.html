@@ -11,21 +11,7 @@
 
     <style>
         /* Base Styles */
-         :root {
-             /* Theme Variables */
-             --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff;
-             --font-size: 16px; --font-family: 'Segoe UI', sans-serif;
-             /* Radii */
-             --radius-std: 8px; --radius-lg: 12px;
-             /* Slider */
-             --slider-track-bg: var(--accent); --slider-thumb-bg: var(--text); --slider-progress-color: var(--text);
-             --slider-track-height: 6px; --slider-thumb-size: 16px;
-             /* Games Section Specific */
-             --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent);
-             --delete-color: #e53e3e; --edit-color: #4299e1; --play-color: #48bb78;
-             /* Custom Background */
-             --custom-bg-image: none;
-         }
+         :root { /* Theme Variables */ --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff; --font-size: 16px; --font-family: 'Segoe UI', sans-serif; /* Radii */ --radius-std: 8px; --radius-lg: 12px; /* Slider */ --slider-track-bg: var(--accent); --slider-thumb-bg: var(--text); --slider-progress-color: var(--text); --slider-track-height: 6px; --slider-thumb-size: 16px; /* Games Section Specific */ --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent); --delete-color: #e53e3e; --edit-color: #4299e1; --play-color: #48bb78; /* Custom Background */ --custom-bg-image: none; }
          body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .settings-panel input[type="file"], .settings-panel button, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .game-card, .game-card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn, .proxy-card, .proxy-card button, #clearDataBtn { box-sizing: border-box; }
          body { margin: 0; font-family: var(--font-family); display: flex; height: 100vh; overflow: hidden; background-color: var(--bg); color: var(--text); font-size: var(--font-size); transition: background-color 0.3s, color 0.3s; background-image: var(--custom-bg-image); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed; }
         .sidebar { width: 200px; background-color: var(--sidebar); flex-shrink: 0; animation: slideInLeft 0.5s ease forwards; transition: background-color 0.3s; display:flex; flex-direction:column; padding: 20px 10px; gap: 20px; }
@@ -84,10 +70,10 @@
         #addGameBtn { background-color: var(--accent); color: var(--text); border: none; padding: 8px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; transition: background-color 0.3s, transform 0.1s; }
         #addGameBtn:hover { filter: brightness(1.2); } #addGameBtn:active { transform: scale(0.95); }
         .game-list-container, .proxy-list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding-top: 10px; }
-        .game-card, .proxy-card { background-color: var(--game-card-bg); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid transparent; transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(20px); animation: cardFadeInUp 0.5s ease forwards; min-height: 110px; /* Slightly taller for favicon */ box-shadow: 0 2px 5px rgba(0,0,0,0.2); color: var(--text); }
+        .game-card, .proxy-card { background-color: var(--game-card-bg); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid transparent; transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(20px); animation: cardFadeInUp 0.5s ease forwards; min-height: 110px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); color: var(--text); }
         .game-card:nth-child(1), .proxy-card:nth-child(1) { animation-delay: 0.05s; } .game-card:nth-child(2), .proxy-card:nth-child(2) { animation-delay: 0.1s; } .game-card:nth-child(3), .proxy-card:nth-child(3) { animation-delay: 0.15s; } .game-card:nth-child(4), .proxy-card:nth-child(4) { animation-delay: 0.2s; }
         .game-card:hover, .proxy-card:hover { transform: translateY(-5px) scale(1.02); background-color: var(--game-card-hover-bg); border-color: var(--text); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
-        .proxy-card h4 { font-size: 1.05em; margin-top: 0; margin-bottom: 8px; word-break: break-word; flex-grow: 1; color: var(--text);} /* Proxy card name */
+        .proxy-card h4 { font-size: 1.05em; margin-top: 0; margin-bottom: 8px; word-break: break-word; flex-grow: 1; color: var(--text);}
         .game-card p.category { font-size: 0.75em; color: var(--text); opacity: 0.7; margin-top: 0; margin-bottom: 10px; background-color: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: var(--radius-std); display: inline-block; }
         .game-card-actions, .proxy-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; }
         .game-card-actions button, .proxy-card-actions button { background-color: transparent; border: none; border-radius: var(--radius-std); cursor: pointer; padding: 5px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s, transform 0.1s; }
@@ -138,20 +124,19 @@
         /* Game Card Favicon Styles */
         .game-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 20px; }
         .game-favicon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; background-color: rgba(128, 128, 128, 0.1); display: inline-block; vertical-align: middle; }
-        .game-card-header h4 { margin: 0; flex-grow: 1; line-height: 1.2; color: var(--text); word-break: break-word; } /* Ensure h4 uses theme text and breaks */
-
+        .game-card-header h4 { margin: 0; flex-grow: 1; line-height: 1.2; color: var(--text); word-break: break-word; }
 
         /* --- Specific Overrides for Trigonometrical Red Theme --- */
         [data-theme="trigonometrical-red"] .modal-box,
         [data-theme="trigonometrical-red"] .settings-panel,
         [data-theme="trigonometrical-red"] .sidebar button,
-        [data-theme="trigonometrical-red"] .sidebar h2, /* Sidebar title */
+        [data-theme="trigonometrical-red"] .sidebar h2,
         [data-theme="trigonometrical-red"] .icon-btn svg,
         [data-theme="trigonometrical-red"] .slider-value-display,
         [data-theme="trigonometrical-red"] #addCategoryBtn,
-        [data-theme="trigonometrical-red"] .modal-box button, /* All modal buttons */
-        [data-theme="trigonometrical-red"] .game-card, /* Card text fallback */
-        [data-theme="trigonometrical-red"] .proxy-card /* Proxy card text fallback */
+        [data-theme="trigonometrical-red"] .modal-box button,
+        [data-theme="trigonometrical-red"] .game-card,
+        [data-theme="trigonometrical-red"] .proxy-card
         { color: #ffffff; fill: #ffffff; }
 
         [data-theme="trigonometrical-red"] .modal-box input[type="text"],
@@ -163,16 +148,12 @@
 
         [data-theme="trigonometrical-red"] .modal-box input::placeholder,
         [data-theme="trigonometrical-red"] .settings-panel input::placeholder,
-        [data-theme="trigonometrical-red"] #nameInput::placeholder /* Welcome prompt placeholder */
+        [data-theme="trigonometrical-red"] #nameInput::placeholder
         { color: #ffffff; opacity: 0.7; }
 
-        /* Override search input specifically as it's on white bg */
-         [data-theme="trigonometrical-red"] .search input { color: #1a1a1a; background-color: #ffffff;}
-         [data-theme="trigonometrical-red"] .search input::placeholder { color: #1a1a1a; opacity: 0.6;}
-
-         /* Override welcome prompt input as it's in a modal but on white bg*/
-         [data-theme="trigonometrical-red"] #nameInput { color: #1a1a1a; background-color: #ffffff;}
-
+        [data-theme="trigonometrical-red"] .search input { color: #1a1a1a; background-color: #ffffff;}
+        [data-theme="trigonometrical-red"] .search input::placeholder { color: #1a1a1a; opacity: 0.6;}
+        [data-theme="trigonometrical-red"] #nameInput { color: #1a1a1a; background-color: #ffffff;}
 
         [data-theme="trigonometrical-red"] #bgImageFileInput::file-selector-button { color: #ffffff; }
 
@@ -183,7 +164,6 @@
 
         [data-theme="trigonometrical-red"] .slider-thumb,
         [data-theme="trigonometrical-red"] .slider-progress { background-color: #ffffff; }
-
 
         /* Animations */
         @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } } @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } @keyframes cardFadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } @keyframes cardFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
@@ -201,57 +181,13 @@
     </div>
 
     <div class="settings-panel" id="settingsPanel">
-        <label>Font Size:
-            <span class="slider-value-display" id="fontSizeValue">16px</span>
-            <div class="custom-slider-container">
-                 <div class="slider-track"></div>
-                 <div class="slider-progress" id="fontSizeProgress"></div>
-                 <div class="slider-thumb" id="fontSizeThumb"></div>
-                 <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16">
-            </div>
-        </label>
-
-        <label>Color Scheme:
-             <select id="themeSelector" onchange="updateTheme(this.value)">
-                 <option value="dark">Dark</option>
-                 <option value="light">Light</option>
-                 <option value="blue">Cool Blue</option>
-                 <option value="forest">Forest Green</option>
-                 <option value="sunset">Sunset Orange</option>
-                 <option value="trigonometrical-red">Trigonometrical Red</option>
-             </select>
-        </label>
-
-        <label>Font Family:
-             <select id="fontSelector" onchange="updateFontFamily(this.value)">
-                  <option value="'Segoe UI', sans-serif">Segoe UI</option>
-                  <option value="Arial, sans-serif">Arial</option>
-                  <option value="Verdana, sans-serif">Verdana</option>
-                  <option value="'Times New Roman', Times, serif">Times New Roman</option>
-                  <option value="'Courier New', Courier, monospace">Courier New</option>
-                  <option value="Georgia, serif">Georgia</option>
-                  <option value="'Roboto', sans-serif">Roboto</option>
-                  <option value="'Lato', sans-serif">Lato</option>
-             </select>
-        </label>
-
-        <label class="toggle-switch-label">
-            <span>Custom Background:</span>
-            <input type="checkbox" id="bgImageToggleSwitch" class="toggle-switch">
-            <span class="toggle-slider"></span>
-        </label>
-        <div id="bgImageControlContainer">
-             <label for="bgImageFileInput">Select Image (Max 2MB):</label>
-             <input type="file" id="bgImageFileInput" accept="image/*">
-             <button id="clearBgImageBtn" title="Remove custom background">Clear Background</button>
-        </div>
-        <label class="toggle-switch-label">
-             Warn on Close:
-             <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch">
-             <span class="toggle-slider"></span>
-         </label>
-
-         <button id="clearDataBtn" class="danger-btn">Clear All Data</button>
+        <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span> <div class="custom-slider-container"> <div class="slider-track"></div> <div class="slider-progress" id="fontSizeProgress"></div> <div class="slider-thumb" id="fontSizeThumb"></div> <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16"> </div> </label>
+        <label>Color Scheme: <select id="themeSelector" onchange="updateTheme(this.value)"> <option value="dark">Dark</option> <option value="light">Light</option> <option value="blue">Cool Blue</option> <option value="forest">Forest Green</option> <option value="sunset">Sunset Orange</option> <option value="trigonometrical-red">Trigonometrical Red</option> </select> </label>
+        <label>Font Family: <select id="fontSelector" onchange="updateFontFamily(this.value)"> <option value="'Segoe UI', sans-serif">Segoe UI</option> <option value="Arial, sans-serif">Arial</option> <option value="Verdana, sans-serif">Verdana</option> <option value="'Times New Roman', Times, serif">Times New Roman</option> <option value="'Courier New', Courier, monospace">Courier New</option> <option value="Georgia, serif">Georgia</option> <option value="'Roboto', sans-serif">Roboto</option> <option value="'Lato', sans-serif">Lato</option> </select> </label>
+        <label class="toggle-switch-label"> <span>Custom Background:</span> <input type="checkbox" id="bgImageToggleSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
+        <div id="bgImageControlContainer"> <label for="bgImageFileInput">Select Image (Max 2MB):</label> <input type="file" id="bgImageFileInput" accept="image/*"> <button id="clearBgImageBtn" title="Remove custom background">Clear Background</button> </div>
+        <label class="toggle-switch-label"> Warn on Close: <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
+        <button id="clearDataBtn" class="danger-btn">Clear All Data</button>
     </div>
 
     <script>
@@ -263,11 +199,21 @@
         const MAX_IMAGE_SIZE_MB = 2; const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
         // --- LocalStorage Keys ---
-        const LS_PREFIX = 'qbit_v3.1_'; // Incremented version prefix for potential cache busting
-        const LS_USERNAME = LS_PREFIX + 'userName'; const LS_THEME = LS_PREFIX + 'theme'; const LS_FONTSIZE = LS_PREFIX + 'fontSize'; const LS_FONTFAMILY = LS_PREFIX + 'fontFamily'; const LS_GAMES = LS_PREFIX + 'games'; const LS_CATEGORIES = LS_PREFIX + 'categories'; const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose'; const LS_INITIALIZED = LS_PREFIX + 'initialized'; const LS_BGIMAGE_ENABLED = LS_PREFIX + 'bgImageEnabled'; const LS_BGIMAGE_URL = LS_PREFIX + 'bgImageUrl';
+        const LS_PREFIX = 'qbit_v3.1_'; const LS_USERNAME = LS_PREFIX + 'userName'; const LS_THEME = LS_PREFIX + 'theme'; const LS_FONTSIZE = LS_PREFIX + 'fontSize'; const LS_FONTFAMILY = LS_PREFIX + 'fontFamily'; const LS_GAMES = LS_PREFIX + 'games'; const LS_CATEGORIES = LS_PREFIX + 'categories'; const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose'; const LS_INITIALIZED = LS_PREFIX + 'initialized'; const LS_BGIMAGE_ENABLED = LS_PREFIX + 'bgImageEnabled'; const LS_BGIMAGE_URL = LS_PREFIX + 'bgImageUrl';
 
         // --- SVG Icons ---
         const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
+
+        // --- Broadcast Channel ---
+        let warningChannel;
+        try {
+             warningChannel = new BroadcastChannel('qbit_warn_channel'); // Define the channel
+             console.log("[DEBUG] Main: Broadcast channel created.");
+        } catch (e) {
+             console.error("Main: BroadcastChannel API not supported or failed.", e);
+             warningChannel = null; // Fallback if API not supported
+        }
+
 
         // --- Helper: Debounce ---
         function debounce(func, delay) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { func.apply(this, args); }, delay); }; }
@@ -297,8 +243,63 @@
         function handleSaveGame() { const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const ii=document.getElementById('gameIdInput'); if(!ni||!ui||!cs||!ii)return; const name=ni.value.trim(); const url=ui.value.trim(); const category=cs.value; const id=ii.value; let iv=true; if(!name){ni.style.borderColor='red';iv=false;}else{ni.style.borderColor='';} if(!url||!url.match(/^(https?:\/\/|.\/|..\/|\/)/)){ui.style.borderColor='red';iv=false;alert("Valid URL needed (http://, https://, /, ./, ../)");}else{ui.style.borderColor='';} if(!iv)return; if(isEditingGame&&id){const gi=games.findIndex(g=>g.id===id); if(gi>-1){games[gi]={...games[gi],name,url,category};}else{console.error("Edit fail: ID not found");closeGameModal();return;}}else{const ng={id:crypto.randomUUID(),name,url,category};games.push(ng);} saveGames();renderGames();closeGameModal();}
         function deleteGame(id, ce) { if (!confirm(`Delete this game?`)) return; if (ce) { ce.classList.add('deleting'); ce.addEventListener('animationend', () => { games = games.filter(g => g.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(g => g.id !== id); saveGames(); renderGames(); } }
 
-        // --- Function to open content in about:blank ---
-        function openInAboutBlank(url, title='Content') { console.log(`[DEBUG] Creating about:blank for: ${url}. Warn: ${warnOnClose}`); if (!url||!url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { alert("Invalid URL."); return; } const nw=window.open('','_blank'); if(nw){ try { nw.document.open(); nw.document.write(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${title.replace(/</g,"&lt;")}</title><style>html,body{margin:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style></head><body><iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe><script>const swoc=${warnOnClose};window.addEventListener('beforeunload',(e)=>{if(swoc){const cm='Close window?';e.preventDefault();e.returnValue=cm;return cm;}});<\/script></body></html>`); nw.document.close(); } catch(e){ console.error("Win write err:", e); try { nw.location.href=url; } catch(e2){ nw.close(); alert("Popup blocked?");}}} else { alert("Popup blocked?");}}
+        // --- Function to open content in about:blank (WITH BROADCAST CHANNEL LISTENER) ---
+        function openInAboutBlank(url, title = 'Content') {
+            console.log(`[DEBUG] Creating about:blank wrapper for: ${url}. Initial Warn setting: ${warnOnClose}`);
+            if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; }
+
+            const newWindow = window.open('', '_blank');
+            if (newWindow) {
+                try {
+                    newWindow.document.open();
+                    newWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>${title.replace(/</g, "&lt;")}</title>
+                            <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style>
+                        </head>
+                        <body>
+                            <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe>
+                            <script>
+                                let __internalShouldWarnOnClose__ = ${warnOnClose};
+                                const __channelName__ = 'qbit_warn_channel';
+                                let __warningChannel__;
+                                console.log('Child window: Initial warn state:', __internalShouldWarnOnClose__);
+                                try {
+                                    __warningChannel__ = new BroadcastChannel(__channelName__);
+                                    console.log('Child window: Broadcast channel connected.');
+                                    __warningChannel__.onmessage = (event) => {
+                                        if (event.data && typeof event.data.warn === 'boolean') {
+                                            const newState = event.data.warn;
+                                            if (__internalShouldWarnOnClose__ !== newState) {
+                                                __internalShouldWarnOnClose__ = newState;
+                                                console.log('Child window: Received warn update via BroadcastChannel:', __internalShouldWarnOnClose__);
+                                            }
+                                        }
+                                    };
+                                    window.addEventListener('unload', () => { if (__warningChannel__) { __warningChannel__.close(); console.log('Child window: Broadcast channel closed.'); } });
+                                } catch (e) { console.error("Child window: BroadcastChannel API not supported or failed.", e); __warningChannel__ = null; }
+
+                                window.addEventListener('beforeunload', (event) => {
+                                    if (__internalShouldWarnOnClose__) {
+                                        console.log('Child window: beforeunload triggered WITH warning (state:', __internalShouldWarnOnClose__, ')');
+                                        const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?';
+                                        event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage;
+                                    } else { console.log('Child window: beforeunload triggered WITHOUT warning (state:', __internalShouldWarnOnClose__, ')'); }
+                                });
+                            <\/script>
+                            </body>
+                            </html>
+                    `);
+                    newWindow.document.close();
+                    console.log("[DEBUG] about:blank wrapper written with updated embedded script.");
+                } catch (e) {
+                    console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); }
+                }
+            } else { console.error("Failed to open new window. Pop-up blocker?"); alert("Could not open link. Please check pop-up blocker."); }
+        }
         const playGame = openInAboutBlank;
 
         // --- UI Section Management ---
@@ -317,8 +318,8 @@
         function handleImageFileSelect(e) { if(!e.target.files||e.target.files.length===0)return; const f=e.target.files[0]; if(!f.type.startsWith('image/')){alert("Select image file.");e.target.value=null;return;} if(f.size>MAX_IMAGE_SIZE_BYTES){alert(`Image too large (${(f.size/1024/1024).toFixed(1)}MB). Max ${MAX_IMAGE_SIZE_MB}MB.`);e.target.value=null;return;} const r=new FileReader(); r.onload=(le)=>{bgImageUrl=le.target.result;saveSetting(LS_BGIMAGE_URL,bgImageUrl);applyCustomBackground();console.log("BG saved.");}; r.onerror=(ee)=>{console.error("FileRead err:",ee);alert("Error reading file.");e.target.value=null;}; r.onabort=()=>{console.warn("FileRead abort.");e.target.value=null;}; r.readAsDataURL(f); }
         function clearCustomBackground() { bgImageUrl=''; removeSetting(LS_BGIMAGE_URL); if(bgImageFileInput)bgImageFileInput.value=null; applyCustomBackground(); }
 
-        // --- updateTheme Function (Correct Text Colors) ---
-        function updateTheme(theme) { const selector=document.getElementById('themeSelector'); if(!root||!body) return; const value=theme||(selector?selector.value:'dark'); let accentColor='#444444'; let textColorValue='#ffffff'; switch(value){ case "light": root.style.setProperty("--bg","#ffffff"); root.style.setProperty("--sidebar","#eeeeee"); root.style.setProperty("--topbar","#dddddd"); root.style.setProperty("--accent","#cccccc"); root.style.setProperty("--text","#1a1a1a"); accentColor='#cccccc'; textColorValue='#1a1a1a'; break; case "blue": root.style.setProperty("--bg","#0a0f1c"); root.style.setProperty("--sidebar","#091121"); root.style.setProperty("--topbar","#101a35"); root.style.setProperty("--accent","#395b9c"); root.style.setProperty("--text","#e0e0ff"); accentColor='#395b9c'; textColorValue='#e0e0ff'; break; case "forest": root.style.setProperty("--bg","#1f2e1f"); root.style.setProperty("--sidebar","#141e14"); root.style.setProperty("--topbar","#2a3f2a"); root.style.setProperty("--accent","#4a784a"); root.style.setProperty("--text","#e5f5e5"); accentColor='#4a784a'; textColorValue='#e5f5e5'; break; case "sunset": root.style.setProperty("--bg","#2b1a1a"); root.style.setProperty("--sidebar","#3a2525"); root.style.setProperty("--topbar","#4d3333"); root.style.setProperty("--accent","#b36b4a"); root.style.setProperty("--text","#ffe8e0"); accentColor='#b36b4a'; textColorValue='#ffe8e0'; break; case "trigonometrical-red": root.style.setProperty("--bg", "#ffffff"); root.style.setProperty("--sidebar", "#a02020"); root.style.setProperty("--topbar", "#b03030"); root.style.setProperty("--accent", "#e53e3e"); root.style.setProperty("--text", "#1a1a1a"); accentColor='#e53e3e'; textColorValue='#1a1a1a'; break; /* Main text DARK */ case "dark": default: root.style.setProperty("--bg","#1e1e1e"); root.style.setProperty("--sidebar","#111111"); root.style.setProperty("--topbar","#2c2c2c"); root.style.setProperty("--accent","#444444"); root.style.setProperty("--text","#ffffff"); accentColor='#444444'; textColorValue='#ffffff'; break; } currentThemeColor=accentColor; body.setAttribute('data-theme', value); updateSelectArrowColor(textColorValue); if(root.style && typeof root.style.setProperty==='function'){ const ca=getComputedStyle(root).getPropertyValue('--accent').trim(); const ct=getComputedStyle(root).getPropertyValue('--text').trim(); const ctb=getComputedStyle(root).getPropertyValue('--topbar').trim(); root.style.setProperty('--slider-track-bg', ca); root.style.setProperty('--slider-thumb-bg', ct); root.style.setProperty('--slider-progress-color', ct); root.style.setProperty('--game-card-bg', ctb); root.style.setProperty('--game-card-hover-bg', ca); } updateFavicon(accentColor); updateWelcomeLogoColor(accentColor); saveSetting(LS_THEME, value); applyCustomBackground(); }
+        // --- updateTheme Function ---
+        function updateTheme(theme) { const selector=document.getElementById('themeSelector'); if(!root||!body) return; const value=theme||(selector?selector.value:'dark'); let accentColor='#444444'; let textColorValue='#ffffff'; switch(value){ case "light": root.style.setProperty("--bg","#ffffff"); root.style.setProperty("--sidebar","#eeeeee"); root.style.setProperty("--topbar","#dddddd"); root.style.setProperty("--accent","#cccccc"); root.style.setProperty("--text","#1a1a1a"); accentColor='#cccccc'; textColorValue='#1a1a1a'; break; case "blue": root.style.setProperty("--bg","#0a0f1c"); root.style.setProperty("--sidebar","#091121"); root.style.setProperty("--topbar","#101a35"); root.style.setProperty("--accent","#395b9c"); root.style.setProperty("--text","#e0e0ff"); accentColor='#395b9c'; textColorValue='#e0e0ff'; break; case "forest": root.style.setProperty("--bg","#1f2e1f"); root.style.setProperty("--sidebar","#141e14"); root.style.setProperty("--topbar","#2a3f2a"); root.style.setProperty("--accent","#4a784a"); root.style.setProperty("--text","#e5f5e5"); accentColor='#4a784a'; textColorValue='#e5f5e5'; break; case "sunset": root.style.setProperty("--bg","#2b1a1a"); root.style.setProperty("--sidebar","#3a2525"); root.style.setProperty("--topbar","#4d3333"); root.style.setProperty("--accent","#b36b4a"); root.style.setProperty("--text","#ffe8e0"); accentColor='#b36b4a'; textColorValue='#ffe8e0'; break; case "trigonometrical-red": root.style.setProperty("--bg", "#ffffff"); root.style.setProperty("--sidebar", "#a02020"); root.style.setProperty("--topbar", "#b03030"); root.style.setProperty("--accent", "#e53e3e"); root.style.setProperty("--text", "#1a1a1a"); accentColor='#e53e3e'; textColorValue='#1a1a1a'; break; case "dark": default: root.style.setProperty("--bg","#1e1e1e"); root.style.setProperty("--sidebar","#111111"); root.style.setProperty("--topbar","#2c2c2c"); root.style.setProperty("--accent","#444444"); root.style.setProperty("--text","#ffffff"); accentColor='#444444'; textColorValue='#ffffff'; break; } currentThemeColor=accentColor; body.setAttribute('data-theme', value); updateSelectArrowColor(textColorValue); if(root.style && typeof root.style.setProperty==='function'){ const ca=getComputedStyle(root).getPropertyValue('--accent').trim(); const ct=getComputedStyle(root).getPropertyValue('--text').trim(); const ctb=getComputedStyle(root).getPropertyValue('--topbar').trim(); root.style.setProperty('--slider-track-bg', ca); root.style.setProperty('--slider-thumb-bg', ct); root.style.setProperty('--slider-progress-color', ct); root.style.setProperty('--game-card-bg', ctb); root.style.setProperty('--game-card-hover-bg', ca); } updateFavicon(accentColor); updateWelcomeLogoColor(accentColor); saveSetting(LS_THEME, value); applyCustomBackground(); }
 
         // --- Search & Filtering ---
         function filterGames() { const s_in=document.getElementById('search'); const mc=document.getElementById('main-content'); if(!s_in||!mc) return; const st=s_in.value.toLowerCase().trim(); const glc=mc.querySelector('.game-list-container'); let ngfm=mc.querySelector('#no-games-found'); let vgc=0; if(glc){ const gcs=glc.querySelectorAll('.game-card'); if(gcs.length>0){gcs.forEach(c=>{const ne=c.querySelector('h4');const ce=c.querySelector('p.category');const n=ne?ne.textContent.toLowerCase():'';const cat=ce?ce.textContent.toLowerCase():'';if(!st||n.includes(st)||cat.includes(st)){c.style.display='';vgc++;}else{c.style.display='none';}});}else{vgc=0;}} if(!ngfm && glc && games.length===0 && !st){ const me=document.createElement('p');me.id='no-games-found';me.style.cssText="grid-column:1/-1;text-align:center;opacity:0.7;padding:20px;color:var(--text);";me.textContent="No games added yet.";glc.appendChild(me);ngfm=me;}else if(ngfm){ const tg=games.length; if(vgc===0 && tg>0 && st){ngfm.textContent=`No games found matching "${s_in.value.trim()}"`;ngfm.style.display='block';}else if(vgc===0 && tg===0){ngfm.textContent=`No games added yet.`;ngfm.style.display='block';}else{ngfm.style.display='none';}} const plc=mc.querySelector('.proxy-list-container'); if(plc&&st){const pcs=plc.querySelectorAll('.proxy-card');pcs.forEach(c=>{const ne=c.querySelector('h4');const n=ne?ne.textContent.toLowerCase():'';if(n.includes(st)){c.style.display='';}else{c.style.display='none';}});}else if(plc){const pcs=plc.querySelectorAll('.proxy-card');pcs.forEach(c=>c.style.display='');} }
@@ -334,7 +335,13 @@
         function loadSettingsAndInit() { console.log("[DEBUG] Init."); try { const t=localStorage.getItem(LS_THEME)||'dark'; const fs=localStorage.getItem(LS_FONTSIZE)||'16'; const ff=localStorage.getItem(LS_FONTFAMILY)||"'Segoe UI', sans-serif"; currentUserName=localStorage.getItem(LS_USERNAME); warnOnClose=localStorage.getItem(LS_WARNONCLOSE)==='true'; bgImageEnabled=localStorage.getItem(LS_BGIMAGE_ENABLED)==='true'; bgImageUrl=localStorage.getItem(LS_BGIMAGE_URL)||''; if(themeSelector)themeSelector.value=t; if(fontSelector)fontSelector.value=ff; if(fontSizeSlider)fontSizeSlider.value=fs; if(warnOnCloseSwitch)warnOnCloseSwitch.checked=warnOnClose; if(bgImageToggleSwitch)bgImageToggleSwitch.checked=bgImageEnabled; updateTheme(t); updateFontSize(fs); updateFontFamily(ff); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); loadGames(); loadCategories(); if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='none'; if(currentUserName)showSection('welcome'); else { if(welcomeAreaPlaceholder&&mainContent)mainContent.appendChild(welcomeAreaPlaceholder); if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='flex'; promptForName(); } updateFavicon(currentThemeColor); } catch(e){ console.error("Init err:", e); if(mainContent)mainContent.innerHTML=`<h2 style="color:red;text-align:center;">Error loading state: ${e.message}</h2>`; updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif"); if(!currentUserName)promptForName(); else showSection('welcome'); } updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim()); console.log("Init complete."); }
 
         // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => { console.log("DOM ready."); try { mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); namePromptModal=document.getElementById('namePromptModal'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn'); const ce={mainContent,settingsPanel,settingsBtn,namePromptModal,gameModal,searchInput,themeSelector,fontSelector,fontSizeSlider,warnOnCloseSwitch,bgImageToggleSwitch,bgImageControlContainer,bgImageFileInput,clearBgImageBtn}; const m=Object.entries(ce).filter(([k,v])=>!v).map(([k])=>k); if(m.length>0) throw new Error(`Missing elements: ${m.join(', ')}`); } catch(e){ console.error("FATAL:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; } loadSettingsAndInit(); console.log("Attaching listeners."); settingsBtn.addEventListener('click',toggleSettings); searchInput.addEventListener('input',debouncedFilterGames); const sgb=document.getElementById('saveGameBtn');const cgb=document.getElementById('cancelGameBtn');const acb=document.getElementById('addCategoryBtn'); if(sgb)sgb.addEventListener('click',handleSaveGame); if(cgb)cgb.addEventListener('click',closeGameModal); if(acb)acb.addEventListener('click',handleAddCategory); if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();}); fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value)); warnOnCloseSwitch.addEventListener('change',(e)=>{warnOnClose=e.target.checked;saveSetting(LS_WARNONCLOSE,warnOnClose);if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload);else window.removeEventListener('beforeunload',handleMainBeforeUnload);}); bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();}); bgImageFileInput.addEventListener('change',handleImageFileSelect); clearBgImageBtn.addEventListener('click',clearCustomBackground); const cdb=document.getElementById('clearDataBtn'); if(cdb)cdb.addEventListener('click',clearAllData); else console.warn("Clear Data btn not found."); console.log("Listeners attached."); });
+        document.addEventListener('DOMContentLoaded', () => { console.log("DOM ready."); try { mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); namePromptModal=document.getElementById('namePromptModal'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn'); const ce={mainContent,settingsPanel,settingsBtn,namePromptModal,gameModal,searchInput,themeSelector,fontSelector,fontSizeSlider,warnOnCloseSwitch,bgImageToggleSwitch,bgImageControlContainer,bgImageFileInput,clearBgImageBtn}; const m=Object.entries(ce).filter(([k,v])=>!v).map(([k])=>k); if(m.length>0) throw new Error(`Missing elements: ${m.join(', ')}`); } catch(e){ console.error("FATAL:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; } loadSettingsAndInit(); console.log("Attaching listeners."); settingsBtn.addEventListener('click',toggleSettings); searchInput.addEventListener('input',debouncedFilterGames); const sgb=document.getElementById('saveGameBtn');const cgb=document.getElementById('cancelGameBtn');const acb=document.getElementById('addCategoryBtn'); if(sgb)sgb.addEventListener('click',handleSaveGame); if(cgb)cgb.addEventListener('click',closeGameModal); if(acb)acb.addEventListener('click',handleAddCategory); if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();}); fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value));
+        // Warn on Close Listener with Broadcast
+        warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); try{ if(warningChannel) warningChannel.postMessage({warn:warnOnClose}); console.log(`[DEBUG] Broadcasted warn status: ${warnOnClose}`); } catch(be){ console.error("Warn broadcast err:", be); } });
+        // Background Listeners
+        bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();}); bgImageFileInput.addEventListener('change',handleImageFileSelect); clearBgImageBtn.addEventListener('click',clearCustomBackground);
+        // Clear All Data Listener
+        const cdb=document.getElementById('clearDataBtn'); if(cdb)cdb.addEventListener('click',clearAllData); else console.warn("Clear Data btn not found."); console.log("Listeners attached."); });
     </script>
 
 </body>
