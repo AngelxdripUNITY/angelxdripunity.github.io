@@ -25,17 +25,122 @@
         .search input { width: 100%; padding: 8px 12px; background-color: var(--bg); color: var(--text); border: 1px solid var(--accent); border-radius: var(--radius-std); font-size: 0.9em; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         .top-buttons { display: flex; gap: 10px; }
         .icon-btn { width: 38px; height: 38px; border-radius: 50%; background-color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, transform 0.2s, filter 0.2s; padding: 0; }
-         .icon-btn:disabled { filter: grayscale(70%) opacity(50%); cursor: not-allowed; transform: none; }
+          .icon-btn:disabled { filter: grayscale(70%) opacity(50%); cursor: not-allowed; transform: none; }
         .icon-btn:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.1); }
         .icon-btn svg { width: 18px; height: 18px; fill: var(--text); display: block; }
 
         /* Content Area Styling */
         .content { padding: 25px; overflow-y: auto; flex-grow: 1; line-height: 1.6; color: var(--text); display: block; height: calc(100% - 58px); }
         .content h1 { font-size: 1.8em; margin-bottom: 0.5em; color: var(--text);} .content h2 { font-size: 1.4em; margin-bottom: 0.4em; margin-top: 1em; color: var(--text);} .content p { font-size: 1em; margin-bottom: 1em; color: var(--text);}
-        #welcome-area { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; opacity: 0; animation: fadeIn 1s 0.2s forwards; }
-        #welcome-logo-container { width: 64px; height: 64px; margin-bottom: 20px; opacity: 0; transform: scale(0.5); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards; }
-        #welcome-logo-container svg { display: block; width: 100%; height: 100%; }
-        #welcome-message { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s ease-out 0.8s forwards; color: var(--text); }
+
+        /* Welcome Area, User Count, Changelog */
+        #welcome-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center vertically */
+            text-align: center;
+            height: 100%; /* Ensure it takes full height */
+            opacity: 0;
+            animation: fadeIn 1s 0.2s forwards;
+            padding-bottom: 20px; /* Add padding at the bottom */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+        }
+        #welcome-logo-container {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards;
+            flex-shrink: 0; /* Prevent logo from shrinking */
+        }
+        #welcome-logo-container svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #welcome-message {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out 0.8s forwards;
+            color: var(--text);
+            margin-bottom: 15px; /* Space below welcome */
+             flex-shrink: 0; /* Prevent message from shrinking */
+        }
+
+        /* User Count Styles */
+        #user-count-display {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 25px; /* Space below user count */
+            color: var(--text);
+             flex-shrink: 0;
+        }
+
+        /* Changelog Styles */
+        #changelog-section {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle background */
+            border-radius: var(--radius-std);
+            width: 80%;
+            max-width: 600px;
+            text-align: left; /* Align text left within the box */
+            border: 1px solid var(--accent);
+             flex-shrink: 0; /* Prevent shrinking */
+             margin-bottom: auto; /* Pushes changelog up if space allows */
+        }
+         #changelog-section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 5px;
+            color: var(--text);
+         }
+         .changelog-version {
+            margin-bottom: 15px;
+         }
+         .changelog-version h4 {
+            margin: 0 0 5px 0;
+            font-size: 1em;
+            color: var(--text);
+         }
+         .changelog-version ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style: disc;
+            font-size: 0.9em;
+            color: var(--text);
+            opacity: 0.9;
+         }
+         .changelog-version ul li {
+            margin-bottom: 4px;
+         }
+
+        /* Theme overrides for changelog/user count */
+        [data-theme="light"] #changelog-section,
+        [data-theme="trigonometrical-red"] #changelog-section {
+             background-color: rgba(0, 0, 0, 0.05); /* Lighter background for light themes */
+             border-color: var(--accent);
+        }
+        [data-theme="light"] #user-count-display,
+        [data-theme="light"] #changelog-section h2,
+        [data-theme="light"] .changelog-version h4,
+        [data-theme="light"] .changelog-version ul {
+            color: var(--text);
+        }
+        [data-theme="trigonometrical-red"] #user-count-display,
+        [data-theme="trigonometrical-red"] #changelog-section h2,
+        [data-theme="trigonometrical-red"] .changelog-version h4,
+        [data-theme="trigonometrical-red"] .changelog-version ul {
+             color: #ffffff; /* White text for red theme background */
+        }
+         [data-theme="trigonometrical-red"] #changelog-section {
+             background-color: var(--topbar); /* Use topbar color */
+             border-color: var(--sidebar);
+         }
 
         /* Settings Panel (remains fixed) */
         .settings-panel { position: fixed; top: 55px; right: 20px; background-color: var(--topbar); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 280px; z-index: 10; opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s, visibility 0s linear 0.4s; display: none; flex-direction: column; gap: 15px; color: var(--text); }
@@ -324,13 +429,13 @@
         }
          /* Style for when input is for key entry */
          .chat-input-area input:disabled:not([placeholder="Enter message..."]) {
-             background-color: var(--sidebar); /* Darker background */
-             cursor: default; /* Not exactly not-allowed, user CAN type */
-             opacity: 0.8;
+              background-color: var(--sidebar); /* Darker background */
+              cursor: default; /* Not exactly not-allowed, user CAN type */
+              opacity: 0.8;
          }
          .chat-input-area input:disabled:not([placeholder="Enter message..."])::placeholder {
-             color: var(--text);
-             opacity: 0.5;
+              color: var(--text);
+              opacity: 0.5;
          }
 
 
@@ -403,7 +508,7 @@
 
         <div class="content" id="main-content">
              <div id="welcome-area-placeholder" style="display: none;">Loading...</div>
-             </div>
+        </div>
 
         <div class="chat-panel" id="chatPanel">
              <div class="chat-section" id="chatActiveSection">
@@ -415,7 +520,7 @@
                          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                      </button>
                       <button id="validateKeyBtn" class="icon-btn" title="Validate Key / Send Message">
-                         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                          <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                       </button>
                  </div>
              </div>
@@ -468,9 +573,12 @@
         let lastMessageTimestamp = 0; // Track last received message time
         let isChatViewActive = false; // Track if chat is the current view
         let hasValidatedKeyThisSession = false; // Track session validation status
+        // --- User Count State ---
+        let userCountIntervalId = null; // Interval timer for user count
+        const USER_COUNT_POLL_INTERVAL = 15000; // Poll for user count every 15 seconds
 
         // --- LocalStorage Keys ---
-        const LS_PREFIX = 'qbit_dont_change_this_'; // Updated prefix
+        const LS_PREFIX = 'qbit_'; // Change this back to your OLD prefix
         const LS_USERNAME = LS_PREFIX + 'userName';
         const LS_THEME = LS_PREFIX + 'theme';
         const LS_FONTSIZE = LS_PREFIX + 'fontSize';
@@ -510,15 +618,15 @@
 
         // --- General Function Definitions ---
         function getLogoSvg(color) {
-            const safeColor = color || '#444444'; // Use provided color
-            // Adjusted SVG for slightly bolder look in PFP
-             return `<svg width="40" height="40" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="9" width="7" height="14" rx="2.5"/><rect x="13" y="9" width="7" height="14" rx="2.5"/><rect x="21" y="9" width="7" height="14" rx="2.5"/></svg>`;
+             const safeColor = color || '#444444'; // Use provided color
+             // Adjusted SVG for slightly bolder look in PFP
+              return `<svg width="40" height="40" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="9" width="7" height="14" rx="2.5"/><rect x="13" y="9" width="7" height="14" rx="2.5"/><rect x="21" y="9" width="7" height="14" rx="2.5"/></svg>`;
         }
          // --- Generate User PFP SVG ---
          function generateUserPfpSvg(username) {
-            const userColor = stringToHslColor(username, 65, 55); // Use consistent HSL generation
-            // Use the existing getLogoSvg function with the generated color
-            return getLogoSvg(userColor);
+             const userColor = stringToHslColor(username, 65, 55); // Use consistent HSL generation
+             // Use the existing getLogoSvg function with the generated color
+             return getLogoSvg(userColor);
          }
 
         function updateFavicon(color) { if (!faviconLink) return; const svgString = getLogoSvg(color); const dataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`; faviconLink.href = dataUri; }
@@ -528,7 +636,69 @@
 
         // --- User & Welcome Functions ---
         function promptForName() { console.log("[DEBUG] Executing promptForName"); const modal = document.getElementById('namePromptModal'); const input = document.getElementById('nameInput'); const button = document.getElementById('submitNameBtn'); if (!modal || !input || !button) { console.error("Name prompt modal inner elements missing."); return; } modal.classList.add('visible'); input.focus(); let cs=null, ce=null; cs = () => { const name = input.value.trim(); if (name) { currentUserName = name; saveSetting(LS_USERNAME, name); modal.classList.remove('visible'); displayWelcomeMessage(name); button.removeEventListener('click', cs); input.removeEventListener('keypress', ce); } else { input.style.borderColor='red'; setTimeout(()=>{ input.style.borderColor=''; },1500); } }; ce = (e) => { if (e.key === 'Enter') cs(); }; button.removeEventListener('click', cs); input.removeEventListener('keypress', ce); button.addEventListener('click', cs, { once: true }); input.addEventListener('keypress', ce); }
-        function displayWelcomeMessage(name) { console.log("[DEBUG] Displaying welcome message for:", name); if (!mainContent) return; mainContent.innerHTML = ''; const wa = document.createElement('div'); wa.id = 'welcome-area'; const lc = document.createElement('div'); lc.id = 'welcome-logo-container'; lc.innerHTML = getLogoSvg(currentThemeColor); const msg = document.createElement('h1'); msg.id = 'welcome-message'; msg.textContent = `Welcome, ${name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}!`; wa.appendChild(lc); wa.appendChild(msg); mainContent.appendChild(wa); mainContent.style.opacity = 1; }
+
+        function displayWelcomeMessage(name) {
+            console.log("[DEBUG] Displaying welcome message for:", name);
+            if (!mainContent) return;
+            mainContent.innerHTML = ''; // Clear previous content
+
+            const welcomeArea = document.createElement('div');
+            welcomeArea.id = 'welcome-area';
+
+            const logoContainer = document.createElement('div');
+            logoContainer.id = 'welcome-logo-container';
+            logoContainer.innerHTML = getLogoSvg(currentThemeColor); // Use current theme color
+
+            const messageHeading = document.createElement('h1');
+            messageHeading.id = 'welcome-message';
+            messageHeading.textContent = `Welcome, ${name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}!`;
+
+            // --- User Count Display ---
+            const userCountP = document.createElement('p');
+            userCountP.id = 'user-count-display';
+            userCountP.textContent = 'Users online: Loading...'; // Initial text
+
+            // --- Changelog Section ---
+            const changelogDiv = document.createElement('div');
+            changelogDiv.id = 'changelog-section';
+            changelogDiv.innerHTML = `
+                <h2>Changelog</h2>
+                <div class="changelog-version">
+                    <h4>v0.34</h4>
+                    <ul>
+                        <li>Added backend chat functionality.</li>
+                        <li>Implemented message persistence (server-side logging).</li>
+                        <li>Added key validation for sending messages.</li>
+                        <li>Integrated chat panel into the UI.</li>
+                        <li>Fixed game saving/loading inconsistencies.</li>
+                        <li>Improved theme switching visuals.</li>
+                        <li>Added user count display (beta).</li>
+                        <li>Added this changelog!</li>
+                        <li>Refined UI focus states.</li>
+                    </ul>
+                </div>
+                 <div class="changelog-version">
+                    <h4>v0.30</h4>
+                    <ul>
+                        <li>Initial Game saving feature.</li>
+                        <li>Added multiple themes.</li>
+                        <li>Basic settings panel implementation.</li>
+                    </ul>
+                </div>
+                `;
+
+            welcomeArea.appendChild(logoContainer);
+            welcomeArea.appendChild(messageHeading);
+            welcomeArea.appendChild(userCountP); // Add user count display
+            welcomeArea.appendChild(changelogDiv); // Add changelog
+
+            mainContent.appendChild(welcomeArea);
+            mainContent.style.opacity = 1;
+
+            // Start polling for user count now that the element exists
+            startUserCountPolling();
+        }
+
         function updateWelcomeLogoColor(color) { const wa=document.getElementById('welcome-area'); if(!wa) return; const lse=wa.querySelector('#welcome-logo-container svg'); if(lse){ const sc=color||'#444444'; lse.setAttribute('fill', sc); lse.querySelectorAll('rect').forEach(r=>r.setAttribute('fill', sc)); } }
 
         // --- Game & Category Management ---
@@ -549,7 +719,79 @@
         const playGame = openInAboutBlank;
 
         // --- UI Section Management ---
-        function showSection(section) { if (!mainContent || !chatPanel) return; if (isChatViewActive) { toggleChatView(); } mainContent.style.display = 'block'; chatPanel.style.display = 'none'; mainContent.style.opacity = 0; setTimeout(() => { mainContent.innerHTML = ''; mainContent.style.animation = 'none'; let sectionContent = ''; if (section === "welcome" && currentUserName) { displayWelcomeMessage(currentUserName); } else if (section === "games") { if (!currentUserName) { promptForName(); return; } sectionContent = `<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML = sectionContent; const addBtn = document.getElementById('addGameBtn'); if (addBtn) addBtn.onclick = () => openGameModal(); renderGames(); } else if (section === "proxy") { if (!currentUserName) { promptForName(); return; } sectionContent = `<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`; mainContent.innerHTML = sectionContent; renderProxySites(); } else if (section === "tools") { if (!currentUserName) { promptForName(); return; } sectionContent = `<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML = sectionContent; } else { if (!currentUserName) { if (welcomeAreaPlaceholder) mainContent.appendChild(welcomeAreaPlaceholder); if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'flex'; promptForName(); } else { displayWelcomeMessage(currentUserName); } } if (!mainContent.querySelector('#welcome-area') && !mainContent.querySelector('#namePromptModal')) { mainContent.style.opacity = 0; void mainContent.offsetWidth; mainContent.style.animation = "fadeIn 0.5s forwards"; mainContent.style.opacity = 1; } else { mainContent.style.opacity = 1; } }, 200); }
+        function showSection(section) {
+            if (!mainContent || !chatPanel) return;
+
+            // --- Stop Polling if navigating away from welcome ---
+            if (isWelcomeAreaVisible()) {
+                stopUserCountPolling();
+            }
+             // --- Stop Chat polling if active ---
+             if (isChatViewActive) {
+                 // Don't toggle here directly, let the logic below handle it if needed
+                 stopChatPolling(); // Ensure chat poll stops
+                 chatPanel.style.display = 'none'; // Hide chat panel
+                 isChatViewActive = false;
+             }
+
+            mainContent.style.display = 'block'; // Ensure main content is block for showing sections
+            // chatPanel.style.display = 'none'; // Already handled above if was active
+            mainContent.style.opacity = 0;
+
+            setTimeout(() => {
+                mainContent.innerHTML = ''; // Clear content first
+                mainContent.style.animation = 'none';
+                let sectionContent = '';
+
+                if (section === "welcome" && currentUserName) {
+                    // displayWelcomeMessage now handles starting the user count poll
+                    displayWelcomeMessage(currentUserName);
+                } else if (section === "games") {
+                     if (!currentUserName) { promptForName(); return; } // Check auth
+                    sectionContent = `<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`;
+                    mainContent.innerHTML = sectionContent;
+                    const addBtn = document.getElementById('addGameBtn');
+                    if (addBtn) addBtn.onclick = () => openGameModal();
+                    renderGames();
+                    stopUserCountPolling(); // Ensure stopped if navigating here
+                } else if (section === "proxy") {
+                     if (!currentUserName) { promptForName(); return; } // Check auth
+                    sectionContent = `<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`;
+                    mainContent.innerHTML = sectionContent;
+                    renderProxySites();
+                    stopUserCountPolling(); // Ensure stopped if navigating here
+                } else if (section === "tools") {
+                     if (!currentUserName) { promptForName(); return; } // Check auth
+                    sectionContent = `<h2>Tools</h2><p>Useful links, calculators, etc.</p>`;
+                    mainContent.innerHTML = sectionContent;
+                    stopUserCountPolling(); // Ensure stopped if navigating here
+                } else {
+                    // Default case (likely initial load or invalid section)
+                    if (!currentUserName) {
+                         if (welcomeAreaPlaceholder) mainContent.appendChild(welcomeAreaPlaceholder);
+                         if (welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display = 'flex';
+                         promptForName();
+                         stopUserCountPolling(); // Not logged in, no welcome area yet
+                     } else {
+                         // Already logged in, show welcome (which starts user polling)
+                         displayWelcomeMessage(currentUserName);
+                     }
+                }
+
+                // Fade in animation logic (ensure it applies correctly)
+                if (mainContent.innerHTML && !mainContent.querySelector('#namePromptModal')) { // Check if content was added
+                    requestAnimationFrame(() => {
+                        mainContent.style.opacity = 0;
+                        mainContent.style.animation = "fadeIn 0.5s forwards";
+                        mainContent.style.opacity = 1;
+                    });
+                } else {
+                     mainContent.style.opacity = 1; // Show immediately if no animation needed
+                }
+
+            }, 50); // Reduced delay slightly
+        }
+
         function renderProxySites() { const c = mainContent ? mainContent.querySelector('.proxy-list-container') : null; if (!c) return; c.innerHTML = ''; const spaceUrls = [ "https://yessir.happyforever.com/", "https://fish.happyforever.com/", "https://turtle.happyforever.com/", "https://cars.happyforever.com/" ]; const ps = [ { name: "Space", url: null }, { name: "Transend", url: "https://hw.billigerhost.com/" }, { name: "RammerHead", url: "https://pluh.root.sx/" }, { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" } ]; ps.forEach(s => { const card = document.createElement('div'); card.className = 'proxy-card'; card.setAttribute('tabindex', '0'); card.innerHTML = ` <div><h4></h4></div> <div class="proxy-card-actions"> <button class="play-btn" title="Open ${s.name.replace(/</g, "&lt;")}">${ICONS.play}</button> </div> `; card.querySelector('h4').textContent = s.name.replace(/</g, "&lt;"); const handleOpen = () => { const urlToOpen = s.name === "Space" ? spaceUrls[Math.floor(Math.random() * spaceUrls.length)] : s.url; openInAboutBlank(urlToOpen, s.name); }; card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOpen(); } }); card.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); handleOpen(); }; c.appendChild(card); }); }
 
         // --- Settings Panel & Controls ---
@@ -609,21 +851,25 @@
                 chatPanel.style.display = 'none';
                 mainContent.style.display = 'block';
                 isChatViewActive = false;
-                stopChatPolling();
-                showSection(currentUserName ? 'welcome' : ''); // Show welcome/prompt
+                stopChatPolling(); // Stop chat polling
+                // Decide which section to show - often the welcome/home
+                showSection(currentUserName ? 'welcome' : ''); // Show welcome (starts user polling) or prompt
             } else {
                 // Switch from Main Content to Chat
-                if (!currentUserName) { promptForName(); return; } // Need site username
+                if (!currentUserName) { promptForName(); return; }
+
+                 // --- Stop User Count Polling when entering chat ---
+                 if (isWelcomeAreaVisible()) {
+                      stopUserCountPolling();
+                 }
 
                 mainContent.style.display = 'none';
-                chatPanel.style.display = 'flex'; // Show chat panel
+                chatPanel.style.display = 'flex';
                 isChatViewActive = true;
 
-                // Initial fetch/setup for chat log - fetchAllMessages handles clearing/welcome message
-                fetchAllMessages(); // Fetch initial history (includes clearing log and adding welcome)
-                startChatPolling(); // Start polling
-
-                checkSessionKeyValidation(); // Update UI based on stored session status
+                fetchAllMessages(); // Fetch initial chat history
+                startChatPolling(); // Start chat polling
+                checkSessionKeyValidation();
 
                 // Auto-fill key if not validated this session but key exists in localStorage
                 if (!hasValidatedKeyThisSession && currentChatKey && chatMessageInput) {
@@ -634,6 +880,7 @@
                 if(chatMessageInput) chatMessageInput.focus();
             }
         }
+
 
         // Updates chat input UI based on session validation status
         function checkSessionKeyValidation() {
@@ -646,20 +893,20 @@
              if (!chatMessageInput || !sendMessageBtn || !validateKeyBtn) return;
 
              if (hasValidatedKeyThisSession) {
-                 chatMessageInput.disabled = false;
-                 chatMessageInput.placeholder = 'Enter message...';
-                 sendMessageBtn.style.display = 'flex'; // Show send button
-                 validateKeyBtn.style.display = 'none'; // Hide validate button
-                 // chatMessageInput.value = ''; // Clear input field when switching to send mode - maybe not needed if user was typing?
+                  chatMessageInput.disabled = false;
+                  chatMessageInput.placeholder = 'Enter message...';
+                  sendMessageBtn.style.display = 'flex'; // Show send button
+                  validateKeyBtn.style.display = 'none'; // Hide validate button
+                  // chatMessageInput.value = ''; // Clear input field - maybe not needed?
              } else {
                  // State for entering/confirming key
                  chatMessageInput.disabled = false; // Enable input for key entry
                  if (currentChatKey) {
-                     chatMessageInput.placeholder = 'Confirm stored key or enter new one...';
-                     chatMessageInput.value = currentChatKey; // Pre-fill with stored key
+                      chatMessageInput.placeholder = 'Confirm stored key or enter new one...';
+                      chatMessageInput.value = currentChatKey; // Pre-fill with stored key
                  } else {
-                     chatMessageInput.placeholder = 'Enter key to send messages...';
-                     chatMessageInput.value = ''; // Clear value if no key stored
+                      chatMessageInput.placeholder = 'Enter key to send messages...';
+                      chatMessageInput.value = ''; // Clear value if no key stored
                  }
                  sendMessageBtn.style.display = 'none'; // Hide send button
                  validateKeyBtn.style.display = 'flex'; // Show validate button
@@ -673,17 +920,17 @@
              let keyToValidate = chatMessageInput.value.trim();
 
              if (keyToValidate) {
-                 handleKeyValidation(keyToValidate);
+                  handleKeyValidation(keyToValidate);
              } else {
                  // Fallback to prompt if input is empty
                  const enteredKeyViaPrompt = prompt("Please enter your chat key to enable sending messages:");
                  if (enteredKeyViaPrompt === null) {
-                     console.log("Key prompt cancelled.");
-                     return;
+                      console.log("Key prompt cancelled.");
+                      return;
                  }
                  if (enteredKeyViaPrompt.trim() === "") {
-                     alert("Key cannot be empty.");
-                     return;
+                      alert("Key cannot be empty.");
+                      return;
                  }
                  handleKeyValidation(enteredKeyViaPrompt.trim());
              }
@@ -711,7 +958,10 @@
                     currentChatKey = enteredKey; // Update global state variable
                     hasValidatedKeyThisSession = true;
                     updateChatInputState(); // Update UI (enables input, shows send btn)
-                    if(chatMessageInput) chatMessageInput.focus();
+                    if(chatMessageInput) {
+                        chatMessageInput.value = ''; // Clear key from input after validation
+                        chatMessageInput.focus();
+                    }
                 } else {
                     console.warn("Key validation failed:", data.message);
                     alert(`Key validation failed: ${data.message || 'Invalid Key'}`);
@@ -768,10 +1018,14 @@
                     } else {
                         console.error("Failed to send message:", data.message);
                         alert(`Failed to send message: ${data.message || 'Unknown error'}`);
+                        // Restore message to input if failed? Optional.
+                        // chatMessageInput.value = messageText;
                     }
                 } catch (error) {
                     console.error("Error sending message:", error);
                     alert("Error connecting to server to send message.");
+                     // Restore message to input if failed? Optional.
+                     // chatMessageInput.value = messageText;
                 } finally {
                      chatMessageInput.disabled = false;
                      sendMessageBtn.disabled = false;
@@ -782,103 +1036,114 @@
 
         // Append message to log with Discord-like grouping
          function appendMessageToLog(sender, message, timestamp) {
-             if (!chatLogContainer || !currentUserName) return;
+              if (!chatLogContainer || !currentUserName) return;
 
-             const lastMessageGroup = chatLogContainer.lastElementChild;
-             let isNewGroup = true;
-             const MAX_GROUP_TIME_MINUTES = 5; // Messages within 5 mins are grouped
+              const lastMessageGroup = chatLogContainer.lastElementChild;
+              let isNewGroup = true;
+              const MAX_GROUP_TIME_MINUTES = 5; // Messages within 5 mins are grouped
 
-             // Determine if the last element is a valid group from the same sender within the time limit
-             if (lastMessageGroup &&
-                 lastMessageGroup.classList.contains('chat-message-group') &&
-                 lastMessageGroup.dataset.sender === sender) {
+              // Determine if the last element is a valid group from the same sender within the time limit
+              if (lastMessageGroup &&
+                  lastMessageGroup.classList.contains('chat-message-group') &&
+                  lastMessageGroup.dataset.sender === sender) {
 
-                 const lastTimestamp = parseInt(lastMessageGroup.dataset.timestamp || '0');
-                 const timeDiffMinutes = (timestamp - lastTimestamp) / (1000 * 60);
+                  const lastTimestamp = parseInt(lastMessageGroup.dataset.timestamp || '0');
+                  const timeDiffMinutes = (timestamp - lastTimestamp) / (1000 * 60);
 
-                 if (!isNaN(timeDiffMinutes) && timeDiffMinutes < MAX_GROUP_TIME_MINUTES) {
-                     isNewGroup = false;
-                 }
-             }
-
-             // Sanitize inputs
-             const safeSender = sender.replace(/</g, "&lt;");
-             const safeMessage = message.replace(/</g, "&lt;");
-             const messageDate = new Date(timestamp);
-             const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-             const formattedDateTime = messageDate.toLocaleString(); // For tooltip
-
-             if (isNewGroup) {
-                 // --- Create a new message group ---
-                 const messageGroupDiv = document.createElement('div');
-                 messageGroupDiv.classList.add('chat-message-group');
-                 messageGroupDiv.dataset.sender = sender; // Store sender for grouping check
-                 messageGroupDiv.dataset.timestamp = timestamp; // Store timestamp for grouping check
-
-                 // PFP Container
-                 const pfpContainer = document.createElement('div');
-                 pfpContainer.classList.add('chat-pfp-container');
-                 pfpContainer.innerHTML = generateUserPfpSvg(sender); // Generate PFP
-                 messageGroupDiv.appendChild(pfpContainer);
-
-                 // Message Content Area (holds header and text blocks)
-                 const messageContentDiv = document.createElement('div');
-                 messageContentDiv.classList.add('chat-message-content');
-
-                 // Header (Username + Timestamp)
-                 const messageHeaderDiv = document.createElement('div');
-                 messageHeaderDiv.classList.add('chat-message-header');
-
-                 // Username Span
-                 const usernameSpan = document.createElement('span');
-                 usernameSpan.classList.add('chat-username');
-                 usernameSpan.textContent = safeSender;
-                 // Apply unique color derived from username
-                 usernameSpan.style.color = stringToHslColor(sender, 65, 55);
-                 messageHeaderDiv.appendChild(usernameSpan);
-
-                 // Timestamp Span
-                 const timestampSpan = document.createElement('span');
-                 timestampSpan.classList.add('chat-timestamp');
-                 timestampSpan.textContent = formattedTime;
-                 timestampSpan.title = formattedDateTime; // Full date/time on hover
-                 messageHeaderDiv.appendChild(timestampSpan);
-
-                 messageContentDiv.appendChild(messageHeaderDiv);
-
-                 // Message Text (first message of the new group)
-                 const messageP = document.createElement('p');
-                 messageP.classList.add('chat-message-text');
-                 messageP.textContent = safeMessage;
-                 messageContentDiv.appendChild(messageP);
-
-                 messageGroupDiv.appendChild(messageContentDiv);
-                 chatLogContainer.appendChild(messageGroupDiv);
-
-             } else {
-                 // --- Append message text to the existing group ---
-                 const existingContentDiv = lastMessageGroup.querySelector('.chat-message-content');
-                 if (existingContentDiv) {
-                     const messageP = document.createElement('p');
-                     messageP.classList.add('chat-message-text');
-                     messageP.textContent = safeMessage;
-                     existingContentDiv.appendChild(messageP);
-                     // Update the group's timestamp to the latest message for time-based grouping logic
-                     lastMessageGroup.dataset.timestamp = timestamp;
-                 } else {
-                      console.warn("Could not find content div in last message group. Creating new group.");
-                      // Force creation of a new group by effectively making isNewGroup true for this call
-                      // This recursive call needs careful handling to avoid infinite loops if something is very wrong
-                      // A simpler approach might be to just log the error and potentially lose the message display grouping
-                      // For now, let's just log and proceed, updating the main timestamp tracker
-                 }
-             }
-
-             // Keep track of the overall latest message timestamp for polling
-              if (timestamp > lastMessageTimestamp) {
-                  lastMessageTimestamp = timestamp;
+                  if (!isNaN(timeDiffMinutes) && timeDiffMinutes < MAX_GROUP_TIME_MINUTES) {
+                       isNewGroup = false;
+                  }
               }
+
+              // Sanitize inputs
+              const safeSender = sender.replace(/</g, "&lt;");
+              const safeMessage = message.replace(/</g, "&lt;");
+              const messageDate = new Date(timestamp);
+              const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+              const formattedDateTime = messageDate.toLocaleString(); // For tooltip
+
+              if (isNewGroup) {
+                  // --- Create a new message group ---
+                  const messageGroupDiv = document.createElement('div');
+                  messageGroupDiv.classList.add('chat-message-group');
+                  messageGroupDiv.dataset.sender = sender; // Store sender for grouping check
+                  messageGroupDiv.dataset.timestamp = timestamp; // Store timestamp for grouping check
+
+                  // PFP Container
+                  const pfpContainer = document.createElement('div');
+                  pfpContainer.classList.add('chat-pfp-container');
+                  pfpContainer.innerHTML = generateUserPfpSvg(sender); // Generate PFP
+                  messageGroupDiv.appendChild(pfpContainer);
+
+                  // Message Content Area (holds header and text blocks)
+                  const messageContentDiv = document.createElement('div');
+                  messageContentDiv.classList.add('chat-message-content');
+
+                  // Header (Username + Timestamp)
+                  const messageHeaderDiv = document.createElement('div');
+                  messageHeaderDiv.classList.add('chat-message-header');
+
+                  // Username Span
+                  const usernameSpan = document.createElement('span');
+                  usernameSpan.classList.add('chat-username');
+                  usernameSpan.textContent = safeSender;
+                  // Apply unique color derived from username
+                  usernameSpan.style.color = stringToHslColor(sender, 65, 55);
+                  messageHeaderDiv.appendChild(usernameSpan);
+
+                  // Timestamp Span
+                  const timestampSpan = document.createElement('span');
+                  timestampSpan.classList.add('chat-timestamp');
+                  timestampSpan.textContent = formattedTime;
+                  timestampSpan.title = formattedDateTime; // Full date/time on hover
+                  messageHeaderDiv.appendChild(timestampSpan);
+
+                  messageContentDiv.appendChild(messageHeaderDiv);
+
+                  // Message Text (first message of the new group)
+                  const messageP = document.createElement('p');
+                  messageP.classList.add('chat-message-text');
+                  messageP.textContent = safeMessage;
+                  messageContentDiv.appendChild(messageP);
+
+                  messageGroupDiv.appendChild(messageContentDiv);
+                  chatLogContainer.appendChild(messageGroupDiv);
+
+              } else {
+                  // --- Append message text to the existing group ---
+                  const existingContentDiv = lastMessageGroup.querySelector('.chat-message-content');
+                  if (existingContentDiv) {
+                       const messageP = document.createElement('p');
+                       messageP.classList.add('chat-message-text');
+                       messageP.textContent = safeMessage;
+                       existingContentDiv.appendChild(messageP);
+                       // Update the group's timestamp to the latest message for time-based grouping logic
+                       lastMessageGroup.dataset.timestamp = timestamp;
+                  } else {
+                        console.warn("Could not find content div in last message group. Appending as new.");
+                         // Fallback: Create a new group (effectively calls this function with isNewGroup = true)
+                         // This avoids recursion issues but might display slightly off if structure is broken
+                        const messageGroupDiv = document.createElement('div');
+                        messageGroupDiv.classList.add('chat-message-group');
+                        messageGroupDiv.dataset.sender = sender; messageGroupDiv.dataset.timestamp = timestamp;
+                        const pfpContainer = document.createElement('div'); pfpContainer.classList.add('chat-pfp-container'); pfpContainer.innerHTML = generateUserPfpSvg(sender); messageGroupDiv.appendChild(pfpContainer);
+                        const messageContentDiv = document.createElement('div'); messageContentDiv.classList.add('chat-message-content');
+                        const messageHeaderDiv = document.createElement('div'); messageHeaderDiv.classList.add('chat-message-header');
+                        const usernameSpan = document.createElement('span'); usernameSpan.classList.add('chat-username'); usernameSpan.textContent = safeSender; usernameSpan.style.color = stringToHslColor(sender, 65, 55); messageHeaderDiv.appendChild(usernameSpan);
+                        const timestampSpan = document.createElement('span'); timestampSpan.classList.add('chat-timestamp'); timestampSpan.textContent = formattedTime; timestampSpan.title = formattedDateTime; messageHeaderDiv.appendChild(timestampSpan);
+                        messageContentDiv.appendChild(messageHeaderDiv);
+                        const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; messageContentDiv.appendChild(messageP);
+                        messageGroupDiv.appendChild(messageContentDiv);
+                        chatLogContainer.appendChild(messageGroupDiv);
+                  }
+              }
+
+              // Keep track of the overall latest message timestamp for polling
+               if (timestamp > lastMessageTimestamp) {
+                    lastMessageTimestamp = timestamp;
+               }
          }
+
 
         function scrollToChatBottom() { if (chatLogContainer) { setTimeout(() => { chatLogContainer.scrollTop = chatLogContainer.scrollHeight; }, 50); } }
 
@@ -897,19 +1162,20 @@
                     // Sort just to be sure order is correct from server/polling
                     messages.sort((a, b) => a.timestamp - b.timestamp);
                     messages.forEach(msg => {
-                         // Simple duplicate check based on timestamp and sender/text - might need refinement
+                        // Basic duplicate check (can be improved with message IDs if backend adds them)
                          const alreadyExists = Array.from(chatLogContainer.querySelectorAll('.chat-message-group'))
-                                               .some(group => group.dataset.timestamp >= msg.timestamp && group.dataset.sender === msg.sender); // Basic check
+                             .some(group => parseInt(group.dataset.timestamp || '0') === msg.timestamp && group.dataset.sender === msg.sender);
 
-                         if (!alreadyExists || msg.timestamp > lastMessageTimestamp) { // Append if new or definitely later than last known
-                             appendMessageToLog(msg.sender, msg.text, msg.timestamp);
-                             scrolled = true;
+                         if (!alreadyExists) {
+                              appendMessageToLog(msg.sender, msg.text, msg.timestamp);
+                              scrolled = true;
                          } else {
-                            // This case is less likely if lastMessageTimestamp is updated correctly
-                            // but good to handle potential overlap/re-fetch edge cases
-                            // console.log("Skipping potentially duplicate message:", msg.timestamp);
+                              // console.log("Skipping potential duplicate msg:", msg.timestamp);
+                              // Update last timestamp even if skipping, in case server sent slightly old msgs
+                              if (msg.timestamp > lastMessageTimestamp) {
+                                   lastMessageTimestamp = msg.timestamp;
+                              }
                          }
-
                     });
                     if (scrolled) {
                         scrollToChatBottom();
@@ -931,39 +1197,95 @@
              // chatLogContainer.innerHTML = ''; // Clear previous content
 
              try {
-                 const response = await fetch(`${BACKEND_URL}/get-all-messages`);
-                  if (!response.ok) {
-                      console.error(`Error fetching all messages: ${response.statusText}`);
-                      chatLogContainer.innerHTML = welcomeHTML + `<p class="chat-system-message" style="color: var(--delete-color);">Error loading history.</p>`; // Show welcome + error
-                      return;
-                  }
-                  const messages = await response.json();
+                  const response = await fetch(`${BACKEND_URL}/get-all-messages`);
+                   if (!response.ok) {
+                        console.error(`Error fetching all messages: ${response.statusText}`);
+                        chatLogContainer.innerHTML = welcomeHTML + `<p class="chat-system-message" style="color: var(--delete-color);">Error loading history.</p>`; // Show welcome + error
+                        return;
+                   }
+                   const messages = await response.json();
 
-                   // Clear log AFTER successful fetch, before appending
-                   chatLogContainer.innerHTML = welcomeHTML;
-                   lastMessageTimestamp = 0; // Reset timestamp before loading history
+                    // Clear log AFTER successful fetch, before appending
+                    chatLogContainer.innerHTML = welcomeHTML;
+                    lastMessageTimestamp = 0; // Reset timestamp before loading history
 
-                  if (messages && messages.length > 0) {
-                      messages.sort((a, b) => a.timestamp - b.timestamp);
-                      messages.forEach(msg => {
-                          appendMessageToLog(msg.sender, msg.text, msg.timestamp);
-                      });
-                      console.log(`Loaded ${messages.length} historical messages.`);
-                  } else {
-                      console.log("No historical messages found.");
-                  }
-                  scrollToChatBottom(); // Scroll after adding all messages
+                   if (messages && messages.length > 0) {
+                        messages.sort((a, b) => a.timestamp - b.timestamp);
+                        messages.forEach(msg => {
+                             appendMessageToLog(msg.sender, msg.text, msg.timestamp);
+                        });
+                        console.log(`Loaded ${messages.length} historical messages.`);
+                   } else {
+                        console.log("No historical messages found.");
+                   }
+                   scrollToChatBottom(); // Scroll after adding all messages
              } catch (error) {
-                  console.error("Error fetching all messages:", error);
-                  chatLogContainer.innerHTML = welcomeHTML + `<p class="chat-system-message" style="color: var(--delete-color);">Error connecting to load history.</p>`; // Show welcome + error
+                   console.error("Error fetching all messages:", error);
+                   chatLogContainer.innerHTML = welcomeHTML + `<p class="chat-system-message" style="color: var(--delete-color);">Error connecting to load history.</p>`; // Show welcome + error
              }
-         }
+        }
+
 
         function startChatPolling() { if (chatPollIntervalId) clearInterval(chatPollIntervalId); if (!isChatViewActive) return; console.log("Starting chat polling..."); fetchNewMessages(); chatPollIntervalId = setInterval(fetchNewMessages, CHAT_POLL_INTERVAL); }
         function stopChatPolling() { if (chatPollIntervalId) { console.log("Stopping chat polling."); clearInterval(chatPollIntervalId); chatPollIntervalId = null; } }
 
         // --- Backend Command Explanation (Conceptual) ---
         function explainBackendCommands() { console.log(` --- Backend Chat Key Management (Conceptual) --- The following commands would be executed on the SERVER-SIDE, likely via a command-line interface or a secure admin panel, NOT typed into the chat input by users. /key create <key_value> [<description>] - Generates a new key on the backend. - Example: '/key create ALPHA_KEY Alice Key' /key remove <key_to_remove> - Deletes an existing key from the backend. - Example: '/key remove BETA_KEY' /key list - Lists all currently valid keys stored on the backend. --- Chat Log Saving (Conceptual) --- The backend server intercepts messages sent by validated users. It appends each message (with timestamp, sender name from frontend, and message text) to a persistent storage medium (like the chat_log.jsonl file). `); }
+
+
+        // --- User Count Polling Functions ---
+        async function fetchUserCount() {
+            if (!isWelcomeAreaVisible()) return; // Only fetch if welcome area is visible
+
+            const displayElement = document.getElementById('user-count-display');
+            if (!displayElement) return; // Element not found
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/user-count`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (typeof data.count === 'number') {
+                    displayElement.textContent = `Users online: ${data.count}`;
+                } else {
+                    displayElement.textContent = 'Users online: N/A';
+                    console.warn("User count data received but format is incorrect:", data);
+                }
+            } catch (error) {
+                console.error("Error fetching user count:", error);
+                if (displayElement) {
+                    displayElement.textContent = 'Users online: Error';
+                }
+                // Don't stop polling on error necessarily, maybe temporary issue
+                // stopUserCountPolling();
+            }
+        }
+
+        function isWelcomeAreaVisible() {
+             // Check if the main content area is visible AND the welcome-area element exists within it
+             return mainContent && mainContent.style.display !== 'none' && mainContent.querySelector('#welcome-area');
+        }
+
+        function startUserCountPolling() {
+            if (userCountIntervalId) clearInterval(userCountIntervalId); // Clear existing interval
+            if (!isWelcomeAreaVisible()) return; // Don't start if not visible
+
+            console.log("Starting user count polling...");
+            fetchUserCount(); // Fetch immediately
+            userCountIntervalId = setInterval(fetchUserCount, USER_COUNT_POLL_INTERVAL);
+        }
+
+        function stopUserCountPolling() {
+            if (userCountIntervalId) {
+                console.log("Stopping user count polling.");
+                clearInterval(userCountIntervalId);
+                userCountIntervalId = null;
+            }
+            // Reset the display when polling stops (optional)
+             const displayElement = document.getElementById('user-count-display');
+             // if (displayElement) displayElement.textContent = 'Users online: -'; // Example reset text
+        }
 
         // --- Load Settings & Initial Setup ---
         function loadSettingsAndInit() {
@@ -1001,8 +1323,15 @@
                 checkSessionKeyValidation(); // Check session storage on load
 
                 if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='none';
-                if(currentUserName) { showSection('welcome'); }
-                else { if(welcomeAreaPlaceholder&&mainContent)mainContent.appendChild(welcomeAreaPlaceholder); if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='flex'; promptForName(); }
+                if(currentUserName) {
+                    showSection('welcome'); // Will call displayWelcomeMessage -> startUserCountPolling
+                }
+                else {
+                    if(welcomeAreaPlaceholder&&mainContent)mainContent.appendChild(welcomeAreaPlaceholder);
+                    if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='flex';
+                    promptForName();
+                     stopUserCountPolling(); // Stop polling if prompting for name
+                }
                 updateFavicon(currentThemeColor);
 
                 if (currentChatKey) {
@@ -1014,6 +1343,7 @@
                 if(mainContent)mainContent.innerHTML=`<h2 style="color:red;text-align:center;">Error loading state: ${e.message}</h2>`;
                 updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif");
                 if(!currentUserName)promptForName(); else showSection('welcome');
+                 stopUserCountPolling(); // Stop polling on error
             }
             updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim());
             console.log("Init complete.");
@@ -1025,6 +1355,10 @@
             try {
                 // --- Get Standard Elements ---
                 mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); namePromptModal=document.getElementById('namePromptModal'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn');
+                // Get font size display elements
+                 fontSizeThumb = document.getElementById('fontSizeThumb');
+                 fontSizeValueDisplay = document.getElementById('fontSizeValue');
+                 fontSizeProgress = document.getElementById('fontSizeProgress');
 
                 // --- Get Chat Elements ---
                 chatPanel = document.getElementById('chatPanel');
@@ -1032,11 +1366,10 @@
                 chatLogContainer = document.getElementById('chatLogContainer');
                 chatMessageInput = document.getElementById('chatMessageInput');
                 sendMessageBtn = document.getElementById('sendMessageBtn');
-                // chatActiveUserNameSpan is now dynamically created/updated in fetchAllMessages welcome message
                 validateKeyBtn = document.getElementById('validateKeyBtn');
 
                 // --- Check if all elements exist ---
-                const coreElements = { mainContent, settingsPanel, root, body, faviconLink, namePromptModal, gameModal, settingsBtn, searchInput, welcomeAreaPlaceholder, themeSelector, fontSelector, fontSizeSlider, warnOnCloseSwitch, bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn };
+                const coreElements = { mainContent, settingsPanel, root, body, faviconLink, namePromptModal, gameModal, settingsBtn, searchInput, welcomeAreaPlaceholder, themeSelector, fontSelector, fontSizeSlider, fontSizeThumb, fontSizeValueDisplay, fontSizeProgress, warnOnCloseSwitch, bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn };
                  // Removed chatActiveUserNameSpan from this check
                 const chatElements = { chatPanel, chatActiveSection, chatLogContainer, chatMessageInput, sendMessageBtn, validateKeyBtn };
                 const missingCore = Object.entries(coreElements).filter(([k, v]) => !v).map(([k]) => k);
@@ -1079,18 +1412,18 @@
                   validateKeyBtn.addEventListener('click', attemptKeyValidationFromInput);
              }
              if (sendMessageBtn) {
-                 sendMessageBtn.addEventListener('click', sendMessage);
+                  sendMessageBtn.addEventListener('click', sendMessage);
              }
              if (chatMessageInput) {
-                 chatMessageInput.addEventListener('keypress', (e) => {
-                     if (e.key === 'Enter') {
-                         if (hasValidatedKeyThisSession) {
-                             sendMessage(); // Send message if session key is valid
-                         } else {
-                             attemptKeyValidationFromInput(); // Try validating the input content
-                         }
-                     }
-                 });
+                  chatMessageInput.addEventListener('keypress', (e) => {
+                      if (e.key === 'Enter') {
+                          if (hasValidatedKeyThisSession) {
+                               sendMessage(); // Send message if session key is valid
+                          } else {
+                               attemptKeyValidationFromInput(); // Try validating the input content
+                          }
+                      }
+                  });
              }
 
             console.log("Listeners attached.");
