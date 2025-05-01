@@ -19,6 +19,7 @@
             /* Components */ --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent);
             /* Colors */ --delete-color: #e53e3e; --edit-color: #4299e1; --play-color: #48bb78; --mod-color: #4ec9b0; --owner-color: #c586c0; --system-color: #ce9178;
             /* Background */ --custom-bg-image: none;
+            /* Added: Accent Blue for focus */ --accent-blue: #3b82f6;
         }
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .settings-panel input[type="file"], .settings-panel button, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .game-card, .game-card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn, .proxy-card, .proxy-card button, #clearDataBtn, .chat-panel, .chat-section, .chat-log-container, .chat-input-area input, .chat-input-area button { box-sizing: border-box; }
@@ -41,7 +42,7 @@
         .icon-btn svg { width: 18px; height: 18px; fill: var(--text); display: block; }
 
         /* --- Content Area --- */
-        .content { padding: 25px; overflow-y: auto; flex-grow: 1; line-height: 1.6; color: var(--text); display: block; height: calc(100% - 58px); }
+        .content { padding: 25px; overflow-y: auto; flex-grow: 1; line-height: 1.6; color: var(--text); display: block; height: calc(100% - 58px); /* Adjusted for topbar height */ }
         .content h1 { font-size: 1.8em; margin-bottom: 0.5em; color: var(--text);} .content h2 { font-size: 1.4em; margin-bottom: 0.4em; margin-top: 1em; color: var(--text);} .content p { font-size: 1em; margin-bottom: 1em; color: var(--text);}
 
         /* --- Welcome Area --- */
@@ -84,7 +85,8 @@
         .danger-btn:hover { filter: brightness(0.85); }
         .danger-btn:active { transform: scale(0.98); }
         #logoutBtn { background-color: var(--edit-color); } /* Specific color for logout */
-        #logoutBtn:hover { filter: brightness(1.15); }
+        #logoutBtn:hover:not(:disabled) { filter: brightness(1.15); }
+        #logoutBtn:disabled { background-color: var(--accent); opacity: 0.5; cursor: not-allowed; filter: grayscale(50%); transform: none;} /* Style for disabled logout */
 
         /* --- Modals (Auth, Game) --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 100; opacity: 0; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
@@ -173,7 +175,6 @@
         input::placeholder, .modal-box input::placeholder, .search input::placeholder, textarea::placeholder { color: var(--text); opacity: 0.6; }
 
         /* --- Theme Overrides (Example: Trigonometrical Red) --- */
-        /* Add specific theme overrides here if needed, adjusting for new elements/styles */
         [data-theme="trigonometrical-red"] { --mod-color: #1abc9c; --owner-color: #9b59b6; --system-color: #e67e22; }
         [data-theme="trigonometrical-red"] .modal-box, [data-theme="trigonometrical-red"] .settings-panel, [data-theme="trigonometrical-red"] .sidebar button, [data-theme="trigonometrical-red"] .sidebar h2, [data-theme="trigonometrical-red"] .icon-btn svg, [data-theme="trigonometrical-red"] .slider-value-display { color: #ffffff; fill: #ffffff; }
         /* ... other overrides ... */
@@ -197,9 +198,7 @@
 <body data-theme="dark">
 
     <div class="modal-overlay" id="loginModal"> <div class="modal-box"> <h3>Login to Qbit</h3> <div id="loginError"></div> <div class="form-field"> <label for="loginUsername">Username:</label> <input type="text" id="loginUsername" placeholder="Your Username" maxlength="30"> </div> <div class="form-field"> <label for="loginPassword">Password:</label> <input type="password" id="loginPassword" placeholder="Your Password"> </div> <div class="modal-actions" style="justify-content: space-between;"> <button type="button" class="secondary" id="switchToRegisterBtn" style="font-size: 0.9em;">Need an account?</button> <div> <button type="button" class="secondary" id="cancelLoginBtn">Cancel</button> <button type="button" class="primary" id="submitLoginBtn">Login</button> </div> </div> </div> </div>
-
     <div class="modal-overlay" id="registerModal"> <div class="modal-box"> <h3>Register for Qbit</h3> <div id="registerError"></div> <p style="font-size: 0.85em; opacity: 0.8; text-align: left;">Usernames cannot contain spaces (max 30 chars). Passwords need 6+ chars.</p> <div class="form-field"> <label for="registerUsername">Choose Username:</label> <input type="text" id="registerUsername" placeholder="New Username" maxlength="30"> </div> <div class="form-field"> <label for="registerPassword">Choose Password (min 6 chars):</label> <input type="password" id="registerPassword" placeholder="New Password"> </div> <div class="form-field"> <label for="registerPasswordConfirm">Confirm Password:</label> <input type="password" id="registerPasswordConfirm" placeholder="Confirm Password"> </div> <div class="modal-actions" style="justify-content: space-between;"> <button type="button" class="secondary" id="switchToLoginBtn" style="font-size: 0.9em;">Have an account?</button> <div> <button type="button" class="secondary" id="cancelRegisterBtn">Cancel</button> <button type="button" class="primary" id="submitRegisterBtn">Register</button> </div> </div> </div> </div>
-
     <div class="modal-overlay" id="gameModal"> <div class="modal-box"> <h3 id="gameModalTitle">Add New Game</h3> <input type="hidden" id="gameIdInput"> <div class="form-field"> <label for="gameNameInput">Name:</label> <input type="text" id="gameNameInput" placeholder="e.g., 2048" required> </div> <div class="form-field"> <label for="gameUrlInput">URL:</label> <input type="url" id="gameUrlInput" placeholder="https://play2048.co/" required> </div> <div class="form-field"> <label for="gameCategorySelect">Category:</label> <div class="category-field"> <select id="gameCategorySelect"> <option value="">Uncategorized</option> </select> <button id="addCategoryBtn" title="Add New Category">+</button> </div> </div> <div class="modal-actions"> <button type="button" class="secondary" id="cancelGameBtn">Cancel</button> <button type="button" class="primary" id="saveGameBtn">Save Game</button> </div> </div> </div>
 
     <div class="sidebar">
@@ -225,20 +224,20 @@
 
         <div class="content" id="main-content">
             <div id="welcome-area-placeholder" style="display: none; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;"><h2>Loading Qbit...</h2><p style="opacity:0.7;">Please wait.</p></div>
-        </div>
+            </div>
 
         <div class="chat-panel" id="chatPanel">
              <div class="chat-section" id="chatActiveSection">
-                 <div class="chat-log-container" id="chatLogContainer">
-                     <div class="chat-loading-indicator">Loading...</div>
-                     {/* */}
-                 </div>
-                 <div class="chat-input-area">
-                     <input type="text" id="chatMessageInput" placeholder="Login to chat..." disabled>
-                     <button id="sendMessageBtn" class="icon-btn" title="Send Message" style="display: none;">
-                         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                     </button>
-                 </div>
+                  <div class="chat-log-container" id="chatLogContainer">
+                       <div class="chat-loading-indicator">Loading...</div>
+                       {/* Chat messages dynamically loaded here */}
+                  </div>
+                  <div class="chat-input-area">
+                       <input type="text" id="chatMessageInput" placeholder="Login to chat..." disabled>
+                       <button id="sendMessageBtn" class="icon-btn" title="Send Message" style="display: none;">
+                            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                       </button>
+                  </div>
              </div>
         </div>
 
@@ -250,403 +249,734 @@
             <div id="bgImageControlContainer"> <label for="bgImageFileInput">Select Image (Max 2MB):</label> <input type="file" id="bgImageFileInput" accept="image/*"> <button id="clearBgImageBtn" title="Remove custom background">Clear Background</button> </div>
             <label class="toggle-switch-label"> Warn on Close: <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch"> <span class="toggle-slider"></span> </label>
             <button id="logoutBtn" class="danger-btn" style="margin-top: 15px; background-color: var(--edit-color); display: none;">Logout</button>
-            <button id="clearDataBtn" class="danger-btn">Clear All Local Data</button>
-        </div>
+            </div>
     </div>
 
-    <script>
-        // --- Constants ---
-        const BACKEND_URL = 'https://auckland-previous-sender-popular.trycloudflare.com'; // !!! UPDATE IF NEEDED !!!
-        const CHAT_POLL_INTERVAL = 3000;
-        const MESSAGE_COOLDOWN_MS = 2000;
-        const CHAT_HISTORY_LOAD_LIMIT = 50;
-        const MAX_IMAGE_SIZE_MB = 2;
-        const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
-        const LS_PREFIX = 'qbit_'; // LocalStorage Prefix
-        const LS_THEME = LS_PREFIX + 'theme';
-        const LS_FONTSIZE = LS_PREFIX + 'fontSize';
-        const LS_FONTFAMILY = LS_PREFIX + 'fontFamily';
-        const LS_GAMES = LS_PREFIX + 'games';
-        const LS_CATEGORIES = LS_PREFIX + 'categories';
-        const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose';
-        const LS_INITIALIZED = LS_PREFIX + 'initialized_v3'; // Increment version if defaults change
-        const LS_BGIMAGE_ENABLED = LS_PREFIX + 'bgImageEnabled';
-        const LS_BGIMAGE_URL = LS_PREFIX + 'bgImageUrl';
-        const LS_LOGGED_IN_USER = LS_PREFIX + 'loggedInUser_v2'; // Key for localStorage login state
+<script>
+    // --- Constants ---
+    const BACKEND_URL = 'https://auckland-previous-sender-popular.trycloudflare.com'; // !!! UPDATE IF NEEDED !!!
+    const CHAT_POLL_INTERVAL = 3000;
+    const MESSAGE_COOLDOWN_MS = 2000;
+    const CHAT_HISTORY_LOAD_LIMIT = 50;
+    const MAX_IMAGE_SIZE_MB = 2;
+    const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+    const LS_PREFIX = 'qbit_'; // LocalStorage Prefix
+    const LS_THEME = LS_PREFIX + 'theme';
+    const LS_FONTSIZE = LS_PREFIX + 'fontSize';
+    const LS_FONTFAMILY = LS_PREFIX + 'fontFamily';
+    const LS_GAMES = LS_PREFIX + 'games';
+    const LS_CATEGORIES = LS_PREFIX + 'categories';
+    const LS_WARNONCLOSE = LS_PREFIX + 'warnOnClose';
+    const LS_INITIALIZED = LS_PREFIX + 'initialized_v3'; // Increment version if defaults change
+    const LS_BGIMAGE_ENABLED = LS_PREFIX + 'bgImageEnabled';
+    const LS_BGIMAGE_URL = LS_PREFIX + 'bgImageUrl';
+    const LS_LOGGED_IN_USER = LS_PREFIX + 'loggedInUser_v2'; // Key for localStorage login state
+    const LS_IS_BANNED = LS_PREFIX + 'isBanned'; // Key for client-side ban flag
+    const USER_COUNT_POLL_INTERVAL = 15000;
+    const BAN_CHECK_INTERVAL = 5000; // Check every 5 seconds
 
-        // --- DOM Element References ---
-        let mainContent, settingsPanel, root, body, faviconLink,
-            gameModal, gameModalTitle, gameIdInput, gameNameInput, gameUrlInput,
-            gameCategorySelect, addCategoryBtn, saveGameBtn, cancelGameBtn,
-            fontSizeSlider, fontSizeThumb, fontSizeValueDisplay, fontSizeProgress,
-            themeSelector, fontSelector, settingsBtn, searchInput, warnOnCloseSwitch,
-            bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn,
-            loginModal, registerModal, loginUsername, loginPassword, submitLoginBtn, cancelLoginBtn, switchToRegisterBtn, loginError,
-            registerUsername, registerPassword, registerPasswordConfirm, submitRegisterBtn, cancelRegisterBtn, switchToLoginBtn, registerError,
-            logoutBtn, chatToggleBtn, sidebarGamesBtn, sidebarProxyBtn, sidebarToolsBtn,
-            chatPanel, chatActiveSection, chatLogContainer, chatMessageInput, sendMessageBtn, chatLoadingIndicator,
-            welcomeAreaPlaceholder;
+    // --- DOM Element References ---
+    let mainContent, settingsPanel, root, body, faviconLink,
+        gameModal, gameModalTitle, gameIdInput, gameNameInput, gameUrlInput,
+        gameCategorySelect, addCategoryBtn, saveGameBtn, cancelGameBtn,
+        fontSizeSlider, fontSizeThumb, fontSizeValueDisplay, fontSizeProgress,
+        themeSelector, fontSelector, settingsBtn, searchInput, warnOnCloseSwitch,
+        bgImageToggleSwitch, bgImageControlContainer, bgImageFileInput, clearBgImageBtn,
+        loginModal, registerModal, loginUsername, loginPassword, submitLoginBtn, cancelLoginBtn, switchToRegisterBtn, loginError,
+        registerUsername, registerPassword, registerPasswordConfirm, submitRegisterBtn, cancelRegisterBtn, switchToLoginBtn, registerError,
+        logoutBtn, chatToggleBtn, sidebarGamesBtn, sidebarProxyBtn, sidebarToolsBtn,
+        chatPanel, chatActiveSection, chatLogContainer, chatMessageInput, sendMessageBtn, chatLoadingIndicator,
+        welcomeAreaPlaceholder;
 
-        // --- Global State ---
-        let currentThemeColor = '#444444'; let games = []; let categories = []; let isEditingGame = false;
-        let warnOnClose = false; let bgImageEnabled = false; let bgImageUrl = ''; let debounceTimer;
-        let isLoggedIn = false; let loggedInUsername = null;
-        let chatPollIntervalId = null; let lastMessageTimestamp = 0; let isChatViewActive = false;
-        let lastSentTimestamp = 0; let isSendingMessage = false;
-        let isLoadingOlderMessages = false; let oldestMessageTimestamp = null; let noMoreOlderMessages = false;
-        let userCountIntervalId = null; const USER_COUNT_POLL_INTERVAL = 15000;
+    // --- Global State ---
+    let currentThemeColor = '#444444'; let games = []; let categories = []; let isEditingGame = false;
+    let warnOnClose = false; let bgImageEnabled = false; let bgImageUrl = ''; let debounceTimer;
+    let isLoggedIn = false; let loggedInUsername = null; let isClientSideBanned = false; // State variable for ban flag
+    let chatPollIntervalId = null; let lastMessageTimestamp = 0; let isChatViewActive = false;
+    let lastSentTimestamp = 0; let isSendingMessage = false;
+    let isLoadingOlderMessages = false; let oldestMessageTimestamp = null; let noMoreOlderMessages = false;
+    let userCountIntervalId = null;
+    let banCheckIntervalId = null; // To store the interval ID for ban checking
 
-        // --- SVG Icons ---
-        const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
+    // --- SVG Icons ---
+    const ICONS = { play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`, delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` };
 
-        // --- Helper Functions (debounce, hash, color, logo) ---
-        function debounce(func, delay) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { func.apply(this, args); }, delay); }; }
-        function simpleHash(str) { let hash = 5381; for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) + hash) + char; } return Math.abs(hash); }
-        function stringToHslColor(str, s = 65, l = 55) { if (!str) str = "default"; const hash = simpleHash(str); const h = hash % 360; return `hsl(${h}, ${s}%, ${l}%)`; }
-        function getLogoSvg(color) { const safeColor = color || '#444444'; return `<svg width="40" height="40" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="9" width="7" height="14" rx="2.5"/><rect x="13" y="9" width="7" height="14" rx="2.5"/><rect x="21" y="9" width="7" height="14" rx="2.5"/></svg>`; }
-        function generateUserPfpSvg(username) { const userColor = stringToHslColor(username, 65, 55); return getLogoSvg(userColor); }
+    // --- Helper Functions (debounce, hash, color, logo) ---
+    function debounce(func, delay) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { func.apply(this, args); }, delay); }; }
+    function simpleHash(str) { let hash = 5381; for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) + hash) + char; } return Math.abs(hash); }
+    function stringToHslColor(str, s = 65, l = 55) { if (!str) str = "default"; const hash = simpleHash(str); const h = hash % 360; return `hsl(${h}, ${s}%, ${l}%)`; }
+    function getLogoSvg(color) { const safeColor = color || '#444444'; return `<svg width="40" height="40" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="9" width="7" height="14" rx="2.5"/><rect x="13" y="9" width="7" height="14" rx="2.5"/><rect x="21" y="9" width="7" height="14" rx="2.5"/></svg>`; }
+    function generateUserPfpSvg(username) { const userColor = stringToHslColor(username, 65, 55); return getLogoSvg(userColor); }
 
-        // --- LocalStorage/Settings Helpers ---
-        function updateFavicon(color) { if (!faviconLink) return; const svgString = getLogoSvg(color); const dataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`; faviconLink.href = dataUri; }
-        function saveSetting(key, value) { try { localStorage.setItem(key, value); } catch (e) { console.error(`LS Save Error for key "${key}":`, e); if (e.name === 'QuotaExceededError') alert(`Could not save setting. Storage limit reached.`); } }
-        function removeSetting(key) { try { localStorage.removeItem(key); } catch (e) { console.error(`LS Remove Error for key "${key}":`, e); } }
-        function updateSelectArrowColor(textColor = '#ffffff') { const styleId = 'dynamic-select-arrow-style'; let el = document.getElementById(styleId); if (!el) { el = document.createElement('style'); el.id = styleId; document.head.appendChild(el); } const safeColor = encodeURIComponent((textColor || '#ffffff').substring(1)); const svgUrl = `data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${safeColor}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E`; el.textContent = ` .settings-panel select, .modal-box select { background-image: url('${svgUrl}'); } `; }
+    // --- LocalStorage/Settings Helpers ---
+    function updateFavicon(color) { if (!faviconLink) return; const svgString = getLogoSvg(color); const dataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`; faviconLink.href = dataUri; }
+    function saveSetting(key, value) { try { localStorage.setItem(key, value); } catch (e) { console.error(`LS Save Error for key "${key}":`, e); if (e.name === 'QuotaExceededError') alert(`Could not save setting. Storage limit reached.`); } }
+    function removeSetting(key) { try { localStorage.removeItem(key); } catch (e) { console.error(`LS Remove Error for key "${key}":`, e); } }
+    function updateSelectArrowColor(textColor = '#ffffff') { const styleId = 'dynamic-select-arrow-style'; let el = document.getElementById(styleId); if (!el) { el = document.createElement('style'); el.id = styleId; document.head.appendChild(el); } const safeColor = encodeURIComponent((textColor || '#ffffff').substring(1)); const svgUrl = `data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${safeColor}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E`; el.textContent = ` .settings-panel select, .modal-box select { background-image: url('${svgUrl}'); } `; }
 
-        // --- Authentication Modals ---
-        function showLoginModal() { closeAuthModals(); if (loginModal) { loginModal.classList.add('visible'); if(loginUsername) loginUsername.focus(); if(loginError) { loginError.style.display = 'none'; loginError.textContent = ''; }} }
-        function showRegisterModal() { closeAuthModals(); if(registerModal) { registerModal.classList.add('visible'); if(registerUsername) registerUsername.focus(); if(registerError) { registerError.style.display = 'none'; registerError.textContent = ''; }} }
-        function closeAuthModals() { if(loginModal) loginModal.classList.remove('visible'); if(registerModal) registerModal.classList.remove('visible'); }
+    // --- Authentication Modals ---
+    function showLoginModal() { closeAuthModals(); if (loginModal) { loginModal.classList.add('visible'); if(loginUsername) loginUsername.focus(); if(loginError) { loginError.style.display = 'none'; loginError.textContent = ''; }} }
+    function showRegisterModal() { closeAuthModals(); if(registerModal) { registerModal.classList.add('visible'); if(registerUsername) registerUsername.focus(); if(registerError) { registerError.style.display = 'none'; registerError.textContent = ''; }} }
+    function closeAuthModals() { if(loginModal) loginModal.classList.remove('visible'); if(registerModal) registerModal.classList.remove('visible'); }
 
-        // --- Handle Login/Register/Logout API ---
-        async function handleLogin() {
-            if (!loginUsername || !loginPassword || !submitLoginBtn || !loginError) return;
-            const username = loginUsername.value.trim(); const password = loginPassword.value;
-            if (!username || !password) { loginError.textContent = 'Username and password required.'; loginError.style.display = 'block'; return; }
-            loginError.style.display = 'none';
-            try {
-                submitLoginBtn.disabled = true; submitLoginBtn.textContent = 'Logging in...';
-                const response = await fetch(`${BACKEND_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-                const data = await response.json();
-                if (response.ok && data.success) {
-                    isLoggedIn = true; loggedInUsername = data.username;
-                    localStorage.setItem(LS_LOGGED_IN_USER, loggedInUsername); // Use localStorage
-                    updateLoginUI(); closeAuthModals(); showSection('welcome');
-                    console.log(`Logged in as ${loggedInUsername}`);
-                } else { loginError.textContent = data.message || 'Login failed.'; loginError.style.display = 'block'; }
-            } catch (error) { console.error("Login error:", error); loginError.textContent = 'Network error during login.'; loginError.style.display = 'block'; }
-            finally { if(submitLoginBtn) { submitLoginBtn.disabled = false; submitLoginBtn.textContent = 'Login'; }}
+    // --- Backend API Call for Ban Status ---
+    async function checkUserBanStatus(username) {
+        if (!username || !isLoggedIn) {
+            if (isClientSideBanned) { isClientSideBanned = false; localStorage.removeItem(LS_IS_BANNED); updateLoginUI(); console.log("[DEBUG] Cleared stale ban flag as user is not logged in."); }
+            return { isBanned: false, checked: false };
         }
-        async function handleRegister() {
-            if (!registerUsername || !registerPassword || !registerPasswordConfirm || !submitRegisterBtn || !registerError) return;
-            const username = registerUsername.value.trim(); const password = registerPassword.value; const confirmPassword = registerPasswordConfirm.value;
-            registerError.style.display = 'none';
-            if (!username || !password || !confirmPassword) { registerError.textContent = 'All fields are required.'; registerError.style.display = 'block'; return; }
-            if (password !== confirmPassword) { registerError.textContent = 'Passwords do not match.'; registerError.style.display = 'block'; return; }
-            if (/\s/.test(username)) { registerError.textContent = 'Username cannot contain spaces.'; registerError.style.display = 'block'; return; }
-            if (password.length < 6) { registerError.textContent = 'Password must be at least 6 characters.'; registerError.style.display = 'block'; return; }
-            try {
-                submitRegisterBtn.disabled = true; submitRegisterBtn.textContent = 'Registering...';
-                const response = await fetch(`${BACKEND_URL}/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-                const data = await response.json();
-                if (response.ok && data.success) {
-                    isLoggedIn = true; loggedInUsername = data.username;
-                    localStorage.setItem(LS_LOGGED_IN_USER, loggedInUsername); // Use localStorage
-                    updateLoginUI(); closeAuthModals(); showSection('welcome');
-                    console.log(`Registered and logged in as ${loggedInUsername}`);
-                } else { registerError.textContent = data.message || 'Registration failed.'; registerError.style.display = 'block'; }
-            } catch (error) { console.error("Registration error:", error); registerError.textContent = 'Network error during registration.'; registerError.style.display = 'block'; }
-            finally { if(submitRegisterBtn) { submitRegisterBtn.disabled = false; submitRegisterBtn.textContent = 'Register'; }}
+        try {
+            const response = await fetch(`${BACKEND_URL}/check-ban-status`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username }) });
+            const data = await response.json();
+            if (response.ok && data.success) { return { isBanned: data.isBanned, isPermanentlyBanned: data.isPermanentlyBanned, banExpires: data.banExpires, checked: true }; }
+            else { console.error(`[DEBUG] Failed backend check for ban status: ${data.message || response.statusText}`); return { isBanned: isClientSideBanned, checked: false }; }
+        } catch (error) { console.error("[DEBUG] Network error checking ban status:", error); return { isBanned: isClientSideBanned, checked: false }; }
+    }
+
+    // --- Periodic Ban Check Logic ---
+    async function checkBanStatusPeriodically() {
+        if (!isLoggedIn || !loggedInUsername) { console.log("[DEBUG] Ban check skipped: User not logged in (client-side)."); stopBanStatusPolling(); if (isClientSideBanned) { isClientSideBanned = false; localStorage.removeItem(LS_IS_BANNED); updateLoginUI(); } return; }
+        // console.log(`[DEBUG] Performing periodic ban check for: ${loggedInUsername}`); // Noisy
+        const banStatus = await checkUserBanStatus(loggedInUsername);
+        if (banStatus.checked) {
+             const currentlyBanned = banStatus.isBanned;
+             if (currentlyBanned !== isClientSideBanned) {
+                 console.log(`[DEBUG] Ban status changed for ${loggedInUsername}. New status: ${currentlyBanned}`);
+                 isClientSideBanned = currentlyBanned;
+                 if (isClientSideBanned) { localStorage.setItem(LS_IS_BANNED, 'true'); }
+                 else { localStorage.removeItem(LS_IS_BANNED); }
+                 updateLoginUI();
+             }
+        } else { console.warn("[DEBUG] Periodic ban check failed (network or server error). UI reflects last known status."); }
+    }
+
+    // --- Functions to Start/Stop Ban Polling ---
+    function startBanStatusPolling() {
+        stopBanStatusPolling();
+        if (isLoggedIn && loggedInUsername) { console.log(`[DEBUG] Starting periodic ban check (every ${BAN_CHECK_INTERVAL / 1000}s) for ${loggedInUsername}`); checkBanStatusPeriodically(); banCheckIntervalId = setInterval(checkBanStatusPeriodically, BAN_CHECK_INTERVAL); }
+        else { console.log("[DEBUG] Did not start ban polling (user not logged in)."); }
+    }
+    function stopBanStatusPolling() { if (banCheckIntervalId) { console.log("[DEBUG] Stopping periodic ban check."); clearInterval(banCheckIntervalId); banCheckIntervalId = null; } }
+
+    // --- Handle Login/Register/Logout API ---
+    async function handleLogin() {
+        console.log("[DEBUG] handleLogin called");
+        if (!loginUsername || !loginPassword || !submitLoginBtn || !loginError) return;
+        const username = loginUsername.value.trim(); const password = loginPassword.value;
+        if (!username || !password) { loginError.textContent = 'Username and password required.'; loginError.style.display = 'block'; return; }
+        loginError.style.display = 'none';
+        try {
+            submitLoginBtn.disabled = true; submitLoginBtn.textContent = 'Logging in...';
+            const response = await fetch(`${BACKEND_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+            const data = await response.json();
+            if (response.ok && data.success) {
+                console.log("[DEBUG] Login successful");
+                isLoggedIn = true; loggedInUsername = data.username;
+                localStorage.setItem(LS_LOGGED_IN_USER, loggedInUsername);
+                localStorage.removeItem(LS_IS_BANNED);
+                isClientSideBanned = false;
+                startBanStatusPolling(); // Start polling (includes initial check)
+                updateLoginUI();
+                closeAuthModals();
+                showSection('welcome');
+                console.log(`Logged in as ${loggedInUsername}`);
+            } else {
+                console.log(`[DEBUG] Login failed. Status: ${response.status}, Message: ${data.message}`);
+                if (response.status === 403 && (data.message?.toLowerCase().includes('banned'))) { localStorage.setItem(LS_IS_BANNED, 'true'); isClientSideBanned = true; console.warn(`[DEBUG] Login blocked for ${username} (Banned), setting client-side flag.`); }
+                else { localStorage.removeItem(LS_IS_BANNED); isClientSideBanned = false; console.log("[DEBUG] Login failed for other reason, clearing client-side ban flag."); }
+                loginError.textContent = data.message || 'Login failed.';
+                loginError.style.display = 'block';
+                stopBanStatusPolling();
+                updateLoginUI();
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            loginError.textContent = 'Network error during login.';
+            loginError.style.display = 'block';
+            localStorage.removeItem(LS_IS_BANNED);
+            isClientSideBanned = false;
+            stopBanStatusPolling();
+            updateLoginUI();
         }
-        function handleLogout() {
-            isLoggedIn = false; loggedInUsername = null;
-            localStorage.removeItem(LS_LOGGED_IN_USER); // Use localStorage
-            updateLoginUI(); stopChatPolling(); stopUserCountPolling();
-            showSection('welcome'); // Show guest welcome
-            console.log("Logged out.");
+        finally { if(submitLoginBtn) { submitLoginBtn.disabled = false; submitLoginBtn.textContent = 'Login'; }}
+    }
+    async function handleRegister() {
+        console.log("[DEBUG] handleRegister called");
+        if (!registerUsername || !registerPassword || !registerPasswordConfirm || !submitRegisterBtn || !registerError) return;
+        const username = registerUsername.value.trim(); const password = registerPassword.value; const confirmPassword = registerPasswordConfirm.value;
+        registerError.style.display = 'none';
+        if (!username || !password || !confirmPassword) { registerError.textContent = 'All fields are required.'; registerError.style.display = 'block'; return; }
+        if (password !== confirmPassword) { registerError.textContent = 'Passwords do not match.'; registerError.style.display = 'block'; return; }
+        if (/\s/.test(username)) { registerError.textContent = 'Username cannot contain spaces.'; registerError.style.display = 'block'; return; }
+        if (password.length < 6) { registerError.textContent = 'Password must be at least 6 characters.'; registerError.style.display = 'block'; return; }
+        try {
+            submitRegisterBtn.disabled = true; submitRegisterBtn.textContent = 'Registering...';
+            const response = await fetch(`${BACKEND_URL}/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+            const data = await response.json();
+            if (response.ok && data.success) {
+                 console.log("[DEBUG] Registration successful");
+                isLoggedIn = true; loggedInUsername = data.username;
+                localStorage.setItem(LS_LOGGED_IN_USER, loggedInUsername);
+                localStorage.removeItem(LS_IS_BANNED);
+                isClientSideBanned = false;
+                startBanStatusPolling(); // Start polling (includes initial check)
+                updateLoginUI();
+                closeAuthModals();
+                showSection('welcome');
+                console.log(`Registered and logged in as ${loggedInUsername}`);
+            } else {
+                console.log(`[DEBUG] Registration failed. Status: ${response.status}, Message: ${data.message}`);
+                registerError.textContent = data.message || 'Registration failed.';
+                registerError.style.display = 'block';
+                stopBanStatusPolling();
+                updateLoginUI();
+            }
+        } catch (error) {
+            console.error("Registration error:", error);
+            registerError.textContent = 'Network error during registration.';
+            registerError.style.display = 'block';
+            stopBanStatusPolling();
+            updateLoginUI();
+        }
+        finally { if(submitRegisterBtn) { submitRegisterBtn.disabled = false; submitRegisterBtn.textContent = 'Register'; }}
+    }
+    function handleLogout() {
+        console.log("[DEBUG] handleLogout called");
+        stopBanStatusPolling(); // Stop ban polling
+        isLoggedIn = false; loggedInUsername = null;
+        localStorage.removeItem(LS_LOGGED_IN_USER);
+        localStorage.removeItem(LS_IS_BANNED);
+        isClientSideBanned = false;
+        updateLoginUI();
+        stopChatPolling();
+        stopUserCountPolling();
+        showSection('welcome');
+        console.log("Logged out.");
+    }
+
+    // --- Welcome Area ---
+    function displayWelcomeMessage(name) {
+        console.log("[DEBUG] Displaying welcome message for:", name);
+        if (!mainContent) return;
+        mainContent.innerHTML = ''; // Clear previous content
+        const welcomeArea = document.createElement('div'); welcomeArea.id = 'welcome-area';
+        const logoContainer = document.createElement('div'); logoContainer.id = 'welcome-logo-container'; logoContainer.innerHTML = getLogoSvg(currentThemeColor);
+        const messageHeading = document.createElement('h1'); messageHeading.id = 'welcome-message'; messageHeading.textContent = `Welcome, ${name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}!`;
+        const userCountP = document.createElement('p'); userCountP.id = 'user-count-display'; userCountP.textContent = 'Users online: Loading...';
+        const changelogDiv = document.createElement('div'); changelogDiv.id = 'changelog-section';
+        changelogDiv.innerHTML = `<h2>Changelog</h2><div class="changelog-version"><h4>v0.41 (Current)</h4><ul><li>Added immediate ban check when opening Settings panel or Chat view.</li><li>Refined logic for setting/reverting chat input placeholder during cooldowns/state changes.</li><li>Ensured initial UI state accurately reflects stored ban status on load after awaiting check.</li></ul></div><div class="changelog-version"><h4>v0.40</h4><ul><li>Added periodic (5s) ban status check for logged-in users.</li><li>Logout button hiding made more robust on initial load/login.</li><li>"Chat Restricted" placeholder stabilized to prevent flashing.</li></ul></div><div class="changelog-version"><h4>v0.39</h4><ul><li>Backend endpoint added to check user ban status directly.</li><li>Frontend updated to use ban check endpoint.</li></ul></div><div class="changelog-version"><h4>v0.38</h4><ul><li>Fixed client-side ban flag logic.</li></ul></div><div class="changelog-version"><h4>v0.37</h4><ul><li>Backend: Permanent bans, fuzzy blacklist, ASCII-only msg, sys msg dedupe.</li><li>Frontend: Removed Clear Data, Logout hidden if banned (cosmetic).</li></ul></div><div class="changelog-version"><h4>v0.36</h4><ul><li>Login persistence (LocalStorage).</li><li>MOD/OWNER tags & colors.</li><li>System messages in main chat.</li><li>Mod panel updates (roles, unban/untimeout, reasons).</li></ul></div><div class="changelog-version"><h4>v0.35</h4><ul><li>User Accounts (Register/Login).</li><li>Removed chat key.</li><li>Server blacklist & cooldown.</li><li>Chat scroll-to-load.</li></ul></div>`;
+        welcomeArea.appendChild(logoContainer); welcomeArea.appendChild(messageHeading); welcomeArea.appendChild(userCountP); welcomeArea.appendChild(changelogDiv);
+        mainContent.appendChild(welcomeArea);
+        mainContent.style.opacity = 1; // Trigger fade-in
+        startUserCountPolling();
+    }
+    function updateWelcomeLogoColor(color) { const wa=document.getElementById('welcome-area'); if(!wa) return; const lse=wa.querySelector('#welcome-logo-container svg'); if(lse){ const sc=color||'#444444'; lse.setAttribute('fill', sc); lse.querySelectorAll('rect').forEach(r=>r.setAttribute('fill', sc)); } }
+
+    // --- Game & Category Management ---
+    function loadGames() { const dg=[{id:crypto.randomUUID(),name:"N-GON",url:"https://landgreen.github.io/n-gon/index.html",category:"Strategy"},{id:crypto.randomUUID(),name:"Dead Shot",url:"https://deadshot.io/",category:"Action"},{id:crypto.randomUUID(),name:"Tik-Tok",url:"https://cars.happyforever.com/&?q=TikTok",category:"Media"},{id:crypto.randomUUID(),name:"VS-Code",url:"https://cars.happyforever.com/&?q=VS%20Code",category:"Coding"},{id:crypto.randomUUID(),name:"ChatGPT",url:"https://cars.happyforever.com/&?q=ChatGPT",category:"Conversation"},{id:crypto.randomUUID(),name:"Netquel",url:"https://netquel.com/",category:"Strategy"},{id:crypto.randomUUID(),name:"MK48",url:"https://mk48.io/",category:"Strategy"},{id:crypto.randomUUID(),name:"Ships 3D",url:"https://yp3d.com/ships3d/",category:"Action"},{id:crypto.randomUUID(),name:"Geometry Dash",url:"https://geometrylite.github.io",category:"Action"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's",url:"https://wellsousaaa.github.io/Five-Nights-at-Freddys-Web/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Two",url:"https://ruihq.github.io/FNAF2/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Three",url:"https://sussygamedeveloper.github.io/fnaf3/",category:"Horror"}]; try { if(!localStorage.getItem(LS_INITIALIZED)){ console.log("[DEBUG] First run. Loading default games."); games=dg; saveGames(); localStorage.setItem(LS_INITIALIZED,'true'); } else { const sg=localStorage.getItem(LS_GAMES); try { games=sg?JSON.parse(sg):[]; } catch(pe){ console.error("Error parsing stored games:", pe); games=[]; } } } catch(e){ console.error("Error loading games:",e); games=dg; } }
+    function saveGames() { try { saveSetting(LS_GAMES, JSON.stringify(games)); } catch (e) { console.error("Failed to save games:", e); } }
+    function loadCategories() { const dc=['Action','Puzzle','Strategy','Simulation','Misc','Horror','Media','Coding','Conversation']; try { const sc=localStorage.getItem(LS_CATEGORIES); categories=sc?JSON.parse(sc):dc; } catch (e){ console.error("Failed load categories:",e); categories=dc; } dc.forEach(c=>{if(!categories.includes(c))categories.push(c);}); categories.sort(); }
+    function saveCategories() { try { saveSetting(LS_CATEGORIES, JSON.stringify(categories)); } catch (e) { console.error("Failed save categories:", e); } }
+    function populateCategorySelect(se, sc="") { if (!se) return; se.innerHTML='<option value="">Uncategorized</option>'; categories.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;if(c===sc)o.selected=true;se.appendChild(o);}); }
+    function handleAddCategory() { const cs=document.getElementById('gameCategorySelect'); if(!cs)return; const nc=prompt("Enter new category name:"); if(nc && nc.trim()){const tc=nc.trim(); if(!categories.includes(tc)){categories.push(tc);categories.sort();saveCategories();populateCategorySelect(cs,tc);} else {alert("Category exists!");cs.value=tc;}} }
+    function renderGames() { const container=mainContent?mainContent.querySelector('.game-list-container'):null; if(!container)return; container.innerHTML=''; let ngfp=mainContent.querySelector('#no-games-found'); if(!ngfp && games.length === 0){container.innerHTML='<p id="no-games-found" style="grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);">No games added yet.</p>'; ngfp=mainContent.querySelector('#no-games-found');} else if(ngfp){ngfp.style.display='none';} if(games.length > 0){games.forEach((g, index)=>{const card=document.createElement('div'); card.className='game-card'; card.dataset.id=g.id; card.setAttribute('tabindex','0'); card.style.animationDelay = `${0.05 * (index + 1)}s`; card.innerHTML=`<div class="game-card-header"><img class="game-favicon" alt="" width="16" height="16" loading="lazy"><h4></h4></div><p class="category"></p><div class="game-card-actions"><button class="play-btn" title="Play Game">${ICONS.play}</button><button class="edit-btn" title="Edit Game">${ICONS.edit}</button><button class="delete-btn" title="Delete Game">${ICONS.delete}</button></div>`; const ne=card.querySelector('h4'); const ce=card.querySelector('p.category'); const fe=card.querySelector('.game-favicon'); ne.textContent=g.name.replace(/</g,"&lt;"); ce.textContent=g.category||'Uncategorized'; if(fe){fe.alt=`${g.name} Favicon`; if(g.url && (g.url.startsWith('http://')||g.url.startsWith('https://'))){try{const gu=new URL(g.url);const hn=gu.hostname;const fsu=`https://www.google.com/s2/favicons?domain=${hn}&sz=32`;fe.src=fsu;fe.onerror=()=>{fe.style.display='none';}; fe.style.display='inline-block';}catch(e){fe.style.display='none';}}else{fe.style.display='none';}} card.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playGame(g.url,g.name);}});card.querySelector('.play-btn').onclick=(e)=>{e.stopPropagation();playGame(g.url,g.name);};card.querySelector('.edit-btn').onclick=(e)=>{e.stopPropagation();openGameModal(g);};card.querySelector('.delete-btn').onclick=(e)=>{e.stopPropagation();deleteGame(g.id,card);};container.appendChild(card);});} filterGames();}
+    function openGameModal(gte=null) { const m=document.getElementById('gameModal');const t=document.getElementById('gameModalTitle');const ii=document.getElementById('gameIdInput');const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const sb=document.getElementById('saveGameBtn'); if(!m||!t||!ii||!ni||!ui||!cs||!sb)return; isEditingGame=!!gte;ii.value='';ni.value='';ui.value='';ni.style.borderColor='';ui.style.borderColor='';populateCategorySelect(cs,gte?gte.category:"");if(isEditingGame){t.textContent='Edit Game';ii.value=gte.id;ni.value=gte.name;ui.value=gte.url;sb.textContent='Save Changes';}else{t.textContent='Add New Game';sb.textContent='Add Game';} m.classList.add('visible');ni.focus();}
+    function closeGameModal() { const m=document.getElementById('gameModal'); if(m)m.classList.remove('visible'); isEditingGame=false; }
+    function handleSaveGame() { const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const ii=document.getElementById('gameIdInput'); if(!ni||!ui||!cs||!ii)return; const name=ni.value.trim(); const url=ui.value.trim(); const category=cs.value; const id=ii.value; let iv=true; if(!name){ni.style.borderColor='red';iv=false;}else{ni.style.borderColor='';} if(!url||!url.match(/^(https?:\/\/|.\/|..\/|\/)/)){ui.style.borderColor='red';iv=false;alert("Valid URL needed (http://, https://, /, ./, ../)");}else{ui.style.borderColor='';} if(!iv)return; if(isEditingGame&&id){const gi=games.findIndex(g=>g.id===id); if(gi>-1){games[gi]={...games[gi],name,url,category};}else{console.error("Edit fail: ID not found");closeGameModal();return;}}else{const ng={id:crypto.randomUUID(),name,url,category};games.push(ng);} saveGames();renderGames();closeGameModal();}
+    function deleteGame(id, ce) { if (!confirm(`Delete this game?`)) return; if (ce) { ce.classList.add('deleting'); ce.addEventListener('animationend', () => { games = games.filter(g => g.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(g => g.id !== id); saveGames(); renderGames(); } }
+    function playGame (url, title = 'Content') { openInAboutBlank(url, title); }
+    function openInAboutBlank(url, title = 'Content') { if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; } const newWindow = window.open('', '_blank'); if (newWindow) { try { newWindow.document.open(); newWindow.document.write(` <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>${title.replace(/</g, "&lt;")}</title> <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style> </head> <body> <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe> <script> const shouldWarnOnClose = ${warnOnClose}; window.addEventListener('beforeunload', (event) => { if (shouldWarnOnClose) { const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?'; event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage; } }); <\/script> </body> </html> `); newWindow.document.close(); } catch (e) { console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); } } } else { alert("Could not open link. Please check pop-up blocker."); } }
+
+    // --- UI Section Management ---
+    function showSection(section) {
+        if (!mainContent || !chatPanel) return;
+        if (isWelcomeAreaVisible()) { stopUserCountPolling(); }
+        if (isChatViewActive) { stopChatPolling(); chatPanel.style.display = 'none'; isChatViewActive = false; }
+
+        const protectedSections = ['games', 'proxy', 'tools'];
+        if (protectedSections.includes(section) && !isLoggedIn) {
+            console.log(`Section '${section}' requires login.`);
+            showLoginModal();
+            return;
         }
 
-        // --- Welcome Area ---
-        function displayWelcomeMessage(name) { /* ... (same as before, ensures name is sanitized) ... */ console.log("[DEBUG] Displaying welcome message for:", name); if (!mainContent) return; mainContent.innerHTML = ''; const welcomeArea = document.createElement('div'); welcomeArea.id = 'welcome-area'; const logoContainer = document.createElement('div'); logoContainer.id = 'welcome-logo-container'; logoContainer.innerHTML = getLogoSvg(currentThemeColor); const messageHeading = document.createElement('h1'); messageHeading.id = 'welcome-message'; messageHeading.textContent = `Welcome, ${name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}!`; const userCountP = document.createElement('p'); userCountP.id = 'user-count-display'; userCountP.textContent = 'Users online: Loading...'; const changelogDiv = document.createElement('div'); changelogDiv.id = 'changelog-section'; changelogDiv.innerHTML = `<h2>Changelog</h2><div class="changelog-version"><h4>v0.36</h4><ul><li>Login state now persists using LocalStorage.</li><li>Chat displays [MOD] and [OWNER] tags with colors.</li><li>System messages (like warnings) now appear in main chat.</li><li>Added role management & unban/untimeout to Mod Panel.</li><li>Added reasons for moderation actions.</li></ul></div><div class="changelog-version"><h4>v0.35</h4><ul><li>Implemented User Accounts (Register/Login).</li><li>Removed chat key system.</li><li>Added server-side blacklisting & cooldown.</li><li>Chat loads bottom-up with scroll-to-load.</li></ul></div>`; welcomeArea.appendChild(logoContainer); welcomeArea.appendChild(messageHeading); welcomeArea.appendChild(userCountP); welcomeArea.appendChild(changelogDiv); mainContent.appendChild(welcomeArea); mainContent.style.opacity = 1; startUserCountPolling(); }
-        function updateWelcomeLogoColor(color) { /* ... (same as before) ... */ const wa=document.getElementById('welcome-area'); if(!wa) return; const lse=wa.querySelector('#welcome-logo-container svg'); if(lse){ const sc=color||'#444444'; lse.setAttribute('fill', sc); lse.querySelectorAll('rect').forEach(r=>r.setAttribute('fill', sc)); } }
+        mainContent.style.display = 'block'; mainContent.style.opacity = 0;
+        setTimeout(() => {
+            mainContent.innerHTML = ''; mainContent.style.animation = 'none';
+            let sectionContent = '';
+            if (section === "welcome") { displayWelcomeMessage(isLoggedIn ? loggedInUsername : "Guest"); }
+            else if (section === "games") { sectionContent = `<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML = sectionContent; const addBtn = document.getElementById('addGameBtn'); if (addBtn) addBtn.onclick = () => openGameModal(); renderGames(); stopUserCountPolling(); }
+            else if (section === "proxy") { sectionContent = `<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`; mainContent.innerHTML = sectionContent; renderProxySites(); stopUserCountPolling(); }
+            else if (section === "tools") { sectionContent = `<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML = sectionContent; stopUserCountPolling(); }
+            else { if (welcomeAreaPlaceholder) { mainContent.appendChild(welcomeAreaPlaceholder); welcomeAreaPlaceholder.style.display = 'flex'; } displayWelcomeMessage(isLoggedIn ? loggedInUsername : "Guest"); }
+            if (mainContent.innerHTML) { requestAnimationFrame(() => { mainContent.style.opacity = 0; mainContent.style.animation = "fadeIn 0.5s forwards"; mainContent.style.opacity = 1; }); } else { mainContent.style.opacity = 1; }
+        }, 50); // Short delay for smoother transition
+    }
+    function renderProxySites() { const c = mainContent ? mainContent.querySelector('.proxy-list-container') : null; if (!c) return; c.innerHTML = ''; const spaceUrls = [ "https://yessir.happyforever.com/", "https://fish.happyforever.com/", "https://turtle.happyforever.com/", "https://cars.happyforever.com/" ]; const ps = [ { name: "Space", url: null }, { name: "Transend", url: "https://hw.billigerhost.com/" }, { name: "RammerHead", url: "https://pluh.root.sx/" }, { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" } ]; ps.forEach((s, index) => { const card = document.createElement('div'); card.className = 'proxy-card'; card.setAttribute('tabindex', '0'); card.style.animationDelay = `${0.05 * (index + 1)}s`; card.innerHTML = ` <div><h4></h4></div> <div class="proxy-card-actions"> <button class="play-btn" title="Open ${s.name.replace(/</g, "&lt;")}">${ICONS.play}</button> </div> `; card.querySelector('h4').textContent = s.name.replace(/</g, "&lt;"); const handleOpen = () => { const urlToOpen = s.name === "Space" ? spaceUrls[Math.floor(Math.random() * spaceUrls.length)] : s.url; openInAboutBlank(urlToOpen, s.name); }; card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOpen(); } }); card.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); handleOpen(); }; c.appendChild(card); }); }
 
-        // --- Game & Category Management (No changes) ---
-        function loadGames() { const dg=[{id:crypto.randomUUID(),name:"N-GON",url:"https://landgreen.github.io/n-gon/index.html",category:"Strategy"},{id:crypto.randomUUID(),name:"Dead Shot",url:"https://deadshot.io/",category:"Action"},{id:crypto.randomUUID(),name:"Tik-Tok",url:"https://cars.happyforever.com/&?q=TikTok",category:"Media"},{id:crypto.randomUUID(),name:"VS-Code",url:"https://cars.happyforever.com/&?q=VS%20Code",category:"Coding"},{id:crypto.randomUUID(),name:"ChatGPT",url:"https://cars.happyforever.com/&?q=ChatGPT",category:"Conversation"},{id:crypto.randomUUID(),name:"Netquel",url:"https://netquel.com/",category:"Strategy"},{id:crypto.randomUUID(),name:"MK48",url:"https://mk48.io/",category:"Strategy"},{id:crypto.randomUUID(),name:"Ships 3D",url:"https://yp3d.com/ships3d/",category:"Action"},{id:crypto.randomUUID(),name:"Geometry Dash",url:"https://geometrylite.github.io",category:"Action"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's",url:"https://wellsousaaa.github.io/Five-Nights-at-Freddys-Web/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Two",url:"https://ruihq.github.io/FNAF2/",category:"Horror"},{id:crypto.randomUUID(),name:"Five Nights At Freddy's Three",url:"https://sussygamedeveloper.github.io/fnaf3/",category:"Horror"}]; try { if(!localStorage.getItem(LS_INITIALIZED)){ console.log("[DEBUG] First run. Loading default games."); games=dg; saveGames(); localStorage.setItem(LS_INITIALIZED,'true'); } else { const sg=localStorage.getItem(LS_GAMES); try { games=sg?JSON.parse(sg):[]; } catch(pe){ console.error("Error parsing stored games:", pe); games=[]; } } } catch(e){ console.error("Error loading games:",e); games=dg; } }
-        function saveGames() { try { saveSetting(LS_GAMES, JSON.stringify(games)); } catch (e) { console.error("Failed to save games:", e); } }
-        function loadCategories() { const dc=['Action','Puzzle','Strategy','Simulation','Misc','Horror','Media','Coding','Conversation']; try { const sc=localStorage.getItem(LS_CATEGORIES); categories=sc?JSON.parse(sc):dc; } catch (e){ console.error("Failed load categories:",e); categories=dc; } dc.forEach(c=>{if(!categories.includes(c))categories.push(c);}); categories.sort(); }
-        function saveCategories() { try { saveSetting(LS_CATEGORIES, JSON.stringify(categories)); } catch (e) { console.error("Failed save categories:", e); } }
-        function populateCategorySelect(se, sc="") { if (!se) return; se.innerHTML='<option value="">Uncategorized</option>'; categories.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;if(c===sc)o.selected=true;se.appendChild(o);}); }
-        function handleAddCategory() { const cs=document.getElementById('gameCategorySelect'); if(!cs)return; const nc=prompt("Enter new category name:"); if(nc && nc.trim()){const tc=nc.trim(); if(!categories.includes(tc)){categories.push(tc);categories.sort();saveCategories();populateCategorySelect(cs,tc);} else {alert("Category exists!");cs.value=tc;}} }
-        function renderGames() { const container=mainContent?mainContent.querySelector('.game-list-container'):null; if(!container)return; container.innerHTML=''; let ngfp=mainContent.querySelector('#no-games-found'); if(!ngfp && games.length === 0){container.innerHTML='<p id="no-games-found" style="grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);">No games added yet.</p>'; ngfp=mainContent.querySelector('#no-games-found');} else if(ngfp){ngfp.style.display='none';} if(games.length > 0){games.forEach((g, index)=>{const card=document.createElement('div'); card.className='game-card'; card.dataset.id=g.id; card.setAttribute('tabindex','0'); card.style.animationDelay = `${0.05 * (index + 1)}s`; card.innerHTML=`<div class="game-card-header"><img class="game-favicon" alt="" width="16" height="16" loading="lazy"><h4></h4></div><p class="category"></p><div class="game-card-actions"><button class="play-btn" title="Play Game">${ICONS.play}</button><button class="edit-btn" title="Edit Game">${ICONS.edit}</button><button class="delete-btn" title="Delete Game">${ICONS.delete}</button></div>`; const ne=card.querySelector('h4'); const ce=card.querySelector('p.category'); const fe=card.querySelector('.game-favicon'); ne.textContent=g.name.replace(/</g,"&lt;"); ce.textContent=g.category||'Uncategorized'; if(fe){fe.alt=`${g.name} Favicon`; if(g.url && (g.url.startsWith('http://')||g.url.startsWith('https://'))){try{const gu=new URL(g.url);const hn=gu.hostname;const fsu=`https://www.google.com/s2/favicons?domain=${hn}&sz=32`;fe.src=fsu;fe.onerror=()=>{fe.style.display='none';}; fe.style.display='inline-block';}catch(e){fe.style.display='none';}}else{fe.style.display='none';}} card.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playGame(g.url,g.name);}});card.querySelector('.play-btn').onclick=(e)=>{e.stopPropagation();playGame(g.url,g.name);};card.querySelector('.edit-btn').onclick=(e)=>{e.stopPropagation();openGameModal(g);};card.querySelector('.delete-btn').onclick=(e)=>{e.stopPropagation();deleteGame(g.id,card);};container.appendChild(card);});} filterGames();}
-        function openGameModal(gte=null) { const m=document.getElementById('gameModal');const t=document.getElementById('gameModalTitle');const ii=document.getElementById('gameIdInput');const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const sb=document.getElementById('saveGameBtn'); if(!m||!t||!ii||!ni||!ui||!cs||!sb)return; isEditingGame=!!gte;ii.value='';ni.value='';ui.value='';ni.style.borderColor='';ui.style.borderColor='';populateCategorySelect(cs,gte?gte.category:"");if(isEditingGame){t.textContent='Edit Game';ii.value=gte.id;ni.value=gte.name;ui.value=gte.url;sb.textContent='Save Changes';}else{t.textContent='Add New Game';sb.textContent='Add Game';} m.classList.add('visible');ni.focus();}
-        function closeGameModal() { const m=document.getElementById('gameModal'); if(m)m.classList.remove('visible'); isEditingGame=false; }
-        function handleSaveGame() { const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const ii=document.getElementById('gameIdInput'); if(!ni||!ui||!cs||!ii)return; const name=ni.value.trim(); const url=ui.value.trim(); const category=cs.value; const id=ii.value; let iv=true; if(!name){ni.style.borderColor='red';iv=false;}else{ni.style.borderColor='';} if(!url||!url.match(/^(https?:\/\/|.\/|..\/|\/)/)){ui.style.borderColor='red';iv=false;alert("Valid URL needed (http://, https://, /, ./, ../)");}else{ui.style.borderColor='';} if(!iv)return; if(isEditingGame&&id){const gi=games.findIndex(g=>g.id===id); if(gi>-1){games[gi]={...games[gi],name,url,category};}else{console.error("Edit fail: ID not found");closeGameModal();return;}}else{const ng={id:crypto.randomUUID(),name,url,category};games.push(ng);} saveGames();renderGames();closeGameModal();}
-        function deleteGame(id, ce) { if (!confirm(`Delete this game?`)) return; if (ce) { ce.classList.add('deleting'); ce.addEventListener('animationend', () => { games = games.filter(g => g.id !== id); saveGames(); renderGames(); }, { once: true }); } else { games = games.filter(g => g.id !== id); saveGames(); renderGames(); } }
-        function playGame (url, title = 'Content') { openInAboutBlank(url, title); }
-        function openInAboutBlank(url, title = 'Content') { if (!url || !url.match(/^(https?:\/\/|.\/|..\/|\/)/)) { console.error("Invalid URL provided:", url); alert("Cannot open link: Invalid URL provided."); return; } const newWindow = window.open('', '_blank'); if (newWindow) { try { newWindow.document.open(); newWindow.document.write(` <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>${title.replace(/</g, "&lt;")}</title> <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}iframe{display:block;width:100%;height:100%;border:none;}</style> </head> <body> <iframe src="${url}" frameborder="0" allowfullscreen sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe> <script> const shouldWarnOnClose = ${warnOnClose}; window.addEventListener('beforeunload', (event) => { if (shouldWarnOnClose) { const confirmationMessage = 'Closing this window might interrupt your game/session. Are you sure?'; event.preventDefault(); event.returnValue = confirmationMessage; return confirmationMessage; } }); <\/script> </body> </html> `); newWindow.document.close(); } catch (e) { console.error("Error writing to new window:", e); try { newWindow.location.href = url; } catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); } } } else { alert("Could not open link. Please check pop-up blocker."); } }
+    // --- Settings Panel & Controls ---
+    async function handleSettingsButtonClick() { // Renamed from toggleSettings, now async
+        if (!settingsBtn || !settingsPanel || !isLoggedIn) {
+             if (!isLoggedIn) showLoginModal(); // Prompt login if trying to open settings while logged out
+            return;
+        }
 
-        // --- UI Section Management ---
-        function showSection(section) {
-            if (!mainContent || !chatPanel) return;
-            if (isWelcomeAreaVisible()) { stopUserCountPolling(); }
-            if (isChatViewActive) { stopChatPolling(); chatPanel.style.display = 'none'; isChatViewActive = false; }
+        // If panel is already open, just close it without checks
+        if (settingsPanel.classList.contains('show')) {
+             settingsPanel.classList.remove('show');
+             startBanStatusPolling(); // Restart background polling when closed
+             console.log("[DEBUG] Settings panel closed, restarting ban polling.");
+             return;
+        }
 
-            const protectedSections = ['games', 'proxy', 'tools'];
-            if (protectedSections.includes(section) && !isLoggedIn) {
-                console.log(`Section '${section}' requires login.`);
-                showLoginModal();
+        // Show loading/disabled state on button
+        settingsBtn.disabled = true;
+        settingsBtn.style.opacity = '0.7'; // Visual cue
+        settingsBtn.style.cursor = 'wait';
+        console.log("[DEBUG] Settings button clicked, checking ban status before opening...");
+
+        const banStatus = await checkUserBanStatus(loggedInUsername); // Check status NOW
+        isClientSideBanned = banStatus.isBanned; // Update global flag
+
+        // Update localStorage based on check
+        if (isClientSideBanned) {
+            localStorage.setItem(LS_IS_BANNED, 'true');
+        } else {
+            localStorage.removeItem(LS_IS_BANNED);
+        }
+
+        updateLoginUI(); // Ensure UI (like logout button visibility) is correct based on the check
+
+        if (isClientSideBanned) {
+            console.warn("[DEBUG] Settings cannot be opened: User is banned.");
+            // Optional: Show a brief message to the user
+            // alert("Settings unavailable: Account restricted.");
+        } else {
+            console.log("[DEBUG] Ban check passed. Opening settings panel and stopping background polling.");
+            stopBanStatusPolling(); // ---> Stop background polling while panel is open <---
+            settingsPanel.classList.add('show'); // Show panel only if not banned
+        }
+
+        // Reset button state
+        settingsBtn.disabled = false;
+        settingsBtn.style.opacity = '1';
+        settingsBtn.style.cursor = 'pointer';
+    }
+    function updateSliderVisuals(s,t,p,d) { if(!s||!t||!p||!d)return; try{const min=parseFloat(s.min)||12; const max=parseFloat(s.max)||24; const v=parseFloat(s.value)||16; let pct=((v-min)/(max-min))*100; pct=Math.max(0,Math.min(100,pct)); t.style.left=`${pct}%`; t.style.transform='translateX(-50%)'; p.style.width=`${pct}%`; d.textContent=`${Math.round(v)}px`;}catch(e){console.error("Slider update err:",e);} }
+    function updateFontSize(v) { const s=document.getElementById('fontSizeSlider');const t=document.getElementById('fontSizeThumb');const p=document.getElementById('fontSizeProgress');const d=document.getElementById('fontSizeValue'); if(!s||!root)return; const val=v||s.value; root.style.setProperty("--font-size",`${val}px`); saveSetting(LS_FONTSIZE,val); updateSliderVisuals(s,t,p,d); }
+    function updateFontFamily(fn) { const s=document.getElementById('fontSelector'); if(!s||!root)return; const v=fn||s.value; root.style.setProperty("--font-family",v); saveSetting(LS_FONTFAMILY,v); }
+    function applyCustomBackground() { if(!root||!bgImageControlContainer||!bgImageToggleSwitch)return; if(bgImageEnabled){bgImageControlContainer.style.display='flex';}else{bgImageControlContainer.style.display='none';} if(bgImageEnabled&&bgImageUrl&&bgImageUrl.startsWith('data:image/')){root.style.setProperty('--custom-bg-image',`url("${bgImageUrl}")`);}else{root.style.setProperty('--custom-bg-image','none');} bgImageToggleSwitch.checked=bgImageEnabled; }
+    function handleImageFileSelect(e) { if(!e.target.files||e.target.files.length===0)return; const f=e.target.files[0]; if(!f.type.startsWith('image/')){alert("Select image file.");e.target.value=null;return;} if(f.size>MAX_IMAGE_SIZE_BYTES){alert(`Image too large (${(f.size/1024/1024).toFixed(1)}MB). Max ${MAX_IMAGE_SIZE_MB}MB.`);e.target.value=null;return;} const r=new FileReader(); r.onload=(le)=>{bgImageUrl=le.target.result;saveSetting(LS_BGIMAGE_URL,bgImageUrl);applyCustomBackground();console.log("BG saved.");}; r.onerror=(ee)=>{console.error("FileRead err:",ee);alert("Error reading file.");e.target.value=null;}; r.onabort=()=>{console.warn("FileRead abort.");e.target.value=null;}; r.readAsDataURL(f); }
+    function clearCustomBackground() { bgImageUrl=''; removeSetting(LS_BGIMAGE_URL); if(bgImageFileInput)bgImageFileInput.value=null; applyCustomBackground(); }
+    function updateTheme(theme) { const selector=document.getElementById('themeSelector'); if(!root||!body) return; const value=theme||(selector?selector.value:'dark'); let accentColor='#444444'; let textColorValue='#ffffff'; switch(value){ case "light": root.style.setProperty("--bg","#ffffff"); root.style.setProperty("--sidebar","#eeeeee"); root.style.setProperty("--topbar","#dddddd"); root.style.setProperty("--accent","#cccccc"); root.style.setProperty("--text","#1a1a1a"); accentColor='#cccccc'; textColorValue='#1a1a1a'; break; case "blue": root.style.setProperty("--bg","#0a0f1c"); root.style.setProperty("--sidebar","#091121"); root.style.setProperty("--topbar","#101a35"); root.style.setProperty("--accent","#395b9c"); root.style.setProperty("--text","#e0e0ff"); accentColor='#395b9c'; textColorValue='#e0e0ff'; break; case "forest": root.style.setProperty("--bg","#1f2e1f"); root.style.setProperty("--sidebar","#141e14"); root.style.setProperty("--topbar","#2a3f2a"); root.style.setProperty("--accent","#4a784a"); root.style.setProperty("--text","#e5f5e5"); accentColor='#4a784a'; textColorValue='#e5f5e5'; break; case "sunset": root.style.setProperty("--bg","#2b1a1a"); root.style.setProperty("--sidebar","#3a2525"); root.style.setProperty("--topbar","#4d3333"); root.style.setProperty("--accent","#b36b4a"); root.style.setProperty("--text","#ffe8e0"); accentColor='#b36b4a'; textColorValue='#ffe8e0'; break; case "trigonometrical-red": root.style.setProperty("--bg", "#ffffff"); root.style.setProperty("--sidebar", "#a02020"); root.style.setProperty("--topbar", "#b03030"); root.style.setProperty("--accent", "#e53e3e"); root.style.setProperty("--text", "#1a1a1a"); accentColor='#e53e3e'; textColorValue='#1a1a1a'; break; case "dark": default: root.style.setProperty("--bg","#1e1e1e"); root.style.setProperty("--sidebar","#111111"); root.style.setProperty("--topbar","#2c2c2c"); root.style.setProperty("--accent","#444444"); root.style.setProperty("--text","#ffffff"); accentColor='#444444'; textColorValue='#ffffff'; break; } currentThemeColor=accentColor; body.setAttribute('data-theme', value); updateSelectArrowColor(textColorValue); if(root.style && typeof root.style.setProperty==='function'){ const ca=getComputedStyle(root).getPropertyValue('--accent').trim(); const ct=getComputedStyle(root).getPropertyValue('--text').trim(); const ctb=getComputedStyle(root).getPropertyValue('--topbar').trim(); root.style.setProperty('--slider-track-bg', ca); root.style.setProperty('--slider-thumb-bg', ct); root.style.setProperty('--slider-progress-color', ct); root.style.setProperty('--game-card-bg', ctb); root.style.setProperty('--game-card-hover-bg', ca); } updateFavicon(accentColor); updateWelcomeLogoColor(accentColor); saveSetting(LS_THEME, value); applyCustomBackground(); }
+
+    // --- Search & Filtering ---
+    function filterGames() { const s_in=document.getElementById('search'); const mc=document.getElementById('main-content'); if(!s_in||!mc) return; const st=s_in.value.toLowerCase().trim(); const glc=mc.querySelector('.game-list-container'); let ngfm=mc.querySelector('#no-games-found'); let vgc=0; if(glc){ const gcs=glc.querySelectorAll('.game-card'); if(gcs.length>0){gcs.forEach(c=>{const ne=c.querySelector('h4');const ce=c.querySelector('p.category');const n=ne?ne.textContent.toLowerCase():'';const cat=ce?ce.textContent.toLowerCase():'';if(!st||n.includes(st)||cat.includes(st)){c.style.display='';vgc++;}else{c.style.display='none';}});}else{vgc=0;}} if(!ngfm && glc && games.length===0 && !st){ const me=document.createElement('p');me.id='no-games-found';me.style.cssText="grid-column:1/-1;text-align:center;opacity:0.7;padding:20px;color:var(--text);";me.textContent="No games added yet.";glc.appendChild(me);ngfm=me;}else if(ngfm){ const tg=games.length; if(vgc===0 && tg>0 && st){ngfm.textContent=`No games found matching "${s_in.value.trim()}"`;ngfm.style.display='block';}else if(vgc===0 && tg===0){ngfm.textContent=`No games added yet.`;ngfm.style.display='block';}else{ngfm.style.display='none';}} const plc=mc.querySelector('.proxy-list-container'); if(plc&&st){const pcs=plc.querySelectorAll('.proxy-card');pcs.forEach(c=>{const ne=c.querySelector('h4');const n=ne?ne.textContent.toLowerCase():'';if(n.includes(st)){c.style.display='';}else{c.style.display='none';}});}else if(plc){const pcs=plc.querySelectorAll('.proxy-card');pcs.forEach(c=>c.style.display='');} }
+    const debouncedFilterGames = debounce(filterGames, 300);
+
+    // --- Warn on Close Logic ---
+    function handleMainBeforeUnload(e) { if(warnOnClose){const cm='Close Qbit? Changes might be lost.';e.preventDefault();e.returnValue=cm;return cm;} }
+
+    // --- Chat View Toggle (MODIFIED for immediate check) ---
+    function toggleChatView() {
+        if (!mainContent || !chatPanel) return;
+        if (!isLoggedIn) { showLoginModal(); return; } // Require login
+
+        if (isChatViewActive) { // Hide Chat
+            chatPanel.style.display = 'none';
+            mainContent.style.display = 'block';
+            isChatViewActive = false;
+            stopChatPolling();
+        } else { // Show Chat
+            if (isWelcomeAreaVisible()) stopUserCountPolling();
+            mainContent.style.display = 'none';
+            chatPanel.style.display = 'flex';
+            isChatViewActive = true;
+
+            updateLoginUI(); // Update UI first
+
+            fetchInitialMessages();
+            startChatPolling(); // Start message polling
+
+            // ---> Run immediate ban check when opening chat <---
+            console.log("[DEBUG] Chat view opened, running immediate ban check.");
+            checkBanStatusPeriodically(); // Update ban status and potentially UI again
+
+            if(chatMessageInput) chatMessageInput.focus();
+        }
+    }
+
+    // --- Send Message Function ---
+    async function sendMessage() {
+        console.log(`[DEBUG] sendMessage called. isLoggedIn: ${isLoggedIn}, isClientSideBanned: ${isClientSideBanned}`);
+        if (!isLoggedIn || !loggedInUsername) { alert("Please login to send messages."); showLoginModal(); return; }
+        if (isClientSideBanned) { alert("Cannot send message (Account Restricted)"); console.warn("[DEBUG] sendMessage blocked by client-side ban flag."); return; }
+        if (isSendingMessage) return;
+        const messageText = chatMessageInput.value.trim();
+        if (!messageText) return;
+        const now = Date.now();
+        if (now - lastSentTimestamp < MESSAGE_COOLDOWN_MS) { const waitSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastSentTimestamp)) / 1000); setTempPlaceholder(`Wait ${waitSec}s...`); console.log("Client cooldown active."); return; }
+        const messageData = { message: messageText, siteUsername: loggedInUsername };
+        setSendingState(true);
+        try {
+            const response = await fetch(`${BACKEND_URL}/send-message`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(messageData) });
+            const data = await response.json();
+            if (response.ok && data.success) {
+                console.log("[DEBUG] sendMessage successful.");
+                lastSentTimestamp = Date.now();
+                fetchNewMessages(); // Fetch new messages which might include our own
+                if (isClientSideBanned) { console.log("[DEBUG] Message succeeded, clearing client-side ban flag."); localStorage.removeItem(LS_IS_BANNED); isClientSideBanned = false; updateLoginUI(); }
+            } else {
+                console.error(`[DEBUG] Failed to send message. Status: ${response.status}, Message: ${data.message}`);
+                alert(`Failed: ${data.message || 'Unknown error'}`);
+                chatMessageInput.value = messageText; // Keep message on failure
+                if (response.status === 403 && (data.message?.toLowerCase().includes('banned') || data.message?.toLowerCase().includes('timed out'))) { console.warn("[DEBUG] Send message failed due to ban/timeout. Setting client-side flag."); localStorage.setItem(LS_IS_BANNED, 'true'); isClientSideBanned = true; updateLoginUI(); }
+                else { if (isClientSideBanned) { console.log("[DEBUG] Send message failed for other reason, clearing client-side ban flag."); localStorage.removeItem(LS_IS_BANNED); isClientSideBanned = false; updateLoginUI(); } }
+                if (response.status === 429) { lastSentTimestamp = Date.now(); const waitSec = Math.ceil(MESSAGE_COOLDOWN_MS / 1000); setTempPlaceholder(`Wait ${waitSec}s...`); }
+            }
+        } catch (error) {
+            console.error("Error sending message:", error);
+            alert("Network error sending message.");
+            chatMessageInput.value = messageText;
+            if (isClientSideBanned) { console.log("[DEBUG] Network error during send, clearing client-side ban flag."); localStorage.removeItem(LS_IS_BANNED); isClientSideBanned = false; updateLoginUI(); }
+        } finally {
+            setSendingState(false); // Ensure state is reset and placeholder updated
+        }
+    }
+    // --- Chat Helpers (setSendingState, setTempPlaceholder - Modified for stability) ---
+    function setSendingState(isSending) {
+        isSendingMessage = isSending;
+        const isDisabled = isSending || !isLoggedIn || isClientSideBanned; // Calculate disabled state based on current flags
+
+        if (chatMessageInput) chatMessageInput.disabled = isDisabled;
+        if (sendMessageBtn) sendMessageBtn.disabled = isDisabled;
+
+        if (!isSending && chatMessageInput) { // When message send finishes or state is reset
+            chatMessageInput.value = ''; // Clear input
+
+            // ---> STABILIZED PLACEHOLDER: Re-evaluate placeholder based on current state <---
+            if (isClientSideBanned) {
+                chatMessageInput.placeholder = 'Chat disabled (Account Restricted)';
+            } else if (isLoggedIn) {
+                chatMessageInput.placeholder = 'Enter message...';
+                // Only focus if sending finished successfully and user is allowed to type
+                if (!isDisabled) chatMessageInput.focus();
+            } else {
+                chatMessageInput.placeholder = 'Login to chat...';
+            }
+             // ---> End re-evaluation <---
+
+        }
+        // Note: The logic when isSending=true doesn't need placeholder changes as input is disabled
+    }
+    function setTempPlaceholder(text, duration = MESSAGE_COOLDOWN_MS) {
+        if(!chatMessageInput) return;
+        // ---> STABILIZED PLACEHOLDER: Determine correct default based on current state <---
+        let originalPlaceholder;
+        if (isClientSideBanned) {
+            originalPlaceholder = 'Chat disabled (Account Restricted)';
+        } else if (isLoggedIn) {
+            originalPlaceholder = 'Enter message...';
+        } else {
+            originalPlaceholder = 'Login to chat...';
+        }
+        // ---> End determination <---
+
+        chatMessageInput.placeholder = text; // Set temporary text
+        setTimeout(() => {
+            // Only revert if the placeholder is still the temporary text AND the input is enabled
+            // (Prevents overriding "Chat disabled..." if a ban happened during the cooldown)
+            if(chatMessageInput && chatMessageInput.placeholder === text && !chatMessageInput.disabled) {
+                 // Re-check the correct placeholder *again* before reverting, in case state changed
+                if (isClientSideBanned) {
+                    chatMessageInput.placeholder = 'Chat disabled (Account Restricted)';
+                } else if (isLoggedIn) {
+                    chatMessageInput.placeholder = 'Enter message...';
+                } else {
+                    chatMessageInput.placeholder = 'Login to chat...';
+                }
+            } else if (chatMessageInput && chatMessageInput.placeholder === text && chatMessageInput.disabled && isClientSideBanned) {
+                // If input became disabled due to a ban while showing temp text, force the restricted placeholder
+                 chatMessageInput.placeholder = 'Chat disabled (Account Restricted)';
+            }
+        }, duration);
+    }
+
+    // --- Append/Prepend Message - Handles Roles ---
+    function appendMessageToLog(sender, message, timestamp, role = 'user') {
+        if (!chatLogContainer) return;
+        const lastMessageGroup = chatLogContainer.lastElementChild; let isNewGroup = true; const MAX_GROUP_TIME_MINUTES = 5;
+        let lastRealMessageGroup = lastMessageGroup; while (lastRealMessageGroup && !lastRealMessageGroup.classList.contains('chat-message-group')) { lastRealMessageGroup = lastRealMessageGroup.previousElementSibling; }
+        if (lastRealMessageGroup && lastRealMessageGroup.dataset.sender === sender && sender !== 'System' && sender !== '[MOD]') { const lastTimestamp = parseInt(lastRealMessageGroup.dataset.latestTimestamp || '0'); const timeDiffMinutes = (timestamp - lastTimestamp) / (1000 * 60); if (!isNaN(timeDiffMinutes) && timeDiffMinutes < MAX_GROUP_TIME_MINUTES) { isNewGroup = false; } }
+
+        const safeSender = sender.replace(/</g, "&lt;"); const safeMessage = message.replace(/</g, "&lt;"); const messageDate = new Date(timestamp); const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); const formattedDateTime = messageDate.toLocaleString();
+
+        if (sender === 'System') { appendSystemMessage(safeMessage, timestamp); return; }
+
+        if (isNewGroup) {
+            const messageGroupDiv = document.createElement('div'); messageGroupDiv.classList.add('chat-message-group'); messageGroupDiv.dataset.sender = sender; messageGroupDiv.dataset.timestamp = timestamp; messageGroupDiv.dataset.latestTimestamp = timestamp;
+            const pfpContainer = document.createElement('div'); pfpContainer.classList.add('chat-pfp-container'); pfpContainer.innerHTML = generateUserPfpSvg(sender); messageGroupDiv.appendChild(pfpContainer);
+            const messageContentDiv = document.createElement('div'); messageContentDiv.classList.add('chat-message-content');
+            const messageHeaderDiv = document.createElement('div'); messageHeaderDiv.classList.add('chat-message-header');
+            const usernameSpan = document.createElement('span'); usernameSpan.classList.add('chat-username'); usernameSpan.textContent = safeSender;
+            let roleTag = '';
+            if (role === 'mod' || sender === '[MOD]') { usernameSpan.classList.add('username-mod'); roleTag = '[MOD]'; }
+            else if (role === 'owner') { usernameSpan.classList.add('username-owner'); roleTag = '[OWNER]'; }
+            messageHeaderDiv.appendChild(usernameSpan);
+            if (roleTag) { const roleTagSpan = document.createElement('span'); roleTagSpan.className = 'role-tag'; roleTagSpan.textContent = roleTag; messageHeaderDiv.appendChild(roleTagSpan); }
+            const timestampSpan = document.createElement('span'); timestampSpan.classList.add('chat-timestamp'); timestampSpan.textContent = formattedTime; timestampSpan.title = formattedDateTime; messageHeaderDiv.appendChild(timestampSpan);
+            messageContentDiv.appendChild(messageHeaderDiv);
+            const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; messageContentDiv.appendChild(messageP);
+            messageGroupDiv.appendChild(messageContentDiv); chatLogContainer.appendChild(messageGroupDiv);
+        } else {
+            const existingContentDiv = lastRealMessageGroup.querySelector('.chat-message-content');
+            if (existingContentDiv) { const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; existingContentDiv.appendChild(messageP); lastRealMessageGroup.dataset.latestTimestamp = timestamp; }
+            else { console.warn("Could not find content div in last group."); appendMessageToLog(sender, message, timestamp, role); } // Fallback
+        }
+        if (timestamp > lastMessageTimestamp) { lastMessageTimestamp = timestamp; }
+    }
+    function prependMessageToLog(sender, message, timestamp, role = 'user') {
+        if (!chatLogContainer) return;
+        const safeSender = sender.replace(/</g, "&lt;"); const safeMessage = message.replace(/</g, "&lt;"); const messageDate = new Date(timestamp); const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); const formattedDateTime = messageDate.toLocaleString();
+
+         if (sender === 'System') {
+             const systemDiv = document.createElement('p'); systemDiv.classList.add('chat-system-message'); systemDiv.textContent = safeMessage;
+             const firstChild = chatLogContainer.firstChild; if (firstChild) chatLogContainer.insertBefore(systemDiv, firstChild); else chatLogContainer.appendChild(systemDiv);
+             return;
+         }
+
+        const messageGroupDiv = document.createElement('div'); messageGroupDiv.classList.add('chat-message-group'); messageGroupDiv.dataset.sender = sender; messageGroupDiv.dataset.timestamp = timestamp; messageGroupDiv.dataset.latestTimestamp = timestamp;
+        const pfpContainer = document.createElement('div'); pfpContainer.classList.add('chat-pfp-container'); pfpContainer.innerHTML = generateUserPfpSvg(sender); messageGroupDiv.appendChild(pfpContainer);
+        const messageContentDiv = document.createElement('div'); messageContentDiv.classList.add('chat-message-content');
+        const messageHeaderDiv = document.createElement('div'); messageHeaderDiv.classList.add('chat-message-header');
+        const usernameSpan = document.createElement('span'); usernameSpan.classList.add('chat-username'); usernameSpan.textContent = safeSender;
+        let roleTag = ''; if (role === 'mod' || sender === '[MOD]') { usernameSpan.classList.add('username-mod'); roleTag = '[MOD]'; } else if (role === 'owner') { usernameSpan.classList.add('username-owner'); roleTag = '[OWNER]'; }
+        messageHeaderDiv.appendChild(usernameSpan); if (roleTag) { const roleTagSpan = document.createElement('span'); roleTagSpan.className = 'role-tag'; roleTagSpan.textContent = roleTag; messageHeaderDiv.appendChild(roleTagSpan); }
+        const timestampSpan = document.createElement('span'); timestampSpan.classList.add('chat-timestamp'); timestampSpan.textContent = formattedTime; timestampSpan.title = formattedDateTime; messageHeaderDiv.appendChild(timestampSpan);
+        messageContentDiv.appendChild(messageHeaderDiv); const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; messageContentDiv.appendChild(messageP);
+        messageGroupDiv.appendChild(messageContentDiv);
+        const indicator = chatLogContainer.querySelector('.chat-loading-indicator');
+        if (indicator && indicator.nextSibling) { chatLogContainer.insertBefore(messageGroupDiv, indicator.nextSibling); }
+        else if (indicator) { chatLogContainer.appendChild(messageGroupDiv); }
+        else if (chatLogContainer.firstChild) { chatLogContainer.insertBefore(messageGroupDiv, chatLogContainer.firstChild); }
+        else { chatLogContainer.appendChild(messageGroupDiv); }
+    }
+    function appendSystemMessage(message, timestamp = Date.now()) { if (!chatLogContainer) return; const messageDiv = document.createElement('p'); messageDiv.classList.add('chat-system-message'); messageDiv.textContent = message; messageDiv.dataset.timestamp = timestamp; chatLogContainer.appendChild(messageDiv); scrollToChatBottom(); }
+    function scrollToChatBottom() { if (chatLogContainer) { setTimeout(() => { chatLogContainer.scrollTop = chatLogContainer.scrollHeight; }, 50); } }
+
+    // --- Chat Polling & Loading ---
+    async function fetchNewMessages() {
+        if (!isChatViewActive || !isLoggedIn) return;
+        // console.log("[DEBUG] Polling for new messages..."); // Noisy
+        try {
+            const response = await fetch(`${BACKEND_URL}/get-messages?after=${lastMessageTimestamp}`);
+            if (!response.ok) {
+                console.warn(`[DEBUG] Poll failed. Status: ${response.status}`);
+                if (response.status === 401 || response.status === 403) {
+                    let data = {}; try { data = await response.json(); } catch (e) { console.warn("[DEBUG] Poll error response was not JSON."); }
+                    if (data.message?.toLowerCase().includes('banned') || data.message?.toLowerCase().includes('timed out')) { console.warn("[DEBUG] Polling failed due to ban/timeout. Setting client-side flag."); localStorage.setItem(LS_IS_BANNED, 'true'); isClientSideBanned = true; updateLoginUI(); }
+                    else { console.warn(`[DEBUG] Poll failed with ${response.status} but message ("${data.message}") doesn't indicate ban/timeout.`); }
+                } else { console.error(`[DEBUG] Error fetching new messages: ${response.statusText}`); }
                 return;
             }
-
-            mainContent.style.display = 'block'; mainContent.style.opacity = 0;
-            setTimeout(() => {
-                mainContent.innerHTML = ''; mainContent.style.animation = 'none';
-                let sectionContent = '';
-                if (section === "welcome") { displayWelcomeMessage(isLoggedIn ? loggedInUsername : "Guest"); }
-                else if (section === "games") { sectionContent = `<div id="games-section-header"><h2>My Games</h2><button id="addGameBtn">+ Add Game</button></div><div class="game-list-container"></div>`; mainContent.innerHTML = sectionContent; const addBtn = document.getElementById('addGameBtn'); if (addBtn) addBtn.onclick = () => openGameModal(); renderGames(); stopUserCountPolling(); }
-                else if (section === "proxy") { sectionContent = `<h2>Proxy Sites</h2><div class="proxy-list-container"></div>`; mainContent.innerHTML = sectionContent; renderProxySites(); stopUserCountPolling(); }
-                else if (section === "tools") { sectionContent = `<h2>Tools</h2><p>Useful links, calculators, etc.</p>`; mainContent.innerHTML = sectionContent; stopUserCountPolling(); }
-                else { if (welcomeAreaPlaceholder) { mainContent.appendChild(welcomeAreaPlaceholder); welcomeAreaPlaceholder.style.display = 'flex'; } displayWelcomeMessage(isLoggedIn ? loggedInUsername : "Guest"); }
-                if (mainContent.innerHTML) { requestAnimationFrame(() => { mainContent.style.opacity = 0; mainContent.style.animation = "fadeIn 0.5s forwards"; mainContent.style.opacity = 1; }); } else { mainContent.style.opacity = 1; }
-            }, 50);
-        }
-        function renderProxySites() { /* ... (same as before) ... */ const c = mainContent ? mainContent.querySelector('.proxy-list-container') : null; if (!c) return; c.innerHTML = ''; const spaceUrls = [ "https://yessir.happyforever.com/", "https://fish.happyforever.com/", "https://turtle.happyforever.com/", "https://cars.happyforever.com/" ]; const ps = [ { name: "Space", url: null }, { name: "Transend", url: "https://hw.billigerhost.com/" }, { name: "RammerHead", url: "https://pluh.root.sx/" }, { name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" } ]; ps.forEach(s => { const card = document.createElement('div'); card.className = 'proxy-card'; card.setAttribute('tabindex', '0'); card.innerHTML = ` <div><h4></h4></div> <div class="proxy-card-actions"> <button class="play-btn" title="Open ${s.name.replace(/</g, "&lt;")}">${ICONS.play}</button> </div> `; card.querySelector('h4').textContent = s.name.replace(/</g, "&lt;"); const handleOpen = () => { const urlToOpen = s.name === "Space" ? spaceUrls[Math.floor(Math.random() * spaceUrls.length)] : s.url; openInAboutBlank(urlToOpen, s.name); }; card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOpen(); } }); card.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); handleOpen(); }; c.appendChild(card); }); }
-
-        // --- Settings Panel & Controls (No changes) ---
-        function toggleSettings() { if(settingsPanel) settingsPanel.classList.toggle("show"); }
-        function updateSliderVisuals(s,t,p,d) { if(!s||!t||!p||!d)return; try{const min=parseFloat(s.min)||12; const max=parseFloat(s.max)||24; const v=parseFloat(s.value)||16; let pct=((v-min)/(max-min))*100; pct=Math.max(0,Math.min(100,pct)); t.style.left=`${pct}%`; t.style.transform='translateX(-50%)'; p.style.width=`${pct}%`; d.textContent=`${Math.round(v)}px`;}catch(e){console.error("Slider update err:",e);} }
-        function updateFontSize(v) { const s=document.getElementById('fontSizeSlider');const t=document.getElementById('fontSizeThumb');const p=document.getElementById('fontSizeProgress');const d=document.getElementById('fontSizeValue'); if(!s||!root)return; const val=v||s.value; root.style.setProperty("--font-size",`${val}px`); saveSetting(LS_FONTSIZE,val); updateSliderVisuals(s,t,p,d); }
-        function updateFontFamily(fn) { const s=document.getElementById('fontSelector'); if(!s||!root)return; const v=fn||s.value; root.style.setProperty("--font-family",v); saveSetting(LS_FONTFAMILY,v); }
-        function applyCustomBackground() { /* ... (same as before) ... */ if(!root||!bgImageControlContainer||!bgImageToggleSwitch)return; if(bgImageEnabled){bgImageControlContainer.style.display='flex';}else{bgImageControlContainer.style.display='none';} if(bgImageEnabled&&bgImageUrl&&bgImageUrl.startsWith('data:image/')){root.style.setProperty('--custom-bg-image',`url("${bgImageUrl}")`);}else{root.style.setProperty('--custom-bg-image','none');} bgImageToggleSwitch.checked=bgImageEnabled; }
-        function handleImageFileSelect(e) { /* ... (same as before) ... */ if(!e.target.files||e.target.files.length===0)return; const f=e.target.files[0]; if(!f.type.startsWith('image/')){alert("Select image file.");e.target.value=null;return;} if(f.size>MAX_IMAGE_SIZE_BYTES){alert(`Image too large (${(f.size/1024/1024).toFixed(1)}MB). Max ${MAX_IMAGE_SIZE_MB}MB.`);e.target.value=null;return;} const r=new FileReader(); r.onload=(le)=>{bgImageUrl=le.target.result;saveSetting(LS_BGIMAGE_URL,bgImageUrl);applyCustomBackground();console.log("BG saved.");}; r.onerror=(ee)=>{console.error("FileRead err:",ee);alert("Error reading file.");e.target.value=null;}; r.onabort=()=>{console.warn("FileRead abort.");e.target.value=null;}; r.readAsDataURL(f); }
-        function clearCustomBackground() { /* ... (same as before) ... */ bgImageUrl=''; removeSetting(LS_BGIMAGE_URL); if(bgImageFileInput)bgImageFileInput.value=null; applyCustomBackground(); }
-        function updateTheme(theme) { /* ... (same as before) ... */ const selector=document.getElementById('themeSelector'); if(!root||!body) return; const value=theme||(selector?selector.value:'dark'); let accentColor='#444444'; let textColorValue='#ffffff'; switch(value){ case "light": root.style.setProperty("--bg","#ffffff"); root.style.setProperty("--sidebar","#eeeeee"); root.style.setProperty("--topbar","#dddddd"); root.style.setProperty("--accent","#cccccc"); root.style.setProperty("--text","#1a1a1a"); accentColor='#cccccc'; textColorValue='#1a1a1a'; break; case "blue": root.style.setProperty("--bg","#0a0f1c"); root.style.setProperty("--sidebar","#091121"); root.style.setProperty("--topbar","#101a35"); root.style.setProperty("--accent","#395b9c"); root.style.setProperty("--text","#e0e0ff"); accentColor='#395b9c'; textColorValue='#e0e0ff'; break; case "forest": root.style.setProperty("--bg","#1f2e1f"); root.style.setProperty("--sidebar","#141e14"); root.style.setProperty("--topbar","#2a3f2a"); root.style.setProperty("--accent","#4a784a"); root.style.setProperty("--text","#e5f5e5"); accentColor='#4a784a'; textColorValue='#e5f5e5'; break; case "sunset": root.style.setProperty("--bg","#2b1a1a"); root.style.setProperty("--sidebar","#3a2525"); root.style.setProperty("--topbar","#4d3333"); root.style.setProperty("--accent","#b36b4a"); root.style.setProperty("--text","#ffe8e0"); accentColor='#b36b4a'; textColorValue='#ffe8e0'; break; case "trigonometrical-red": root.style.setProperty("--bg", "#ffffff"); root.style.setProperty("--sidebar", "#a02020"); root.style.setProperty("--topbar", "#b03030"); root.style.setProperty("--accent", "#e53e3e"); root.style.setProperty("--text", "#1a1a1a"); accentColor='#e53e3e'; textColorValue='#1a1a1a'; break; case "dark": default: root.style.setProperty("--bg","#1e1e1e"); root.style.setProperty("--sidebar","#111111"); root.style.setProperty("--topbar","#2c2c2c"); root.style.setProperty("--accent","#444444"); root.style.setProperty("--text","#ffffff"); accentColor='#444444'; textColorValue='#ffffff'; break; } currentThemeColor=accentColor; body.setAttribute('data-theme', value); updateSelectArrowColor(textColorValue); if(root.style && typeof root.style.setProperty==='function'){ const ca=getComputedStyle(root).getPropertyValue('--accent').trim(); const ct=getComputedStyle(root).getPropertyValue('--text').trim(); const ctb=getComputedStyle(root).getPropertyValue('--topbar').trim(); root.style.setProperty('--slider-track-bg', ca); root.style.setProperty('--slider-thumb-bg', ct); root.style.setProperty('--slider-progress-color', ct); root.style.setProperty('--game-card-bg', ctb); root.style.setProperty('--game-card-hover-bg', ca); } updateFavicon(accentColor); updateWelcomeLogoColor(accentColor); saveSetting(LS_THEME, value); applyCustomBackground(); }
-
-        // --- Search & Filtering (No changes) ---
-        function filterGames() { /* ... (same as before) ... */ const s_in=document.getElementById('search'); const mc=document.getElementById('main-content'); if(!s_in||!mc) return; const st=s_in.value.toLowerCase().trim(); const glc=mc.querySelector('.game-list-container'); let ngfm=mc.querySelector('#no-games-found'); let vgc=0; if(glc){ const gcs=glc.querySelectorAll('.game-card'); if(gcs.length>0){gcs.forEach(c=>{const ne=c.querySelector('h4');const ce=c.querySelector('p.category');const n=ne?ne.textContent.toLowerCase():'';const cat=ce?ce.textContent.toLowerCase():'';if(!st||n.includes(st)||cat.includes(st)){c.style.display='';vgc++;}else{c.style.display='none';}});}else{vgc=0;}} if(!ngfm && glc && games.length===0 && !st){ const me=document.createElement('p');me.id='no-games-found';me.style.cssText="grid-column:1/-1;text-align:center;opacity:0.7;padding:20px;color:var(--text);";me.textContent="No games added yet.";glc.appendChild(me);ngfm=me;}else if(ngfm){ const tg=games.length; if(vgc===0 && tg>0 && st){ngfm.textContent=`No games found matching "${s_in.value.trim()}"`;ngfm.style.display='block';}else if(vgc===0 && tg===0){ngfm.textContent=`No games added yet.`;ngfm.style.display='block';}else{ngfm.style.display='none';}} const plc=mc.querySelector('.proxy-list-container'); if(plc&&st){const pcs=plc.querySelectorAll('.proxy-card');pcs.forEach(c=>{const ne=c.querySelector('h4');const n=ne?ne.textContent.toLowerCase():'';if(n.includes(st)){c.style.display='';}else{c.style.display='none';}});}else if(plc){const pcs=plc.querySelectorAll('.proxy-card');pcs.forEach(c=>c.style.display='');} }
-        const debouncedFilterGames = debounce(filterGames, 300);
-
-        // --- Warn on Close Logic ---
-        function handleMainBeforeUnload(e) { if(warnOnClose){const cm='Close Qbit? Changes might be lost.';e.preventDefault();e.returnValue=cm;return cm;} }
-
-        // --- Clear Local Data ---
-        function clearAllData() {
-            if(confirm("Clear ALL locally saved data (settings, games, background, login)? This will NOT affect chat history. Cannot be undone.")){
-                console.log("[DEBUG] Clearing local data...");
-                try{
-                    const ktr=[ LS_THEME, LS_FONTSIZE, LS_FONTFAMILY, LS_GAMES, LS_CATEGORIES, LS_WARNONCLOSE, LS_INITIALIZED, LS_BGIMAGE_ENABLED, LS_BGIMAGE_URL, LS_LOGGED_IN_USER ]; // Added login key
-                    ktr.forEach(k=>removeSetting(k));
-                    isLoggedIn = false; loggedInUsername = null; // Reset state
-                    alert("Local data cleared. Reloading.");
-                    window.location.reload();
-                } catch(e){ console.error("Clear data err:", e); alert("Error clearing local data."); }
-            } else { console.log("Clear cancelled."); }
-        }
-
-        // --- Chat View Toggle ---
-        function toggleChatView() {
-            if (!mainContent || !chatPanel) return;
-            if (!isLoggedIn) { showLoginModal(); return; } // Require login
-
-            if (isChatViewActive) { // Hide Chat
-                chatPanel.style.display = 'none'; mainContent.style.display = 'block';
-                isChatViewActive = false; stopChatPolling(); showSection('welcome');
-            } else { // Show Chat
-                if (isWelcomeAreaVisible()) stopUserCountPolling();
-                mainContent.style.display = 'none'; chatPanel.style.display = 'flex';
-                isChatViewActive = true;
-                fetchInitialMessages(); startChatPolling(); updateLoginUI();
-                if(chatMessageInput) chatMessageInput.focus();
+             if (isClientSideBanned) { console.log("[DEBUG] Poll succeeded, clearing client-side ban flag."); localStorage.removeItem(LS_IS_BANNED); isClientSideBanned = false; updateLoginUI(); }
+            const messages = await response.json();
+            if (messages && messages.length > 0) {
+                let scrolled = false; messages.sort((a, b) => a.timestamp - b.timestamp);
+                messages.forEach(msg => {
+                    const exists = chatLogContainer.querySelector(`.chat-message-group[data-timestamp="${msg.timestamp}"], .chat-system-message[data-timestamp="${msg.timestamp}"]`);
+                    if (!exists && msg.timestamp > lastMessageTimestamp) { appendMessageToLog(msg.sender, msg.text, msg.timestamp, msg.role); scrolled = true; }
+                    else if (msg.timestamp > lastMessageTimestamp) { lastMessageTimestamp = msg.timestamp; }
+                });
+                if (scrolled) scrollToChatBottom();
             }
+        } catch (error) {
+            console.error("Error polling:", error);
+             if (isClientSideBanned) { console.log("[DEBUG] Network error during poll, clearing client-side ban flag."); localStorage.removeItem(LS_IS_BANNED); isClientSideBanned = false; updateLoginUI(); }
+        }
+    }
+    async function fetchInitialMessages() { if (!chatLogContainer) return; console.log("Fetching initial messages..."); chatLogContainer.innerHTML = ''; addChatLoadingIndicator(); noMoreOlderMessages = false; isLoadingOlderMessages = false; oldestMessageTimestamp = null; lastMessageTimestamp = 0; const welcomeName = loggedInUsername || 'Guest'; const welcomeHTML = `<p class="chat-system-message" data-timestamp="1">Welcome to the chat, <span id="chatActiveUserName">${welcomeName.replace(/</g, "&lt;")}</span>!</p>`; chatLogContainer.innerHTML = welcomeHTML; try { const response = await fetch(`${BACKEND_URL}/get-messages?limit=${CHAT_HISTORY_LOAD_LIMIT}`); if (!response.ok) throw new Error(`HTTP error: ${response.status}`); const messages = await response.json(); if (messages && messages.length > 0) { messages.sort((a, b) => a.timestamp - b.timestamp); messages.forEach(msg => appendMessageToLog(msg.sender, msg.text, msg.timestamp, msg.role)); oldestMessageTimestamp = messages[0].timestamp; if (messages.length < CHAT_HISTORY_LOAD_LIMIT) { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } } else { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } scrollToChatBottom(); setupScrollListener(); } catch (error) { console.error("Error fetching initial messages:", error); appendSystemMessage("Error loading initial chat history."); chatLoadingIndicator.textContent = "Error loading history."; } finally { if (!noMoreOlderMessages && chatLoadingIndicator) { chatLoadingIndicator.style.display = 'none'; } } }
+    async function fetchOlderMessages() { if (isLoadingOlderMessages || noMoreOlderMessages || !oldestMessageTimestamp) return; if (!chatLogContainer || !chatLoadingIndicator) return; console.log(`Workspaceing messages before ${oldestMessageTimestamp}`); isLoadingOlderMessages = true; chatLoadingIndicator.textContent = "Loading older messages..."; chatLoadingIndicator.style.display = 'block'; try { const response = await fetch(`${BACKEND_URL}/get-messages?before=${oldestMessageTimestamp}&limit=${CHAT_HISTORY_LOAD_LIMIT}`); if (!response.ok) throw new Error(`HTTP error: ${response.status}`); const messages = await response.json(); if (messages && messages.length > 0) { const oldScrollHeight = chatLogContainer.scrollHeight; const oldScrollTop = chatLogContainer.scrollTop; messages.sort((a, b) => a.timestamp - b.timestamp); for (let i = messages.length - 1; i >= 0; i--) { prependMessageToLog(messages[i].sender, messages[i].text, messages[i].timestamp, messages[i].role); } oldestMessageTimestamp = messages[0].timestamp; chatLogContainer.scrollTop = oldScrollTop + (chatLogContainer.scrollHeight - oldScrollHeight); if (messages.length < CHAT_HISTORY_LOAD_LIMIT) { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } else { chatLoadingIndicator.style.display = 'none'; } } else { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } } catch (error) { console.error("Error fetching older messages:", error); chatLoadingIndicator.textContent = "Error loading older history."; } finally { isLoadingOlderMessages = false; if (!noMoreOlderMessages && chatLoadingIndicator && !isLoadingOlderMessages) { chatLoadingIndicator.style.display = 'none'; } } }
+    function addChatLoadingIndicator() { if (!chatLogContainer) return; if (!chatLoadingIndicator) { chatLoadingIndicator = document.createElement('div'); chatLoadingIndicator.className = 'chat-loading-indicator'; } chatLoadingIndicator.textContent = 'Loading...'; chatLoadingIndicator.style.display = 'block'; const welcomeMsg = chatLogContainer.querySelector('.chat-system-message'); if (welcomeMsg) { chatLogContainer.insertBefore(chatLoadingIndicator, welcomeMsg.nextSibling); } else if (chatLogContainer.firstChild) { chatLogContainer.insertBefore(chatLoadingIndicator, chatLogContainer.firstChild); } else { chatLogContainer.appendChild(chatLoadingIndicator); } }
+    function setupScrollListener() { if (!chatLogContainer) return; chatLogContainer.removeEventListener('scroll', handleChatScroll); chatLogContainer.addEventListener('scroll', handleChatScroll); }
+    const handleChatScroll = debounce(() => { if (!chatLogContainer) return; if (chatLogContainer.scrollTop < 50 && !isLoadingOlderMessages && !noMoreOlderMessages) { fetchOlderMessages(); } }, 150);
+    function startChatPolling() { if (chatPollIntervalId) clearInterval(chatPollIntervalId); if (!isChatViewActive || !isLoggedIn) return; console.log("Starting chat polling..."); fetchNewMessages(); chatPollIntervalId = setInterval(fetchNewMessages, CHAT_POLL_INTERVAL); }
+    function stopChatPolling() { if (chatPollIntervalId) { console.log("Stopping chat polling."); clearInterval(chatPollIntervalId); chatPollIntervalId = null; } }
+
+    // --- User Count Polling ---
+    async function fetchUserCount() { if (!isWelcomeAreaVisible()) return; const displayElement = document.getElementById('user-count-display'); if (!displayElement) return; try { const response = await fetch(`${BACKEND_URL}/user-count`); if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); } const data = await response.json(); if (typeof data.count === 'number') { displayElement.textContent = `Users online: ${data.count}`; } else { displayElement.textContent = 'Users online: N/A'; } } catch (error) { console.error("Error fetching user count:", error); if (displayElement) { displayElement.textContent = 'Users online: Error'; } } }
+    function isWelcomeAreaVisible() { return mainContent && mainContent.style.display !== 'none' && mainContent.querySelector('#welcome-area'); }
+    function startUserCountPolling() { if (userCountIntervalId) clearInterval(userCountIntervalId); if (!isWelcomeAreaVisible()) return; console.log("Starting user count polling..."); fetchUserCount(); userCountIntervalId = setInterval(fetchUserCount, USER_COUNT_POLL_INTERVAL); }
+    function stopUserCountPolling() { if (userCountIntervalId) { console.log("Stopping user count polling."); clearInterval(userCountIntervalId); userCountIntervalId = null; } }
+
+    // --- Load Settings & Initial Setup (Await initial check) ---
+    async function loadSettingsAndInit() { // Added async
+        console.log("[DEBUG] loadSettingsAndInit called.");
+        try {
+            // --- Load basic settings ---
+            const t=localStorage.getItem(LS_THEME)||'dark';
+            const fs=localStorage.getItem(LS_FONTSIZE)||'16';
+            const ff=localStorage.getItem(LS_FONTFAMILY)||"'Segoe UI', sans-serif";
+            warnOnClose=localStorage.getItem(LS_WARNONCLOSE)==='true';
+            bgImageEnabled=localStorage.getItem(LS_BGIMAGE_ENABLED)==='true';
+            bgImageUrl=localStorage.getItem(LS_BGIMAGE_URL)||'';
+
+            // --- Determine initial login state ---
+            const storedUser = localStorage.getItem(LS_LOGGED_IN_USER);
+            if (storedUser) {
+                isLoggedIn = true;
+                loggedInUsername = storedUser;
+
+                // ---> AWAIT Initial Ban Check <---
+                console.log(`[DEBUG] Resumed session for: ${loggedInUsername}. Performing initial ban check...`);
+                const initialBanStatus = await checkUserBanStatus(loggedInUsername); // Wait for the check
+                isClientSideBanned = initialBanStatus.isBanned; // Set flag based on check result
+                if (isClientSideBanned) { localStorage.setItem(LS_IS_BANNED, 'true'); console.log("[DEBUG] Initial check confirmed user is banned."); }
+                else { localStorage.removeItem(LS_IS_BANNED); console.log("[DEBUG] Initial check confirmed user is NOT banned."); }
+                // ---> END Await <---
+
+                // ---> Update UI AFTER initial check <---
+                updateLoginUI();
+                console.log(`[DEBUG] Initial UI updated based on awaited ban status.`);
+
+                // ---> Start PERIODIC polling AFTER initial check & UI update <---
+                startBanStatusPolling();
+
+            } else {
+                isLoggedIn = false; loggedInUsername = null;
+                localStorage.removeItem(LS_IS_BANNED);
+                isClientSideBanned = false;
+                stopBanStatusPolling(); // Ensure stopped if not logged in
+                console.log(`[DEBUG] No stored user found. Flags cleared.`);
+                updateLoginUI(); // Update UI for logged-out state
+            }
+
+            // --- Apply visual settings ---
+            if(themeSelector)themeSelector.value=t; if(fontSelector)fontSelector.value=ff; if(fontSizeSlider)fontSizeSlider.value=fs; if(warnOnCloseSwitch)warnOnCloseSwitch.checked=warnOnClose; if(bgImageToggleSwitch)bgImageToggleSwitch.checked=bgImageEnabled;
+            updateTheme(t); updateFontSize(fs); updateFontFamily(ff); applyCustomBackground();
+
+            // --- Load app data ---
+            loadGames(); loadCategories();
+
+            // --- Final UI setup ---
+            updateLoginUI(); // Call again ensures theme/font changes reflected
+            if(warnOnClose) window.addEventListener('beforeunload',handleMainBeforeUnload);
+            if(chatPanel) chatPanel.style.display = 'none'; if(mainContent) mainContent.style.display = 'block'; isChatViewActive = false;
+            if(welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display='none';
+            showSection('welcome');
+            updateFavicon(currentThemeColor);
+
+        } catch(e){
+            console.error("Init err:", e);
+            if(mainContent)mainContent.innerHTML=`<h2 style="color:red;">Error loading: ${e.message}</h2>`;
+            updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif");
+            isLoggedIn = false; loggedInUsername = null; isClientSideBanned = false;
+            stopBanStatusPolling(); updateLoginUI(); showSection('welcome'); stopUserCountPolling();
+        }
+        updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim());
+        console.log("[DEBUG] Init complete.");
+    }
+
+    // --- Update UI Based on Login State ---
+    function updateLoginUI() {
+        // console.log(`[DEBUG] updateLoginUI called. isLoggedIn: ${isLoggedIn}, isClientSideBanned: ${isClientSideBanned}`); // Less noisy
+        // Logout Button Logic (Hides if banned or not logged in)
+        if (logoutBtn) {
+            logoutBtn.style.display = (isLoggedIn && !isClientSideBanned) ? 'block' : 'none';
         }
 
-        // --- Send Message Function ---
-        async function sendMessage() { /* ... (same as before, includes cooldown check) ... */ if (!isLoggedIn || !loggedInUsername) { alert("Please login to send messages."); showLoginModal(); return; } if (isSendingMessage) return; const messageText = chatMessageInput.value.trim(); if (!messageText) return; const now = Date.now(); if (now - lastSentTimestamp < MESSAGE_COOLDOWN_MS) { const waitSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastSentTimestamp)) / 1000); setTempPlaceholder(`Wait ${waitSec}s...`); console.log("Client cooldown active."); return; } const messageData = { message: messageText, siteUsername: loggedInUsername }; setSendingState(true); try { const response = await fetch(`${BACKEND_URL}/send-message`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(messageData) }); const data = await response.json(); if (response.ok && data.success) { lastSentTimestamp = Date.now(); fetchNewMessages(); } else { console.error("Failed to send message:", data.message); alert(`Failed: ${data.message || 'Unknown error'}`); chatMessageInput.value = messageText; if (response.status === 429) { lastSentTimestamp = Date.now(); const waitSec = Math.ceil(MESSAGE_COOLDOWN_MS / 1000); setTempPlaceholder(`Wait ${waitSec}s...`); } } } catch (error) { console.error("Error sending message:", error); alert("Network error sending message."); chatMessageInput.value = messageText; } finally { setSendingState(false); } }
-        function setSendingState(isSending) { /* ... (same as before) ... */ isSendingMessage = isSending; if (chatMessageInput) chatMessageInput.disabled = isSending || !isLoggedIn; if (sendMessageBtn) sendMessageBtn.disabled = isSending || !isLoggedIn; if (!isSending && isLoggedIn && chatMessageInput) { chatMessageInput.value = ''; chatMessageInput.placeholder = 'Enter message...'; chatMessageInput.focus(); } else if (!isLoggedIn && chatMessageInput) { chatMessageInput.placeholder = 'Login to chat...'; } }
-        function setTempPlaceholder(text, duration = MESSAGE_COOLDOWN_MS) { /* ... (same as before) ... */ if(!chatMessageInput) return; const originalPlaceholder = isLoggedIn ? 'Enter message...' : 'Login to chat...'; chatMessageInput.placeholder = text; setTimeout(() => { if(chatMessageInput && chatMessageInput.placeholder === text) { chatMessageInput.placeholder = originalPlaceholder; } }, duration); }
-
-
-        // --- Append/Prepend Message - Handles Roles ---
-        function appendMessageToLog(sender, message, timestamp, role = 'user') {
-             if (!chatLogContainer) return;
-             const lastMessageGroup = chatLogContainer.lastElementChild; let isNewGroup = true; const MAX_GROUP_TIME_MINUTES = 5;
-             let lastRealMessageGroup = lastMessageGroup; while (lastRealMessageGroup && !lastRealMessageGroup.classList.contains('chat-message-group')) { lastRealMessageGroup = lastRealMessageGroup.previousElementSibling; }
-             if (lastRealMessageGroup && lastRealMessageGroup.dataset.sender === sender && sender !== 'System' && sender !== '[MOD]') { const lastTimestamp = parseInt(lastRealMessageGroup.dataset.latestTimestamp || '0'); const timeDiffMinutes = (timestamp - lastTimestamp) / (1000 * 60); if (!isNaN(timeDiffMinutes) && timeDiffMinutes < MAX_GROUP_TIME_MINUTES) { isNewGroup = false; } }
-
-             const safeSender = sender.replace(/</g, "&lt;"); const safeMessage = message.replace(/</g, "&lt;"); const messageDate = new Date(timestamp); const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); const formattedDateTime = messageDate.toLocaleString();
-
-             // Handle System messages separately
-             if (sender === 'System') { appendSystemMessage(safeMessage, timestamp); return; }
-
-             if (isNewGroup) {
-                 const messageGroupDiv = document.createElement('div'); messageGroupDiv.classList.add('chat-message-group'); messageGroupDiv.dataset.sender = sender; messageGroupDiv.dataset.timestamp = timestamp; messageGroupDiv.dataset.latestTimestamp = timestamp;
-                 const pfpContainer = document.createElement('div'); pfpContainer.classList.add('chat-pfp-container'); pfpContainer.innerHTML = generateUserPfpSvg(sender); messageGroupDiv.appendChild(pfpContainer);
-                 const messageContentDiv = document.createElement('div'); messageContentDiv.classList.add('chat-message-content');
-                 const messageHeaderDiv = document.createElement('div'); messageHeaderDiv.classList.add('chat-message-header');
-                 const usernameSpan = document.createElement('span'); usernameSpan.classList.add('chat-username'); usernameSpan.textContent = safeSender;
-                 // Add role class and tag
-                 let roleTag = '';
-                 if (role === 'mod' || sender === '[MOD]') { usernameSpan.classList.add('username-mod'); roleTag = '[MOD]'; }
-                 else if (role === 'owner') { usernameSpan.classList.add('username-owner'); roleTag = '[OWNER]'; }
-                 messageHeaderDiv.appendChild(usernameSpan);
-                 if (roleTag) { const roleTagSpan = document.createElement('span'); roleTagSpan.className = 'role-tag'; roleTagSpan.textContent = roleTag; messageHeaderDiv.appendChild(roleTagSpan); }
-                 const timestampSpan = document.createElement('span'); timestampSpan.classList.add('chat-timestamp'); timestampSpan.textContent = formattedTime; timestampSpan.title = formattedDateTime; messageHeaderDiv.appendChild(timestampSpan);
-                 messageContentDiv.appendChild(messageHeaderDiv);
-                 const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; messageContentDiv.appendChild(messageP);
-                 messageGroupDiv.appendChild(messageContentDiv); chatLogContainer.appendChild(messageGroupDiv);
-             } else { // Append to existing group
-                 const existingContentDiv = lastRealMessageGroup.querySelector('.chat-message-content');
-                 if (existingContentDiv) { const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; existingContentDiv.appendChild(messageP); lastRealMessageGroup.dataset.latestTimestamp = timestamp; }
-                 else { console.warn("Could not find content div in last group."); appendMessageToLog(sender, message, timestamp, role); } // Fallback
-             }
-              if (timestamp > lastMessageTimestamp) { lastMessageTimestamp = timestamp; }
+        // Chat Input & Send Button Logic
+        const chatDisabled = !isLoggedIn || isClientSideBanned;
+        if (chatMessageInput) {
+            chatMessageInput.disabled = chatDisabled;
+            // Set the correct placeholder based *only* on the current state flags
+            chatMessageInput.placeholder = isLoggedIn ? (isClientSideBanned ? 'Chat disabled (Account Restricted)' : 'Enter message...') : 'Login to chat...';
         }
-        function prependMessageToLog(sender, message, timestamp, role = 'user') {
-            if (!chatLogContainer) return;
-            const safeSender = sender.replace(/</g, "&lt;"); const safeMessage = message.replace(/</g, "&lt;"); const messageDate = new Date(timestamp); const formattedTime = messageDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); const formattedDateTime = messageDate.toLocaleString();
-
-             // Handle System messages separately if needed for prepend
-             if (sender === 'System') {
-                 const systemDiv = document.createElement('p'); systemDiv.classList.add('chat-system-message'); systemDiv.textContent = safeMessage;
-                  const firstChild = chatLogContainer.firstChild; if (firstChild) chatLogContainer.insertBefore(systemDiv, firstChild); else chatLogContainer.appendChild(systemDiv);
-                 return; // Done with system message
-             }
-
-             // Simplified prepend: Always create new group
-             const messageGroupDiv = document.createElement('div'); messageGroupDiv.classList.add('chat-message-group'); messageGroupDiv.dataset.sender = sender; messageGroupDiv.dataset.timestamp = timestamp; messageGroupDiv.dataset.latestTimestamp = timestamp;
-             const pfpContainer = document.createElement('div'); pfpContainer.classList.add('chat-pfp-container'); pfpContainer.innerHTML = generateUserPfpSvg(sender); messageGroupDiv.appendChild(pfpContainer);
-             const messageContentDiv = document.createElement('div'); messageContentDiv.classList.add('chat-message-content');
-             const messageHeaderDiv = document.createElement('div'); messageHeaderDiv.classList.add('chat-message-header');
-             const usernameSpan = document.createElement('span'); usernameSpan.classList.add('chat-username'); usernameSpan.textContent = safeSender;
-             let roleTag = ''; if (role === 'mod' || sender === '[MOD]') { usernameSpan.classList.add('username-mod'); roleTag = '[MOD]'; } else if (role === 'owner') { usernameSpan.classList.add('username-owner'); roleTag = '[OWNER]'; }
-             messageHeaderDiv.appendChild(usernameSpan); if (roleTag) { const roleTagSpan = document.createElement('span'); roleTagSpan.className = 'role-tag'; roleTagSpan.textContent = roleTag; messageHeaderDiv.appendChild(roleTagSpan); }
-             const timestampSpan = document.createElement('span'); timestampSpan.classList.add('chat-timestamp'); timestampSpan.textContent = formattedTime; timestampSpan.title = formattedDateTime; messageHeaderDiv.appendChild(timestampSpan);
-             messageContentDiv.appendChild(messageHeaderDiv); const messageP = document.createElement('p'); messageP.classList.add('chat-message-text'); messageP.textContent = safeMessage; messageContentDiv.appendChild(messageP);
-             messageGroupDiv.appendChild(messageContentDiv);
-             // Prepend logic (insert after loading indicator if present)
-             const indicator = chatLogContainer.querySelector('.chat-loading-indicator');
-             if (indicator && indicator.nextSibling) { chatLogContainer.insertBefore(messageGroupDiv, indicator.nextSibling); }
-             else if (indicator) { chatLogContainer.appendChild(messageGroupDiv); } // Append if only indicator exists
-             else if (chatLogContainer.firstChild) { chatLogContainer.insertBefore(messageGroupDiv, chatLogContainer.firstChild); }
-             else { chatLogContainer.appendChild(messageGroupDiv); }
+        if (sendMessageBtn) {
+            sendMessageBtn.style.display = isLoggedIn && !isClientSideBanned ? 'flex' : 'none';
+            sendMessageBtn.disabled = chatDisabled;
         }
-        function appendSystemMessage(message, timestamp = Date.now()) { if (!chatLogContainer) return; const messageDiv = document.createElement('p'); messageDiv.classList.add('chat-system-message'); messageDiv.textContent = message; messageDiv.dataset.timestamp = timestamp; chatLogContainer.appendChild(messageDiv); scrollToChatBottom(); }
-        function scrollToChatBottom() { if (chatLogContainer) { setTimeout(() => { chatLogContainer.scrollTop = chatLogContainer.scrollHeight; }, 50); } }
+        if (chatToggleBtn) chatToggleBtn.disabled = false;
 
-        // --- Chat Polling & Loading ---
-        async function fetchNewMessages() {
-            if (!isChatViewActive || !isLoggedIn) return;
-            try {
-                const response = await fetch(`${BACKEND_URL}/get-messages?after=${lastMessageTimestamp}`);
-                if (!response.ok) { console.error(`Error fetching new messages: ${response.statusText}`); return; }
-                const messages = await response.json();
-                if (messages && messages.length > 0) {
-                    let scrolled = false; messages.sort((a, b) => a.timestamp - b.timestamp);
-                    messages.forEach(msg => {
-                         const exists = chatLogContainer.querySelector(`.chat-message-group[data-timestamp="${msg.timestamp}"]`); // Basic duplicate check
-                         if (!exists && msg.timestamp > lastMessageTimestamp) { // Ensure it's actually new
-                             appendMessageToLog(msg.sender, msg.text, msg.timestamp, msg.role); // Pass role
-                             scrolled = true;
-                         } else if (msg.timestamp > lastMessageTimestamp) { lastMessageTimestamp = msg.timestamp; } // Update timestamp even if duplicate seen
-                    });
-                    if (scrolled) scrollToChatBottom();
+        // Sidebar Button Logic
+        const needsLoginBtns = [sidebarGamesBtn, sidebarProxyBtn, sidebarToolsBtn];
+         needsLoginBtns.forEach(btn => { if(btn) btn.disabled = !isLoggedIn; });
+
+        // Welcome Message Logic
+        const welcomeMsgEl = document.getElementById('welcome-message'); if (welcomeMsgEl) { welcomeMsgEl.textContent = `Welcome, ${(loggedInUsername || 'Guest').replace(/</g, "&lt;")}!`; }
+        const chatWelcomeName = document.getElementById('chatActiveUserName'); if (chatWelcomeName) { chatWelcomeName.textContent = (loggedInUsername || 'Guest').replace(/</g, "&lt;"); }
+    }
+
+    // --- Event Listeners Setup ---
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM ready.");
+        try {
+            // --- Find Elements (Ensure all are found) ---
+            mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn');
+            fontSizeThumb = document.getElementById('fontSizeThumb'); fontSizeValueDisplay = document.getElementById('fontSizeValue'); fontSizeProgress = document.getElementById('fontSizeProgress');
+            loginModal = document.getElementById('loginModal'); registerModal = document.getElementById('registerModal');
+            loginUsername = document.getElementById('loginUsername'); loginPassword = document.getElementById('loginPassword'); submitLoginBtn = document.getElementById('submitLoginBtn'); cancelLoginBtn = document.getElementById('cancelLoginBtn'); switchToRegisterBtn = document.getElementById('switchToRegisterBtn'); loginError = document.getElementById('loginError');
+            registerUsername = document.getElementById('registerUsername'); registerPassword = document.getElementById('registerPassword'); registerPasswordConfirm = document.getElementById('registerPasswordConfirm'); submitRegisterBtn = document.getElementById('submitRegisterBtn'); cancelRegisterBtn = document.getElementById('cancelRegisterBtn'); switchToLoginBtn = document.getElementById('switchToLoginBtn'); registerError = document.getElementById('registerError');
+            logoutBtn = document.getElementById('logoutBtn'); chatToggleBtn = document.getElementById('chatToggleBtn');
+            sidebarGamesBtn = document.getElementById('sidebarGamesBtn'); sidebarProxyBtn = document.getElementById('sidebarProxyBtn'); sidebarToolsBtn = document.getElementById('sidebarToolsBtn');
+            chatPanel = document.getElementById('chatPanel'); chatActiveSection = document.getElementById('chatActiveSection'); chatLogContainer = document.getElementById('chatLogContainer'); chatMessageInput = document.getElementById('chatMessageInput'); sendMessageBtn = document.getElementById('sendMessageBtn'); chatLoadingIndicator = document.querySelector('.chat-loading-indicator');
+            gameModalTitle=document.getElementById('gameModalTitle'); gameIdInput=document.getElementById('gameIdInput'); gameNameInput=document.getElementById('gameNameInput'); gameUrlInput=document.getElementById('gameUrlInput'); gameCategorySelect=document.getElementById('gameCategorySelect'); addCategoryBtn=document.getElementById('addCategoryBtn'); saveGameBtn=document.getElementById('saveGameBtn'); cancelGameBtn=document.getElementById('cancelGameBtn');
+
+            const criticalElements = { mainContent, settingsPanel, root, body, loginModal, registerModal, settingsBtn, searchInput, chatPanel, chatLogContainer, chatMessageInput, sendMessageBtn, logoutBtn };
+            const missingCritical = Object.entries(criticalElements).filter(([k, v]) => !v).map(([k]) => k);
+            if (missingCritical.length > 0) throw new Error(`Missing critical elements: ${missingCritical.join(', ')}`);
+
+        } catch(e){ console.error("FATAL: Element finding error:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; }
+
+        loadSettingsAndInit(); // Initializes state, UI, awaits initial check, starts polling
+
+        console.log("Attaching listeners.");
+
+        // --- Settings Button Listener (Uses async handler) ---
+        settingsBtn.addEventListener('click', handleSettingsButtonClick);
+
+        // --- Listener to close settings panel and restart polling ---
+        document.addEventListener('click', (event) => {
+            // Check if the settings panel is visible and the click was outside both the panel and the button that opens it
+            if (settingsPanel && settingsPanel.classList.contains('show') &&
+                !settingsPanel.contains(event.target) && !settingsBtn.contains(event.target))
+            {
+                console.log("[DEBUG] Click outside settings panel detected. Closing panel and restarting polling.");
+                settingsPanel.classList.remove('show');
+                startBanStatusPolling(); // Restart background polling
+            }
+        });
+
+        // --- Other Standard Listeners ---
+        searchInput.addEventListener('input',debouncedFilterGames);
+        if(saveGameBtn)saveGameBtn.addEventListener('click',handleSaveGame); if(cancelGameBtn)cancelGameBtn.addEventListener('click',closeGameModal); if(addCategoryBtn)addCategoryBtn.addEventListener('click',handleAddCategory); if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();});
+        fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value)); warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); });
+        bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();});
+        bgImageFileInput.addEventListener('change',handleImageFileSelect); clearBgImageBtn.addEventListener('click',clearCustomBackground);
+
+        // --- Auth Listeners ---
+        if(submitLoginBtn) submitLoginBtn.addEventListener('click', handleLogin); if(loginPassword) loginPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); }); if(cancelLoginBtn) cancelLoginBtn.addEventListener('click', closeAuthModals); if(switchToRegisterBtn) switchToRegisterBtn.addEventListener('click', showRegisterModal);
+        if(submitRegisterBtn) submitRegisterBtn.addEventListener('click', handleRegister); if(registerPasswordConfirm) registerPasswordConfirm.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleRegister(); }); if(cancelRegisterBtn) cancelRegisterBtn.addEventListener('click', closeAuthModals); if(switchToLoginBtn) switchToLoginBtn.addEventListener('click', showLoginModal);
+        if(loginModal) loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeAuthModals(); }); if(registerModal) registerModal.addEventListener('click', (e) => { if (e.target === registerModal) closeAuthModals(); });
+        if(logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+
+        // --- Chat Listeners ---
+        // Chat toggle listener is attached inline via onclick="toggleChatView()" in the HTML
+        if (sendMessageBtn) sendMessageBtn.addEventListener('click', sendMessage);
+        if (chatMessageInput) {
+            chatMessageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (isLoggedIn && !isClientSideBanned) { sendMessage(); }
+                    else if (!isLoggedIn) { showLoginModal(); }
+                    else { alert("Chat disabled (Account Restricted)"); console.warn("[DEBUG] Enter press blocked by client-side ban flag."); }
                 }
-            } catch (error) { console.error("Error polling:", error); }
-        }
-        async function fetchInitialMessages() { /* ... (same as before, but calls appendMessageToLog with role) ... */ if (!chatLogContainer) return; console.log("Fetching initial messages..."); chatLogContainer.innerHTML = ''; addChatLoadingIndicator(); noMoreOlderMessages = false; isLoadingOlderMessages = false; oldestMessageTimestamp = null; lastMessageTimestamp = 0; /* Reset timestamp */ const welcomeName = loggedInUsername || 'Guest'; const welcomeHTML = `<p class="chat-system-message" data-timestamp="1">Welcome to the chat, <span id="chatActiveUserName">${welcomeName.replace(/</g, "&lt;")}</span>!</p>`; chatLogContainer.innerHTML = welcomeHTML; try { const response = await fetch(`${BACKEND_URL}/get-messages?limit=${CHAT_HISTORY_LOAD_LIMIT}`); if (!response.ok) throw new Error(`HTTP error: ${response.status}`); const messages = await response.json(); if (messages && messages.length > 0) { messages.sort((a, b) => a.timestamp - b.timestamp); messages.forEach(msg => appendMessageToLog(msg.sender, msg.text, msg.timestamp, msg.role)); oldestMessageTimestamp = messages[0].timestamp; if (messages.length < CHAT_HISTORY_LOAD_LIMIT) { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } } else { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } scrollToChatBottom(); setupScrollListener(); } catch (error) { console.error("Error fetching initial messages:", error); appendSystemMessage("Error loading initial chat history."); chatLoadingIndicator.textContent = "Error loading history."; } finally { if (!noMoreOlderMessages && chatLoadingIndicator) { chatLoadingIndicator.style.display = 'none'; } } }
-        async function fetchOlderMessages() { /* ... (same as before, but calls prependMessageToLog with role) ... */ if (isLoadingOlderMessages || noMoreOlderMessages || !oldestMessageTimestamp) return; if (!chatLogContainer || !chatLoadingIndicator) return; console.log(`Workspaceing messages before ${oldestMessageTimestamp}`); isLoadingOlderMessages = true; chatLoadingIndicator.textContent = "Loading older messages..."; chatLoadingIndicator.style.display = 'block'; try { const response = await fetch(`${BACKEND_URL}/get-messages?before=${oldestMessageTimestamp}&limit=${CHAT_HISTORY_LOAD_LIMIT}`); if (!response.ok) throw new Error(`HTTP error: ${response.status}`); const messages = await response.json(); if (messages && messages.length > 0) { const oldScrollHeight = chatLogContainer.scrollHeight; const oldScrollTop = chatLogContainer.scrollTop; messages.sort((a, b) => a.timestamp - b.timestamp); for (let i = messages.length - 1; i >= 0; i--) { prependMessageToLog(messages[i].sender, messages[i].text, messages[i].timestamp, messages[i].role); } oldestMessageTimestamp = messages[0].timestamp; chatLogContainer.scrollTop = oldScrollTop + (chatLogContainer.scrollHeight - oldScrollHeight); if (messages.length < CHAT_HISTORY_LOAD_LIMIT) { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } else { chatLoadingIndicator.style.display = 'none'; } } else { noMoreOlderMessages = true; chatLoadingIndicator.textContent = "Beginning of chat history."; } } catch (error) { console.error("Error fetching older messages:", error); chatLoadingIndicator.textContent = "Error loading older history."; } finally { isLoadingOlderMessages = false; if (!noMoreOlderMessages && chatLoadingIndicator && !isLoadingOlderMessages) { chatLoadingIndicator.style.display = 'none'; } } }
-        function addChatLoadingIndicator() { /* ... (same as before) ... */ if (!chatLogContainer) return; if (!chatLoadingIndicator) { chatLoadingIndicator = document.createElement('div'); chatLoadingIndicator.className = 'chat-loading-indicator'; } chatLoadingIndicator.textContent = 'Loading...'; chatLoadingIndicator.style.display = 'block'; const welcomeMsg = chatLogContainer.querySelector('.chat-system-message'); if (welcomeMsg) { chatLogContainer.insertBefore(chatLoadingIndicator, welcomeMsg.nextSibling); } else if (chatLogContainer.firstChild) { chatLogContainer.insertBefore(chatLoadingIndicator, chatLogContainer.firstChild); } else { chatLogContainer.appendChild(chatLoadingIndicator); } }
-        function setupScrollListener() { /* ... (same as before) ... */ if (!chatLogContainer) return; chatLogContainer.removeEventListener('scroll', handleChatScroll); chatLogContainer.addEventListener('scroll', handleChatScroll); }
-        const handleChatScroll = debounce(() => { /* ... (same as before) ... */ if (!chatLogContainer) return; if (chatLogContainer.scrollTop < 50 && !isLoadingOlderMessages && !noMoreOlderMessages) { fetchOlderMessages(); } }, 150);
-        function startChatPolling() { /* ... (same as before) ... */ if (chatPollIntervalId) clearInterval(chatPollIntervalId); if (!isChatViewActive || !isLoggedIn) return; console.log("Starting chat polling..."); fetchNewMessages(); chatPollIntervalId = setInterval(fetchNewMessages, CHAT_POLL_INTERVAL); }
-        function stopChatPolling() { /* ... (same as before) ... */ if (chatPollIntervalId) { console.log("Stopping chat polling."); clearInterval(chatPollIntervalId); chatPollIntervalId = null; } }
+            });
+         }
+         // Scroll listener attached by setupScrollListener()
 
-        // --- User Count Polling ---
-        async function fetchUserCount() { /* ... (same as before) ... */ if (!isWelcomeAreaVisible()) return; const displayElement = document.getElementById('user-count-display'); if (!displayElement) return; try { const response = await fetch(`${BACKEND_URL}/user-count`); if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); } const data = await response.json(); if (typeof data.count === 'number') { displayElement.textContent = `Users online: ${data.count}`; } else { displayElement.textContent = 'Users online: N/A'; } } catch (error) { console.error("Error fetching user count:", error); if (displayElement) { displayElement.textContent = 'Users online: Error'; } } }
-        function isWelcomeAreaVisible() { /* ... (same as before) ... */ return mainContent && mainContent.style.display !== 'none' && mainContent.querySelector('#welcome-area'); }
-        function startUserCountPolling() { /* ... (same as before) ... */ if (userCountIntervalId) clearInterval(userCountIntervalId); if (!isWelcomeAreaVisible()) return; console.log("Starting user count polling..."); fetchUserCount(); userCountIntervalId = setInterval(fetchUserCount, USER_COUNT_POLL_INTERVAL); }
-        function stopUserCountPolling() { /* ... (same as before) ... */ if (userCountIntervalId) { console.log("Stopping user count polling."); clearInterval(userCountIntervalId); userCountIntervalId = null; } }
-
-        // --- Load Settings & Initial Setup ---
-        function loadSettingsAndInit() {
-            console.log("[DEBUG] Init.");
-            try {
-                const t=localStorage.getItem(LS_THEME)||'dark'; const fs=localStorage.getItem(LS_FONTSIZE)||'16'; const ff=localStorage.getItem(LS_FONTFAMILY)||"'Segoe UI', sans-serif";
-                warnOnClose=localStorage.getItem(LS_WARNONCLOSE)==='true'; bgImageEnabled=localStorage.getItem(LS_BGIMAGE_ENABLED)==='true'; bgImageUrl=localStorage.getItem(LS_BGIMAGE_URL)||'';
-                const storedUser = localStorage.getItem(LS_LOGGED_IN_USER); // Use localStorage
-                if (storedUser) { isLoggedIn = true; loggedInUsername = storedUser; console.log(`[DEBUG] Resumed session for: ${loggedInUsername} from localStorage`); } else { isLoggedIn = false; loggedInUsername = null; }
-                if(themeSelector)themeSelector.value=t; if(fontSelector)fontSelector.value=ff; if(fontSizeSlider)fontSizeSlider.value=fs; if(warnOnCloseSwitch)warnOnCloseSwitch.checked=warnOnClose; if(bgImageToggleSwitch)bgImageToggleSwitch.checked=bgImageEnabled;
-                updateTheme(t); updateFontSize(fs); updateFontFamily(ff); updateLoginUI();
-                if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload);
-                loadGames(); loadCategories();
-                if(chatPanel) chatPanel.style.display = 'none'; if(mainContent) mainContent.style.display = 'block'; isChatViewActive = false;
-                if(welcomeAreaPlaceholder)welcomeAreaPlaceholder.style.display='none';
-                showSection('welcome'); // Show welcome initially
-                updateFavicon(currentThemeColor);
-            } catch(e){ console.error("Init err:", e); if(mainContent)mainContent.innerHTML=`<h2 style="color:red;">Error loading: ${e.message}</h2>`; updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif"); isLoggedIn = false; loggedInUsername = null; updateLoginUI(); showSection('welcome'); stopUserCountPolling(); }
-            updateSelectArrowColor(getComputedStyle(root).getPropertyValue('--text').trim());
-            console.log("Init complete.");
-       }
-
-        // --- Update UI Based on Login State ---
-        function updateLoginUI() {
-            if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
-            if (chatMessageInput) { chatMessageInput.disabled = !isLoggedIn; chatMessageInput.placeholder = isLoggedIn ? 'Enter message...' : 'Login to chat...'; }
-            if (sendMessageBtn) sendMessageBtn.style.display = isLoggedIn ? 'flex' : 'none';
-            if (chatToggleBtn) chatToggleBtn.disabled = false; // Always enable toggle, prompt login if needed
-            // Enable/disable sidebar buttons requiring login
-            const needsLoginBtns = [sidebarGamesBtn, sidebarProxyBtn, sidebarToolsBtn];
-             needsLoginBtns.forEach(btn => { if(btn) btn.disabled = !isLoggedIn; });
-            // Update welcome message content
-            const welcomeMsgEl = document.getElementById('welcome-message'); if (welcomeMsgEl) { welcomeMsgEl.textContent = `Welcome, ${(loggedInUsername || 'Guest').replace(/</g, "&lt;")}!`; }
-            // Update chat welcome message content if chat panel exists
-            const chatWelcomeName = document.getElementById('chatActiveUserName'); if (chatWelcomeName) { chatWelcomeName.textContent = (loggedInUsername || 'Guest').replace(/</g, "&lt;"); }
-        }
-
-
-        // --- Event Listeners Setup ---
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM ready.");
-            try {
-                // --- Find Elements ---
-                mainContent=document.getElementById("main-content"); settingsPanel=document.getElementById("settingsPanel"); root=document.documentElement; body=document.body; faviconLink=document.getElementById('dynamic-favicon'); gameModal=document.getElementById('gameModal'); settingsBtn=document.getElementById('settingsBtn'); searchInput=document.getElementById('search'); welcomeAreaPlaceholder=document.getElementById('welcome-area-placeholder'); themeSelector=document.getElementById('themeSelector'); fontSelector=document.getElementById('fontSelector'); fontSizeSlider=document.getElementById('fontSizeSlider'); warnOnCloseSwitch=document.getElementById('warnOnCloseSwitch'); bgImageToggleSwitch=document.getElementById('bgImageToggleSwitch'); bgImageControlContainer=document.getElementById('bgImageControlContainer'); bgImageFileInput=document.getElementById('bgImageFileInput'); clearBgImageBtn=document.getElementById('clearBgImageBtn');
-                fontSizeThumb = document.getElementById('fontSizeThumb'); fontSizeValueDisplay = document.getElementById('fontSizeValue'); fontSizeProgress = document.getElementById('fontSizeProgress');
-                loginModal = document.getElementById('loginModal'); registerModal = document.getElementById('registerModal');
-                loginUsername = document.getElementById('loginUsername'); loginPassword = document.getElementById('loginPassword'); submitLoginBtn = document.getElementById('submitLoginBtn'); cancelLoginBtn = document.getElementById('cancelLoginBtn'); switchToRegisterBtn = document.getElementById('switchToRegisterBtn'); loginError = document.getElementById('loginError');
-                registerUsername = document.getElementById('registerUsername'); registerPassword = document.getElementById('registerPassword'); registerPasswordConfirm = document.getElementById('registerPasswordConfirm'); submitRegisterBtn = document.getElementById('submitRegisterBtn'); cancelRegisterBtn = document.getElementById('cancelRegisterBtn'); switchToLoginBtn = document.getElementById('switchToLoginBtn'); registerError = document.getElementById('registerError');
-                logoutBtn = document.getElementById('logoutBtn'); chatToggleBtn = document.getElementById('chatToggleBtn');
-                sidebarGamesBtn = document.getElementById('sidebarGamesBtn'); sidebarProxyBtn = document.getElementById('sidebarProxyBtn'); sidebarToolsBtn = document.getElementById('sidebarToolsBtn');
-                chatPanel = document.getElementById('chatPanel'); chatActiveSection = document.getElementById('chatActiveSection'); chatLogContainer = document.getElementById('chatLogContainer'); chatMessageInput = document.getElementById('chatMessageInput'); sendMessageBtn = document.getElementById('sendMessageBtn'); chatLoadingIndicator = document.querySelector('.chat-loading-indicator');
-                gameModalTitle=document.getElementById('gameModalTitle'); gameIdInput=document.getElementById('gameIdInput'); gameNameInput=document.getElementById('gameNameInput'); gameUrlInput=document.getElementById('gameUrlInput'); gameCategorySelect=document.getElementById('gameCategorySelect'); addCategoryBtn=document.getElementById('addCategoryBtn'); saveGameBtn=document.getElementById('saveGameBtn'); cancelGameBtn=document.getElementById('cancelGameBtn');
-                const criticalElements = { mainContent, settingsPanel, root, body, loginModal, registerModal, settingsBtn, searchInput, chatPanel, chatLogContainer, chatMessageInput, sendMessageBtn, logoutBtn };
-                const missingCritical = Object.entries(criticalElements).filter(([k, v]) => !v).map(([k]) => k);
-                if (missingCritical.length > 0) throw new Error(`Missing critical elements: ${missingCritical.join(', ')}`);
-            } catch(e){ console.error("FATAL: Element finding error:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; }
-
-            loadSettingsAndInit();
-
-            console.log("Attaching listeners.");
-            // --- Standard Listeners ---
-            settingsBtn.addEventListener('click',toggleSettings); searchInput.addEventListener('input',debouncedFilterGames);
-            if(saveGameBtn)saveGameBtn.addEventListener('click',handleSaveGame); if(cancelGameBtn)cancelGameBtn.addEventListener('click',closeGameModal); if(addCategoryBtn)addCategoryBtn.addEventListener('click',handleAddCategory); if(gameModal)gameModal.addEventListener('click',(e)=>{if(e.target===gameModal)closeGameModal();});
-            fontSizeSlider.addEventListener('input',(e)=>updateFontSize(e.target.value)); warnOnCloseSwitch.addEventListener('change',(e)=>{ warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); });
-            bgImageToggleSwitch.addEventListener('change',(e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();});
-            bgImageFileInput.addEventListener('change',handleImageFileSelect); clearBgImageBtn.addEventListener('click',clearCustomBackground);
-            const cdb=document.getElementById('clearDataBtn'); if(cdb)cdb.addEventListener('click',clearAllData);
-
-            // --- Auth Listeners ---
-             if(submitLoginBtn) submitLoginBtn.addEventListener('click', handleLogin); if(loginPassword) loginPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); }); if(cancelLoginBtn) cancelLoginBtn.addEventListener('click', closeAuthModals); if(switchToRegisterBtn) switchToRegisterBtn.addEventListener('click', showRegisterModal);
-             if(submitRegisterBtn) submitRegisterBtn.addEventListener('click', handleRegister); if(registerPasswordConfirm) registerPasswordConfirm.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleRegister(); }); if(cancelRegisterBtn) cancelRegisterBtn.addEventListener('click', closeAuthModals); if(switchToLoginBtn) switchToLoginBtn.addEventListener('click', showLoginModal);
-             if(loginModal) loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeAuthModals(); }); if(registerModal) registerModal.addEventListener('click', (e) => { if (e.target === registerModal) closeAuthModals(); });
-             if(logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-
-            // --- Chat Listeners ---
-            if (sendMessageBtn) sendMessageBtn.addEventListener('click', sendMessage);
-            if (chatMessageInput) { chatMessageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { if (isLoggedIn) sendMessage(); else showLoginModal(); } }); }
-             // Scroll listener attached by setupScrollListener()
-
-            console.log("Listeners attached.");
-        }); // End DOMContentLoaded
-    </script>
+        console.log("Listeners attached.");
+    }); // End DOMContentLoaded
+</script>
 
 </body>
 </html>
