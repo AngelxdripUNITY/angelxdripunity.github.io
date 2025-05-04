@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Qbit Enhanced</title> <link rel="icon" id="dynamic-favicon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Q</text></svg>">
+    <title>Qbit Enhanced</title>
+    <link rel="icon" id="dynamic-favicon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Q</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -11,25 +12,21 @@
     <style>
         /* --- Root Variables and Base Styles --- */
         :root {
-            /* Theme Variables */ --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff; --danger-color: #e53e3e; /* Added Danger Color */
+            /* Theme Variables */ --bg: #1e1e1e; --sidebar: #111; --topbar: #2c2c2c; --accent: #444; --text: #ffffff; --danger-color: #e53e3e;
             /* Font */ --font-size: 16px; --font-family: 'Segoe UI', sans-serif;
             /* Radii */ --radius-std: 8px; --radius-lg: 12px;
             /* Slider */ --slider-track-bg: var(--accent); --slider-thumb-bg: var(--text); --slider-progress-color: var(--text); --slider-track-height: 6px; --slider-thumb-size: 16px;
-            /* Components */ --game-card-bg: var(--topbar); --game-card-hover-bg: var(--accent);
-            /* Colors (Specific UI Roles) */ --delete-color: var(--danger-color); /* Use themed danger color */ --edit-color: #4299e1; --play-color: #48bb78; --mod-color: #4ec9b0; --owner-color: #c586c0; --system-color: #ce9178;
+            /* Components */ --card-bg: var(--topbar); --card-hover-bg: var(--accent);
+            /* Colors (Specific UI Roles) */ --delete-color: var(--danger-color); --edit-color: #4299e1; --play-color: #48bb78;
             /* Background */ --custom-bg-image: none;
-            /* Added: Accent Blue for focus */ --accent-blue: #3b82f6;
+            /* Added: Accent Blue for focus (Kept for focus outline consistency) */ --accent-blue: #3b82f6;
             /* Custom Theme Colors */ --custom-accent-color: #3b82f6; /* Default custom accent */
         }
         html, body { height: 100%; margin: 0; overflow: hidden; }
-        body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .settings-panel input[type="file"], .settings-panel button, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .game-card, .game-card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn, .proxy-card, .proxy-card button, #clearDataBtn, .tool-card, #clearBgImageBtn, .custom-tab-item-card, .custom-tab-item-card button, #addItemBtn, #itemModal input, #itemModal button, #sidebarAddTabBtn /* Added custom tab elements */ { box-sizing: border-box; }
-        body { font-family: var(--font-family); display: flex; background-color: var(--bg); color: var(--text); font-size: var(--font-size); transition: background-color 0.3s, color 0.3s; background-image: var(--custom-bg-image); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
-          /* Themed Scrollbar (Firefox) */
-          scrollbar-width: thin;
-          scrollbar-color: var(--accent) var(--sidebar); /* thumb track */
-        }
+        body, .sidebar, .main, .modal-overlay, .modal-box, .sidebar button, .search input, .icon-btn, .content, iframe, .settings-panel label, .settings-panel select, .settings-panel input[type="file"], .settings-panel button, .custom-slider-container, input[type="range"].custom-slider, .modal-box input, .modal-box select, .modal-box button, .card, .card button, #addGameBtn, #gameModal input, #gameModal select, #gameModal button, #addCategoryBtn, #clearDataBtn, #clearBgImageBtn, #addItemBtn, #itemModal input, #itemModal button, #sidebarAddTabBtn { box-sizing: border-box; }
+        body { font-family: var(--font-family); display: flex; background-color: var(--bg); color: var(--text); font-size: var(--font-size); transition: background-color 0.3s, color 0.3s; background-image: var(--custom-bg-image); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed; scrollbar-width: thin; scrollbar-color: var(--accent) var(--sidebar); }
 
-        /* --- Themed Scrollbar (WebKit - Chrome, Edge, Safari) --- */
+        /* --- Themed Scrollbar (WebKit) --- */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--sidebar); border-radius: 5px; }
         ::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 5px; border: 2px solid var(--sidebar); }
@@ -37,14 +34,14 @@
         ::-webkit-scrollbar-corner { background: transparent; }
 
         /* --- Layout: Sidebar, Main, Topbar --- */
-        .sidebar { width: 200px; background-color: var(--sidebar); flex-shrink: 0; animation: slideInLeft 0.5s ease forwards; transition: background-color 0.3s; display:flex; flex-direction:column; padding: 20px 10px; gap: 5px; /* Reduced gap */ height: 100vh; overflow-y: auto; }
+        .sidebar { width: 200px; background-color: var(--sidebar); flex-shrink: 0; animation: slideInLeft 0.5s ease forwards; transition: background-color 0.3s; display:flex; flex-direction:column; padding: 20px 10px; gap: 10px; /* Increased gap */ height: 100vh; overflow-y: auto; }
         .sidebar h2 { font-size: 1.1em; border-bottom: 1px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px; color: var(--text); margin-top: 0;}
-        .sidebar .sidebar-section { margin-bottom: 15px; } /* Added section wrapper */
-        .sidebar .sidebar-section h3 { font-size: 0.8em; text-transform: uppercase; opacity: 0.6; margin: 10px 0 5px 0; color: var(--text); padding-left: 5px; letter-spacing: 0.5px; } /* Section titles */
-        .sidebar button { background: var(--accent); border: none; padding: 0.6em 0.8em; text-align: left; color: var(--text); cursor: pointer; border-radius: var(--radius-std); transition: background 0.3s, transform 0.2s, color 0.3s; font-size: 0.9em; display: block; width: 100%; margin-bottom: 5px; /* Spacing between buttons */ }
-        .sidebar button:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.03); }
+        .sidebar .sidebar-section { margin-bottom: 5px; } /* Reduced bottom margin */
+        .sidebar .sidebar-section h3 { font-size: 0.8em; text-transform: uppercase; opacity: 0.6; margin: 10px 0 5px 0; color: var(--text); padding-left: 5px; letter-spacing: 0.5px; }
+        .sidebar button { background: var(--accent); border: none; padding: 0.6em 0.8em; text-align: left; color: var(--text); cursor: pointer; border-radius: var(--radius-std); transition: background 0.3s, transform 0.2s, color 0.3s, filter 0.3s; font-size: 0.9em; display: block; width: 100%; margin-bottom: 8px; /* Increased spacing */ }
+        .sidebar button:hover:not(:disabled):not(.active) { filter: brightness(1.15); /* Slightly brighter hover */ transform: scale(1.02); background: var(--accent); /* Ensure hover uses accent */ }
         .sidebar button:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(50%); transform: none;}
-        .sidebar button.active { background: var(--accent-blue); /* Highlight active tab */ font-weight: bold; }
+        .sidebar button.active { background: var(--accent); /* Use theme accent for active */ filter: brightness(1.4); /* Make active brighter */ font-weight: bold; }
         #sidebarAddTabBtn { margin-top: 10px; background-color: transparent; border: 1px dashed var(--accent); text-align: center; opacity: 0.8; }
         #sidebarAddTabBtn:hover { opacity: 1; background-color: var(--accent); border-style: solid; }
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; height: 100vh; }
@@ -62,7 +59,7 @@
         .content h1 { font-size: 1.8em; margin-bottom: 0.5em; color: var(--text);} .content h2 { font-size: 1.4em; margin-bottom: 0.4em; margin-top: 1em; color: var(--text);} .content p { font-size: 1em; margin-bottom: 1em; color: var(--text);}
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--accent); }
         .section-header h2 { margin: 0; }
-        .section-header button { background-color: var(--accent); color: var(--text); border: none; padding: 8px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; transition: background-color 0.3s, transform 0.1s; }
+        .section-header button { background-color: var(--accent); color: var(--text); border: none; padding: 8px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; transition: background-color 0.3s, transform 0.1s, filter 0.2s; }
         .section-header button:hover { filter: brightness(1.2); } .section-header button:active { transform: scale(0.95); }
 
         /* --- Welcome Area --- */
@@ -78,22 +75,17 @@
         .changelog-version ul li { margin-bottom: 4px; }
 
         /* --- Settings Panel --- */
-        .settings-panel { position: fixed; top: 55px; right: 20px; background-color: var(--topbar); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 300px; /* Wider */ z-index: 10; opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s, visibility 0s linear 0.4s; display: none; flex-direction: column; gap: 15px; color: var(--text); max-height: calc(100vh - 75px); overflow-y: auto; }
+        .settings-panel { position: fixed; top: 55px; right: 20px; background-color: var(--topbar); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 300px; z-index: 10; opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s, visibility 0s linear 0.4s; display: none; flex-direction: column; gap: 15px; color: var(--text); max-height: calc(100vh - 75px); overflow-y: auto; }
         .settings-panel.show { display: flex; opacity: 1; transform: translateY(0); visibility: visible; transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s; }
-        .settings-panel label:not(.toggle-switch-label):not(#usernameSettingLabel):not(#customColorLabel) /* Exclude specific labels */ { font-size: 0.9em; display: flex; flex-direction: column; gap: 8px; color: var(--text); }
-        /* --- Styles for Username Setting Area --- */
+        .settings-panel label:not(.toggle-switch-label):not(#usernameSettingLabel):not(#customColorLabel) { font-size: 0.9em; display: flex; flex-direction: column; gap: 8px; color: var(--text); }
         .settings-panel label#usernameSettingLabel { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.9em; color: var(--text); width: 100%; }
         .settings-panel #settingsUsernameInput { flex-grow: 1; padding: 6px 10px; font-size: 0.9em; border-radius: var(--radius-std); border: 1px solid var(--accent); background-color: var(--bg); color: var(--text); transition: border-color 0.3s, background-color 0.3s; }
         .settings-panel #saveUsernameBtn { flex-shrink: 0; padding: 6px 12px; font-size: 0.85em; background-color: var(--accent); color: var(--text); border: none; border-radius: var(--radius-std); cursor: pointer; transition: background-color 0.3s, filter 0.2s; }
         .settings-panel #saveUsernameBtn:hover { filter: brightness(1.2); }
         .settings-panel #saveUsernameBtn:active { transform: scale(0.95); }
-        /* --- End Username Setting Styles --- */
-        /* --- Styles for Custom Color Picker --- */
-        #customColorSettingContainer { display: none; /* Hidden by default */ flex-direction: column; gap: 8px; }
+        #customColorSettingContainer { display: none; flex-direction: column; gap: 8px; }
         #customColorSettingContainer label#customColorLabel { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.9em; color: var(--text); width: 100%; }
-        #customColorInput { /* Style the color input */ height: 30px; width: 50px; padding: 2px; border: 1px solid var(--accent); border-radius: var(--radius-std); background-color: var(--bg); cursor: pointer; }
-        /* --- End Custom Color Picker Styles --- */
-
+        #customColorInput { height: 30px; width: 50px; padding: 2px; border: 1px solid var(--accent); border-radius: var(--radius-std); background-color: var(--bg); cursor: pointer; }
         .settings-panel select { padding: 10px; border-radius: var(--radius-std); border: 1px solid var(--accent); background-color: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s, border-color 0.3s; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${(typeof getComputedStyle !== 'undefined' ? (getComputedStyle(document.documentElement).getPropertyValue('--text') || '#ffffff').substring(1) : 'ffffff')}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px auto; padding-right: 35px; font-size: 0.9em; }
         /* Slider Styles */
         .custom-slider-container { position: relative; width: 100%; height: var(--slider-thumb-size); display: flex; align-items: center; cursor: pointer; margin-top: 5px; }
@@ -113,19 +105,18 @@
         .toggle-switch:checked + .toggle-slider::before { transform: translateX(20px); }
         .toggle-switch:focus-visible + .toggle-slider { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
         /* Danger/Action Buttons */
-        .danger-btn { background-color: var(--danger-color); /* Use themed danger color */ color: var(--text); border: none; padding: 10px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; font-weight: bold; text-align: center; transition: background-color 0.3s, transform 0.1s, filter 0.3s; margin-top: 10px; width: 100%; }
+        .danger-btn { background-color: var(--danger-color); /* Uses themed danger color */ color: var(--text); border: none; padding: 10px 15px; border-radius: var(--radius-std); cursor: pointer; font-size: 0.9em; font-weight: bold; text-align: center; transition: background-color 0.3s, transform 0.1s, filter 0.3s; margin-top: 10px; width: 100%; }
         .danger-btn:hover { filter: brightness(1.15); }
         .danger-btn:active { transform: scale(0.98); }
         #clearBgImageBtn { background-color: var(--accent); } /* Keep clear BG button less aggressive */
         #clearBgImageBtn:hover { filter: brightness(1.1); }
 
-        /* --- Modals (Game Modal & Item Modal) --- */
+        /* --- Modals --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 100; opacity: 0; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
         .modal-overlay.visible { display: flex; opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
         .modal-box { background-color: var(--topbar); padding: 30px 40px; border-radius: var(--radius-lg); border: 1px solid var(--accent); box-shadow: 0 5px 20px rgba(0,0,0,0.4); text-align: center; color: var(--text); transform: scale(0.9); transition: transform 0.3s ease, background-color 0.3s, color 0.3s; max-width: 450px; width: 90%; max-height: 90vh; display: flex; flex-direction: column; }
         .modal-overlay.visible .modal-box { transform: scale(1); }
         .modal-box h3 { margin-top: 0; margin-bottom: 25px; font-size: 1.3em; color: var(--text); flex-shrink: 0; }
-        .modal-box p { margin-bottom: 20px; font-size: 0.95em; opacity: 0.9; text-align: left; color: var(--text); flex-shrink: 0; }
         .modal-box .form-field { margin-bottom: 18px; flex-shrink: 0; }
         .modal-box .category-field { display: flex; align-items: center; gap: 10px; }
         .modal-box label { display: block; text-align: left; margin-bottom: 5px; font-size: 0.9em; font-weight: bold; color: var(--text); }
@@ -134,17 +125,18 @@
         #addCategoryBtn { padding: 6px 10px; font-size: 0.8em; flex-shrink: 0; background-color: var(--accent); color: var(--text); border: none; border-radius: var(--radius-std); cursor: pointer; }
         #addCategoryBtn:hover { filter: brightness(1.2); }
         .modal-box .modal-actions { margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
-        .modal-box button { padding: 10px 20px; border: none; border-radius: var(--radius-std); font-size: 1em; cursor: pointer; transition: background-color 0.3s, transform 0.1s; color: var(--text); }
+        .modal-box button { padding: 10px 20px; border: none; border-radius: var(--radius-std); font-size: 1em; cursor: pointer; transition: background-color 0.3s, transform 0.1s, filter 0.2s; color: var(--text); }
         .modal-box button.primary { background-color: var(--accent); }
         .modal-box button.secondary { background-color: transparent; border: 1px solid var(--accent); }
         .modal-box button:hover { filter: brightness(1.2); } .modal-box button:active { transform: scale(0.95); }
         .modal-box button:disabled { filter: grayscale(50%); opacity: 0.6; cursor: not-allowed; }
 
-        /* --- Game/Tool/Proxy/Custom Item Cards --- */
-        .list-container { /* Generic container */ display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding-top: 10px; }
-        .card { /* Generic card base */ background-color: var(--game-card-bg); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid transparent; transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(20px); animation: cardFadeInUp 0.5s ease forwards; min-height: 110px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); color: var(--text); }
-        .card:nth-child(n) { animation-delay: calc(0.05s * n); } /* Stagger animation slightly */
-        .card:hover { transform: translateY(-5px) scale(1.02); background-color: var(--game-card-hover-bg); border-color: var(--text); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        /* --- Generic Cards --- */
+        .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding-top: 10px; }
+        .card { background-color: var(--card-bg); border-radius: var(--radius-lg); /* Keep overall radius */ padding: 0; /* Remove padding for proxy layout */ display: flex; flex-direction: column; justify-content: space-between; border: 1px solid transparent; transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(20px); animation: cardFadeInUp 0.5s ease forwards; min-height: 110px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); color: var(--text); overflow: hidden; /* Needed for border-radius */ }
+        .card:not(.proxy-card) { padding: 15px; /* Restore padding for non-proxy cards */ }
+        .card:nth-child(n) { animation-delay: calc(0.05s * n); }
+        .card:hover { transform: translateY(-5px) scale(1.02); background-color: var(--card-hover-bg); border-color: var(--text); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
         .card p.category, .card p.description { font-size: 0.75em; color: var(--text); opacity: 0.7; margin-top: 0; margin-bottom: 10px; background-color: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: var(--radius-std); display: inline-block; }
         .card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; }
         .card-actions button { background-color: transparent; border: none; border-radius: var(--radius-std); cursor: pointer; padding: 5px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s, transform 0.1s; }
@@ -160,11 +152,52 @@
         .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 20px; }
         .card-favicon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 3px; object-fit: contain; background-color: rgba(128, 128, 128, 0.1); display: inline-block; vertical-align: middle; }
         .card-header h4 { margin: 0; flex-grow: 1; line-height: 1.2; color: var(--text); word-break: break-word; }
-        /* Specific card type aliases */
-        .game-card { /* Inherits from .card */ }
-        .tool-card { /* Inherits from .card */ }
-        .proxy-card { /* Inherits from .card */ }
-        .custom-tab-item-card { /* Inherits from .card */ }
+
+        /* --- Proxy Card Specific Styles --- */
+        .proxy-card { cursor: pointer; } /* Make whole card indicate clickability */
+        .proxy-preview {
+            height: 120px; /* Adjust height as needed */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Important for blur effect */
+            background: linear-gradient(45deg, var(--accent), var(--topbar)); /* Simple gradient base */
+        }
+        .proxy-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0; /* Cover the entire area */
+            background: inherit; /* Use parent's background */
+            filter: blur(8px); /* Apply blur */
+            z-index: 0; /* Behind the play button */
+        }
+        .proxy-preview .play-icon {
+            position: relative; /* To be above the blurred background */
+            z-index: 1;
+            width: 48px; /* Larger play button */
+            height: 48px;
+            fill: rgba(255, 255, 255, 0.8); /* Whiteish, slightly transparent */
+            transition: transform 0.2s ease, fill 0.2s ease;
+        }
+        .proxy-card:hover .proxy-preview .play-icon {
+            transform: scale(1.1);
+            fill: rgba(255, 255, 255, 1); /* Fully opaque on hover */
+        }
+        .proxy-label {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.2); /* Slightly darker background for label */
+            border-top: 1px solid var(--accent); /* Separator line */
+        }
+
+        /* Specific card type classes (inherit from .card) */
+        .game-card {}
+        .tool-card {}
+        /* .proxy-card defined above */
+        .custom-tab-item-card {}
 
         /* --- Focus Styles --- */
         *:focus { outline: none; }
@@ -221,7 +254,8 @@
         <div class="modal-box">
             <h3 id="itemModalTitle">Add New Item</h3>
             <input type="hidden" id="itemIdInput">
-            <input type="hidden" id="itemTabIdInput"> <div class="form-field">
+            <input type="hidden" id="itemTabIdInput">
+            <div class="form-field">
                 <label for="itemNameInput">Name:</label>
                 <input type="text" id="itemNameInput" placeholder="e.g., Google Search" required>
             </div>
@@ -254,7 +288,8 @@
     <div class="main">
         <div class="topbar">
             <div class="search">
-                <input type="text" id="search" placeholder="Search..." /> </div>
+                <input type="text" id="search" placeholder="Search..." />
+            </div>
             <div class="top-buttons">
                 <button class="icon-btn" title="Settings" id="settingsBtn">
                     <svg viewBox="0 0 24 24"><path d="M12 15.5C10.07 15.5 8.5 13.93 8.5 12S10.07 8.5 12 8.5 15.5 10.07 15.5 12 13.93 15.5 12 15.5ZM19.43 12.98C19.46 12.66 19.5 12.34 19.5 12S19.46 11.34 19.43 11.02L21.54 9.37C21.73 9.21 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.06 19.3 4.97 19.07 5.03L16.56 5.67C16.04 5.25 15.47 4.89 14.85 4.6L14.5 2H9.5L9.15 4.6C8.53 4.89 7.96 5.25 7.44 5.67L4.93 5.03C4.7 4.97 4.46 5.06 4.34 5.27L2.34 8.73C2.22 8.95 2.27 9.21 2.46 9.37L4.57 11.02C4.54 11.34 4.5 11.66 4.5 12S4.54 12.66 4.57 12.98L2.46 14.63C2.27 14.79 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.94 4.7 19.03 4.93 18.97L7.44 18.33C7.96 18.75 8.53 19.11 9.15 19.4L9.5 22H14.5L14.85 19.4C15.47 19.11 16.04 18.75 16.56 18.33L19.07 18.97C19.3 19.03 19.54 18.94 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.79 21.54 14.63L19.43 12.98Z"/></svg>
@@ -267,58 +302,66 @@
             </div>
 
         <div class="settings-panel" id="settingsPanel">
-             <label id="usernameSettingLabel">Username:
-                 <input type="text" id="settingsUsernameInput" placeholder="Enter username" maxlength="30">
-                 <button id="saveUsernameBtn">Save</button>
-             </label>
-             <hr style="border: none; border-top: 1px solid var(--accent); margin: 5px 0;">
-             <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span>
-                 <div class="custom-slider-container">
-                     <div class="slider-track"></div>
-                     <div class="slider-progress" id="fontSizeProgress"></div>
-                     <div class="slider-thumb" id="fontSizeThumb"></div>
-                     <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16">
-                 </div>
-             </label>
-             <label>Color Scheme:
-                 <select id="themeSelector"> <option value="dark">Dark (Default)</option>
-                     <option value="light">Light</option>
-                     <option value="blue">Cool Blue</option>
-                     <option value="forest">Forest Green</option>
-                     <option value="sunset">Sunset Orange</option>
-                     <option value="purple">Deep Purple</option> <option value="mint">Minty Fresh</option> <option value="rose">Rose Gold</option> <option value="custom">Custom Accent</option> <option value="trigonometrical-red">Trigonometrical Red</option> </select>
-             </label>
-             <div id="customColorSettingContainer">
-                 <label id="customColorLabel">Custom Accent:
-                      <input type="color" id="customColorInput" value="#3b82f6"> </label>
-             </div>
-             <label>Font Family:
-                 <select id="fontSelector"> <option value="'Segoe UI', sans-serif">Segoe UI</option>
-                     <option value="Arial, sans-serif">Arial</option>
-                     <option value="Verdana, sans-serif">Verdana</option>
-                     <option value="'Times New Roman', Times, serif">Times New Roman</option>
-                     <option value="'Courier New', Courier, monospace">Courier New</option>
-                     <option value="Georgia, serif">Georgia</option>
-                     <option value="'Roboto', sans-serif">Roboto</option>
-                     <option value="'Lato', sans-serif">Lato</option>
-                 </select>
-             </label>
-             <label class="toggle-switch-label">
-                 <span>Custom Background:</span>
-                 <input type="checkbox" id="bgImageToggleSwitch" class="toggle-switch">
-                 <span class="toggle-slider"></span>
-             </label>
-             <div id="bgImageControlContainer" style="display: none;">
-                 <label for="bgImageFileInput">Select Image (Max 2MB):</label>
-                 <input type="file" id="bgImageFileInput" accept="image/*">
-                 <button id="clearBgImageBtn" title="Remove custom background" class="danger-btn" style="margin-top: 5px;">Clear Background</button>
-             </div>
-             <label class="toggle-switch-label"> Warn on Close:
-                 <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch">
-                 <span class="toggle-slider"></span>
-             </label>
-             <hr style="border: none; border-top: 1px solid var(--accent); margin: 10px 0;">
-             <button id="clearDataBtn" title="Reset all settings, games, categories, and tabs to default" class="danger-btn">Clear All Stored Data</button>
+              <label id="usernameSettingLabel">Username:
+                   <input type="text" id="settingsUsernameInput" placeholder="Enter username" maxlength="30">
+                   <button id="saveUsernameBtn">Save</button>
+              </label>
+              <hr style="border: none; border-top: 1px solid var(--accent); margin: 5px 0;">
+              <label>Font Size: <span class="slider-value-display" id="fontSizeValue">16px</span>
+                   <div class="custom-slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-progress" id="fontSizeProgress"></div>
+                        <div class="slider-thumb" id="fontSizeThumb"></div>
+                        <input type="range" id="fontSizeSlider" class="custom-slider" min="12" max="24" step="1" value="16">
+                   </div>
+              </label>
+              <label>Color Scheme:
+                   <select id="themeSelector">
+                       <option value="dark">Dark (Default)</option>
+                       <option value="light">Light</option>
+                       <option value="blue">Cool Blue</option>
+                       <option value="forest">Forest Green</option>
+                       <option value="sunset">Sunset Orange</option>
+                       <option value="purple">Deep Purple</option>
+                       <option value="mint">Minty Fresh</option>
+                       <option value="rose">Rose Gold</option>
+                       <option value="custom">Custom Accent</option>
+                       <option value="trigonometrical-red">Trigonometrical Red</option>
+                    </select>
+              </label>
+              <div id="customColorSettingContainer">
+                   <label id="customColorLabel">Custom Accent:
+                        <input type="color" id="customColorInput" value="#3b82f6">
+                    </label>
+              </div>
+              <label>Font Family:
+                   <select id="fontSelector">
+                       <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                       <option value="Arial, sans-serif">Arial</option>
+                       <option value="Verdana, sans-serif">Verdana</option>
+                       <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                       <option value="'Courier New', Courier, monospace">Courier New</option>
+                       <option value="Georgia, serif">Georgia</option>
+                       <option value="'Roboto', sans-serif">Roboto</option>
+                       <option value="'Lato', sans-serif">Lato</option>
+                   </select>
+              </label>
+              <label class="toggle-switch-label">
+                   <span>Custom Background:</span>
+                   <input type="checkbox" id="bgImageToggleSwitch" class="toggle-switch">
+                   <span class="toggle-slider"></span>
+              </label>
+              <div id="bgImageControlContainer" style="display: none;">
+                   <label for="bgImageFileInput">Select Image (Max 2MB):</label>
+                   <input type="file" id="bgImageFileInput" accept="image/*">
+                   <button id="clearBgImageBtn" title="Remove custom background" class="danger-btn" style="margin-top: 5px;">Clear Background</button>
+              </div>
+              <label class="toggle-switch-label"> Warn on Close:
+                   <input type="checkbox" id="warnOnCloseSwitch" class="toggle-switch">
+                   <span class="toggle-slider"></span>
+              </label>
+              <hr style="border: none; border-top: 1px solid var(--accent); margin: 10px 0;">
+              <button id="clearDataBtn" title="Reset all settings, games, categories, and tabs to default" class="danger-btn">Clear All Stored Data</button>
         </div>
     </div>
 <script>
@@ -363,8 +406,6 @@
     let customTabs = []; // Holds [{ id: 'uuid', name: 'Tab Name', items: [{ id: 'uuid', name: 'Item Name', url: '...' }] }]
     let isEditingGame = false;
     let isEditingItem = false; // Track item editing state
-    let currentEditItemId = null; // Track ID for editing item
-    let currentEditItemTabId = null; // Track Tab ID for editing item
     let warnOnClose = false;
     let bgImageEnabled = false;
     let bgImageUrl = '';
@@ -373,21 +414,17 @@
 
     // --- SVG Icons ---
     const ICONS = {
-        play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
+        play: `<svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`, // Added class for styling
         edit: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
         delete: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
         proxyPlay: `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`, // Globe Icon
-        add: `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`, // Plus icon for adding items
         tabDelete: `<svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align: middle; margin-left: 5px; opacity: 0.6; display: inline-block;"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>` // Small X for deleting tabs
     };
 
-    // --- Helper Functions (debounce, hash, color, logo, etc.) ---
+    // --- Helper Functions ---
     function debounce(func, delay) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { func.apply(this, args); }, delay); }; }
-    function simpleHash(str) { let hash = 5381; for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) + hash) + char; } return Math.abs(hash); }
-    function stringToHslColor(str, s = 65, l = 55) { if (!str) str = "default"; const hash = simpleHash(str); const h = hash % 360; return `hsl(${h}, ${s}%, ${l}%)`; }
     function getLogoSvg(color) { const safeColor = color || '#444444'; return `<svg width="40" height="40" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="${safeColor}"><rect x="5" y="9" width="7" height="14" rx="2.5"/><rect x="13" y="9" width="7" height="14" rx="2.5"/><rect x="21" y="9" width="7" height="14" rx="2.5"/></svg>`; }
-    function generateUserPfpSvg(username) { const userColor = stringToHslColor(username, 65, 55); return getLogoSvg(userColor); }
-    function sanitizeHTML(str) { return str.replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function sanitizeHTML(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
     function isValidUrl(string) { try { new URL(string); return true; } catch (_) { return false; } }
     function isValidHttpUrl(string) { try { const url = new URL(string); return url.protocol === "http:" || url.protocol === "https:"; } catch (_) { return false; } }
 
@@ -415,8 +452,6 @@
             saveSetting(LS_USERNAME, currentUsername);
         } else {
             currentUsername = 'Guest';
-            // Optionally save 'Guest' back if you want to avoid prompting again
-            // saveSetting(LS_USERNAME, currentUsername);
         }
         console.log(`Username set to: ${currentUsername}`);
         updateUsernameDisplay();
@@ -440,9 +475,6 @@
         saveUsernameBtn.textContent = 'Saved!'; setTimeout(() => { saveUsernameBtn.textContent = 'Save'; }, 1500);
     }
     function updateUsernameDisplay() {
-        // Example: If you add <span id="usernameDisplay"></span> in the topbar
-        // const displayEl = document.getElementById('usernameDisplay');
-        // if (displayEl) displayEl.textContent = `User: ${sanitizeHTML(currentUsername)}`;
         if (settingsUsernameInput) settingsUsernameInput.value = currentUsername;
     }
 
@@ -465,14 +497,16 @@
 
         const changelogDiv = document.createElement('div');
         changelogDiv.id = 'changelog-section';
+        // Simplified changelog for brevity
         changelogDiv.innerHTML = `
             <h2>Changelog</h2>
-            <div class="changelog-version"><h4>v1.5 (Current)</h4><ul><li>Added Custom Tabs feature! Create your own sections in the sidebar.</li><li>Added more themes (Purple, Mint, Rose Gold) and a Custom Accent theme.</li><li>Themed the "Clear All Stored Data" button.</li><li>UI improvements for sidebar organization.</li></ul></div>
-            <div class="changelog-version"><h4>v1.4</h4><ul><li>Games now open directly by default.</li><li>Added optional "Play with Proxy" button (🌐) to games for the internal proxy method.</li></ul></div>
-            <div class="changelog-version"><h4>v1.3</h4><ul><li>Username prompt only appears on first load or after data clear.</li><li>Games opened via an internal proxy (allorigins.win) to handle navigation within the game window.</li></ul></div>
-            <div class="changelog-version"><h4>v1.2</h4><ul><li>Added themed scrollbars.</li><li>Added Clear All Data button to settings.</li><li>Replaced Slither.io with Snake.io and added 10 more .io games.</li></ul></div>
-            <div class="changelog-version"><h4>v1.1</h4><ul><li>Re-added Proxy section.</li><li>Added ability to change username in Settings.</li></ul></div>
-            <div class="changelog-version"><h4>v1.0</h4><ul><li>Initial simplified version.</li></ul></div>`;
+             <div class="changelog-version"><h4>v1.6 (Current)</h4><ul><li>Updated Proxy card layout.</li><li>Themed sidebar hover/active states.</li><li>Adjusted sidebar spacing.</li></ul></div>
+            <div class="changelog-version"><h4>v1.5</h4><ul><li>Added Custom Tabs feature!</li><li>Added more themes and a Custom Accent theme.</li><li>Themed "Clear All Data" button.</li><li>UI improvements for sidebar.</li></ul></div>
+            <div class="changelog-version"><h4>v1.4</h4><ul><li>Games open directly by default. Added optional "Play with Proxy" button.</li></ul></div>
+            <div class="changelog-version"><h4>v1.3</h4><ul><li>Username prompt only on first load/reset. Games opened via internal proxy.</li></ul></div>
+            <div class="changelog-version"><h4>v1.2</h4><ul><li>Added themed scrollbars & Clear All Data button. Added more games.</li></ul></div>
+             <div class="changelog-version"><h4>v1.1</h4><ul><li>Re-added Proxy section. Added username change in Settings.</li></ul></div>
+             <div class="changelog-version"><h4>v1.0</h4><ul><li>Initial simplified version.</li></ul></div>`;
 
         welcomeArea.appendChild(logoContainer);
         welcomeArea.appendChild(messageHeading);
@@ -484,87 +518,79 @@
 
     // --- Game & Category Management ---
     function loadGames() {
-        const dg = [ /* Omitted for brevity - use the full list from the original HTML */
-                {id: crypto.randomUUID(), name: "N-GON", url: "https://landgreen.github.io/n-gon/index.html", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Netquel", url: "https://netquel.com/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "MK48", url: "https://mk48.io/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Starblast.io", url: "https://starblast.io/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Tanx", url: "https://tanx.io/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Diep.io", url: "https://diep.io/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "ZombsRoyale.io", url: "https://zombsroyale.io/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Bloxd.io", url: "https://bloxd.io/", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Virtual International Chess", url: "http://humage.com/games/chess/virtual-international-english-chess.html?embed=true", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "XiangQi Chinese Chess", url: "http://humage.com/games/chess/virtual-xiangqi-chinese-chess.html?embed=true", category: "Strategy"},
-                {id: crypto.randomUUID(), name: "Sudoku", url: "http://humage.com/sudoku.html?embed=true", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "Sliding Tile Puzzle", url: "http://humage.com/games/puzzle/sliding-tile-puzzle-html5-canvas.html?embed=true", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "Mahjong", url: "https://www.htmlgames.com/Mahjong/", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "2048", url: "https://www.htmlgames.com/2048/", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "Jigsaw Puzzle", url: "https://www.htmlgames.com/JigsawPuzzle/", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "Tower Collapse", url: "https://www.htmlgames.com/TowerCollapse/", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "Daily Kakuro", url: "https://www.htmlgames.com/DailyKakuro/", category: "Puzzle"},
-                {id: crypto.randomUUID(), name: "Dead Shot", url: "https://deadshot.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Ships 3D", url: "https://yp3d.com/ships3d/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Shell Shockers", url: "https://shellshock.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Snake.io", url: "https://snake.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Venge.io", url: "https://venge.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Robostorm.io", url: "https://robostorm.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Agar.io", url: "https://agar.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Krunker.io", url: "https://krunker.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Paper.io 2", url: "https://paper-io.com/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Ev.io", url: "https://ev.io/", category: "Action"},
-                {id: crypto.randomUUID(), name: "Om Nom Run", url: "https://html5games.com/OmNomRun", category: "Action"},
-                {id: crypto.randomUUID(), name: "Cannon Balls 3D", url: "https://html5games.com/CannonBalls3D", category: "Action"},
-                {id: crypto.randomUUID(), name: "Bubble Tower 3D", url: "https://html5games.com/BubbleTower3D", category: "Action"},
-                {id: crypto.randomUUID(), name: "Western Sniper", url: "https://html5games.com/WesternSniper", category: "Action"},
-                {id: crypto.randomUUID(), name: "Giant Rush", url: "https://html5games.com/GiantRush", category: "Action"},
-                {id: crypto.randomUUID(), name: "Color Roll 3D", url: "https://html5games.com/ColorRoll3D", category: "Action"},
-                {id: crypto.randomUUID(), name: "Color Fill 3D", url: "https://html5games.com/ColorFill3D", category: "Action"},
-                {id: crypto.randomUUID(), name: "Rise Up", url: "https://html5games.com/RiseUp", category: "Action"},
-                {id: crypto.randomUUID(), name: "Go Escape", url: "https://html5games.com/GoEscape", category: "Action"},
-                {id: crypto.randomUUID(), name: "Thief Puzzle", url: "https://html5games.com/ThiefPuzzle", category: "Action"},
-                {id: crypto.randomUUID(), name: "HexGL", url: "https://hexgl.bkcore.com/", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Madalin Stunt Cars 2", url: "https://madalinstuntcars2.io/", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Moto X3M Pool Party", url: "https://html5games.com/MotoX3MPoolParty", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Race Master", url: "https://1000webgames.com/race-master.php", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Truck Space 2", url: "https://1000webgames.com/truck-space-2.php", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Hard Wheels Winter 2", url: "https://1000webgames.com/hard-wheels-winter-2.php", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Park The Taxi 3", url: "https://1000webgames.com/park-the-taxi-3.php", category: "Racing"},
-                {id: crypto.randomUUID(), name: "Geometry Dash", url: "https://geometrylite.github.io", category: "Skill"},
-                {id: crypto.randomUUID(), name: "Tetr.io", url: "https://tetr.io/", category: "Skill"},
-                {id: crypto.randomUUID(), name: "Typing with RSS News Feeds", url: "http://humage.com/typing_news.html?embed=true", category: "Educational"},
-                {id: crypto.randomUUID(), name: "Virtual Playing Cards", url: "http://humage.com/playing_cards.html?embed=true", category: "Educational"},
-                {id: crypto.randomUUID(), name: "Braindom", url: "https://html5games.com/Braindom", category: "Educational"},
-                {id: crypto.randomUUID(), name: "Sort It", url: "https://html5games.com/SortIt", category: "Educational"},
-                {id: crypto.randomUUID(), name: "Cube Match", url: "https://html5games.com/CubeMatch", category: "Educational"},
-                {id: crypto.randomUUID(), name: "Interland", url: "https://beinternetawesome.withgoogle.com/en_us/interland", category: "Educational"},
-                {id: crypto.randomUUID(), name: "Fruit Party", url: "https://html5games.com/FruitParty", category: "Casual"},
-                {id: crypto.randomUUID(), name: "Fashion Battle", url: "https://html5games.com/FashionBattle", category: "Casual"},
-                {id: crypto.randomUUID(), name: "Parking Jam", url: "https://html5games.com/ParkingJam", category: "Casual"},
-                {id: crypto.randomUUID(), name: "Spot the Cat", url: "https://html5games.com/SpotTheCat", category: "Casual"},
-                {id: crypto.randomUUID(), name: "Color Water Sort 3D", url: "https://html5games.com/ColorWaterSort3D", category: "Casual"},
-                {id: crypto.randomUUID(), name: "Skribbl.io", url: "https://skribbl.io/", category: "Drawing"},
-                {id: crypto.randomUUID(), name: "Gartic.io", url: "https://gartic.io/", category: "Drawing"},
-                {id: crypto.randomUUID(), name: "Aritelia", url: "https://aritelia.io/", category: "Adventure"},
-                {id: crypto.randomUUID(), name: "BrowserQuest", url: "https://browserquest.mozilla.org/", category: "Adventure"}
+        const dg = [ // Default Games (Keep a few examples)
+{id: crypto.randomUUID(), name: "N-GON", url: "https://landgreen.github.io/n-gon/index.html", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "Netquel", url: "https://netquel.com/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "MK48", url: "https://mk48.io/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "Starblast.io", url: "https://starblast.io/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "Tanx", url: "https://tanx.io/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "Diep.io", url: "https://diep.io/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "ZombsRoyale.io", url: "https://zombsroyale.io/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "Bloxd.io", url: "https://bloxd.io/", category: "Strategy"},
+
+                {id: crypto.randomUUID(), name: "Dead Shot", url: "https://deadshot.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Ships 3D", url: "https://yp3d.com/ships3d/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Shell Shockers", url: "https://shellshock.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Snake.io", url: "https://snake.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Venge.io", url: "https://venge.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Robostorm.io", url: "https://robostorm.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Krunker.io", url: "https://krunker.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Paper.io 2", url: "https://paper-io.com/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Ev.io", url: "https://ev.io/", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Rise Up", url: "https://play.famobi.com/wrapper/rise-up/A1000-10", category: "Action"},
+
+                {id: crypto.randomUUID(), name: "Madalin Stunt Cars 2", url: "https://madalinstuntcars2.io/", category: "Racing"},
+
+                {id: crypto.randomUUID(), name: "Geometry Dash", url: "https://geometrylite.github.io", category: "Skill"},
+
+                {id: crypto.randomUUID(), name: "Tetris", url: "https://gregorycannon.github.io/TetrisTrainer/", category: "Skill"},
+
+                {id: crypto.randomUUID(), name: "Interland", url: "https://beinternetawesome.withgoogle.com/en_us/interland", category: "Educational"},
+
+                {id: crypto.randomUUID(), name: "Parking Jam", url: "https://play.famobi.com/wrapper/parking-jam/A1000-10", category: "Casual"},
+
+                {id: crypto.randomUUID(), name: "Color Water Sort 3D", url: "https://play.famobi.com/wrapper/color-water-sort-3d/A1000-10", category: "Casual"},
+
+                {id: crypto.randomUUID(), name: "Skribbl.io", url: "https://skribbl.io/", category: "Drawing"},
+
+                {id: crypto.randomUUID(), name: "Gartic.io", url: "https://gartic.io/", category: "Drawing"},
+
+                {id: crypto.randomUUID(), name: "Aritelia", url: "https://aritelia.io/", category: "Adventure"},
+
+                {id: crypto.randomUUID(), name: "BrowserQuest", url: "https://browserquest.mozilla.org/", category: "Adventure"}
         ];
         try {
             if (!localStorage.getItem(LS_INITIALIZED)) {
                 console.log("[DEBUG] First run or reset. Loading default games & categories.");
                 games = dg;
                 saveGames();
-                // Also reset categories on first init
                 categories = ['Action','Puzzle','Strategy','Simulation','Misc','Horror','Media','Coding','Conversation', 'Racing', 'Skill', 'Adventure', 'Educational', 'Drawing', 'Casual'].sort();
                 saveCategories();
-                // Reset custom tabs
                 customTabs = [];
                 saveCustomTabs();
                 localStorage.setItem(LS_INITIALIZED, 'true');
             } else {
                 const sg = localStorage.getItem(LS_GAMES);
-                try { games = sg ? JSON.parse(sg) : dg; } // Fallback to defaults on parse error
+                try { games = sg ? JSON.parse(sg) : dg; }
                 catch (pe) { console.error("Error parsing stored games:", pe); games = dg; }
             }
-        } catch (e) { console.error("Error loading games:", e); games = dg; } // Fallback to defaults on any LS error
+        } catch (e) { console.error("Error loading games:", e); games = dg; }
     }
     function saveGames() { try { saveSetting(LS_GAMES, JSON.stringify(games)); } catch (e) { console.error("Failed to save games:", e); } }
     function loadCategories() { const dc=['Action','Puzzle','Strategy','Simulation','Misc','Horror','Media','Coding','Conversation', 'Racing', 'Skill', 'Adventure', 'Educational', 'Drawing', 'Casual']; try { const sc=localStorage.getItem(LS_CATEGORIES); categories=sc?JSON.parse(sc):dc; } catch (e){ console.error("Failed load categories:",e); categories=dc; } dc.forEach(c=>{if(!categories.includes(c))categories.push(c);}); categories.sort(); }
@@ -573,23 +599,23 @@
     function handleAddCategory() { const cs=document.getElementById('gameCategorySelect'); if(!cs)return; const nc=prompt("Enter new category name:"); if(nc && nc.trim()){const tc=nc.trim(); if(!categories.includes(tc)){categories.push(tc);categories.sort();saveCategories();populateCategorySelect(cs,tc);} else {alert("Category exists!");cs.value=tc;}} }
     function renderGames() {
         const container=mainContent?mainContent.querySelector('.list-container'):null;
-        if(!container) return; // Should exist if called from showSection("games")
-        container.innerHTML=''; // Clear only the list container
+        if(!container) return;
+        container.innerHTML='';
         let noItemsP=mainContent.querySelector('#no-items-found');
         if (!noItemsP && games.length === 0) {
              container.innerHTML = '<p id="no-items-found" style="grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);">No games added yet.</p>';
              noItemsP = mainContent.querySelector('#no-items-found');
         } else if (noItemsP) {
-            noItemsP.style.display = 'none'; // Hide initially
+            noItemsP.style.display = 'none';
         }
 
         if(games.length > 0){
-            games.forEach((g, index)=>{
+            games.forEach((g)=>{
                 const card=createCardElement(g, 'game');
                 container.appendChild(card);
             });
         }
-        filterContent(); // Apply search filter immediately
+        filterContent();
     }
     function openGameModal(gte=null) { const m=document.getElementById('gameModal');const t=document.getElementById('gameModalTitle');const ii=document.getElementById('gameIdInput');const ni=document.getElementById('gameNameInput');const ui=document.getElementById('gameUrlInput');const cs=document.getElementById('gameCategorySelect');const sb=document.getElementById('saveGameBtn'); if(!m||!t||!ii||!ni||!ui||!cs||!sb)return; isEditingGame=!!gte;ii.value='';ni.value='';ui.value='';ni.style.borderColor='';ui.style.borderColor='';populateCategorySelect(cs,gte?gte.category:"");if(isEditingGame){t.textContent='Edit Game';ii.value=gte.id;ni.value=gte.name;ui.value=gte.url;sb.textContent='Save Changes';}else{t.textContent='Add New Game';sb.textContent='Add Game';} m.classList.add('visible');ni.focus();}
     function closeGameModal() { const m=document.getElementById('gameModal'); if(m)m.classList.remove('visible'); isEditingGame=false; }
@@ -601,7 +627,6 @@
         try {
             const ct = localStorage.getItem(LS_CUSTOM_TABS);
             customTabs = ct ? JSON.parse(ct) : [];
-            // Basic validation
             if (!Array.isArray(customTabs)) customTabs = [];
             customTabs = customTabs.filter(tab => tab && typeof tab.name === 'string' && Array.isArray(tab.items));
         } catch (e) {
@@ -618,26 +643,23 @@
     }
     function renderCustomTabButtons() {
         if (!customTabsSection) return;
-        // Clear existing custom buttons only
         customTabsSection.querySelectorAll('button.custom-tab-btn').forEach(btn => btn.remove());
 
         customTabs.forEach(tab => {
             const button = document.createElement('button');
-            button.className = 'custom-tab-btn'; // Add class for easy selection
+            button.className = 'custom-tab-btn';
             button.dataset.tabId = tab.id;
-            // Sanitize tab name before inserting
             const tabNameSpan = document.createElement('span');
             tabNameSpan.textContent = sanitizeHTML(tab.name);
             button.appendChild(tabNameSpan);
 
-            // Add delete button to the tab button
             const deleteBtn = document.createElement('span');
             deleteBtn.innerHTML = ICONS.tabDelete;
             deleteBtn.title = `Delete Tab "${sanitizeHTML(tab.name)}"`;
-            deleteBtn.style.float = 'right'; // Position delete icon
+            deleteBtn.style.float = 'right';
             deleteBtn.style.cursor = 'pointer';
             deleteBtn.onclick = (e) => {
-                e.stopPropagation(); // Prevent triggering tab switch
+                e.stopPropagation();
                 handleDeleteTab(tab.id, tab.name);
             };
             button.appendChild(deleteBtn);
@@ -645,7 +667,6 @@
             button.onclick = () => showSection(`custom-tab-${tab.id}`);
             customTabsSection.appendChild(button);
         });
-        // Re-apply active class if the current section is a custom tab
         updateActiveSidebarButton(currentSectionId);
     }
     function handleAddTab() {
@@ -659,7 +680,7 @@
             customTabs.push(newTab);
             saveCustomTabs();
             renderCustomTabButtons();
-            showSection(`custom-tab-${newTab.id}`); // Switch to the new tab
+            showSection(`custom-tab-${newTab.id}`);
         }
     }
     function handleDeleteTab(tabId, tabName) {
@@ -670,7 +691,6 @@
         saveCustomTabs();
         renderCustomTabButtons();
 
-        // If the deleted tab was the current section, switch to home
         if (currentSectionId === `custom-tab-${tabId}`) {
             showSection('welcome');
         }
@@ -679,7 +699,7 @@
         const tab = customTabs.find(t => t.id === tabId);
         if (!tab || !mainContent) {
             console.error("Tab not found or mainContent missing for ID:", tabId);
-            showSection('welcome'); // Fallback to welcome
+            showSection('welcome');
             return;
         }
 
@@ -688,8 +708,7 @@
                 <h2>${sanitizeHTML(tab.name)}</h2>
                 <button id="addItemBtn" data-tab-id="${tab.id}">+ Add Item</button>
             </div>
-            <div class="list-container custom-item-list-container">
-                </div>
+            <div class="list-container custom-item-list-container"></div>
             <p id="no-items-found" style="display: none; grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);"></p>
         `;
 
@@ -706,21 +725,18 @@
             noItemsP.style.display = 'block';
         } else {
             noItemsP.style.display = 'none';
-            tab.items.forEach((item, index) => {
-                const card = createCardElement(item, 'custom', tab.id); // Pass tabId
+            tab.items.forEach((item) => {
+                const card = createCardElement(item, 'custom', tab.id);
                 container.appendChild(card);
             });
         }
-        filterContent(); // Apply search
+        filterContent();
     }
     function openItemModal(item = null, tabId) {
         if (!itemModal || !itemModalTitle || !itemIdInput || !itemTabIdInput || !itemNameInput || !itemUrlInput || !saveItemBtn) return;
 
         isEditingItem = !!item;
-        currentEditItemId = item ? item.id : null;
-        currentEditItemTabId = tabId; // Always set the tab ID we're operating on
-
-        itemTabIdInput.value = tabId; // Store target tab ID
+        itemTabIdInput.value = tabId;
         itemIdInput.value = '';
         itemNameInput.value = '';
         itemUrlInput.value = '';
@@ -744,15 +760,13 @@
     function closeItemModal() {
         if (itemModal) itemModal.classList.remove('visible');
         isEditingItem = false;
-        currentEditItemId = null;
-        currentEditItemTabId = null;
     }
     function handleSaveItem() {
         if (!itemIdInput || !itemTabIdInput || !itemNameInput || !itemUrlInput) return;
         const name = itemNameInput.value.trim();
         const url = itemUrlInput.value.trim();
-        const itemId = itemIdInput.value; // Might be empty for new item
-        const tabId = itemTabIdInput.value; // The tab to save to
+        const itemId = itemIdInput.value;
+        const tabId = itemTabIdInput.value;
 
         let isValid = true;
         if (!name) { itemNameInput.style.borderColor = 'red'; isValid = false; } else { itemNameInput.style.borderColor = ''; }
@@ -766,7 +780,7 @@
             return;
         }
 
-        if (isEditingItem && itemId) { // Editing existing item
+        if (isEditingItem && itemId) {
             const itemIndex = tab.items.findIndex(i => i.id === itemId);
             if (itemIndex > -1) {
                 tab.items[itemIndex] = { ...tab.items[itemIndex], name, url };
@@ -775,158 +789,175 @@
                 closeItemModal();
                 return;
             }
-        } else { // Adding new item
+        } else {
             const newItem = { id: crypto.randomUUID(), name, url };
             tab.items.push(newItem);
         }
 
         saveCustomTabs();
-        renderCustomTabContent(tabId); // Re-render the content of the affected tab
+        renderCustomTabContent(tabId);
         closeItemModal();
     }
     function handleDeleteItem(itemId, tabId, cardElement) {
-         if (!confirm('Delete this item?')) return;
+       if (!confirm('Delete this item?')) return;
 
-         const tab = customTabs.find(t => t.id === tabId);
-         if (!tab) {
-             console.error("Delete item failed: Tab not found", tabId);
-             return;
-         }
+       const tab = customTabs.find(t => t.id === tabId);
+       if (!tab) {
+            console.error("Delete item failed: Tab not found", tabId);
+            return;
+       }
 
-         const initialLength = tab.items.length;
-         tab.items = tab.items.filter(item => item.id !== itemId);
+       const initialLength = tab.items.length;
+       tab.items = tab.items.filter(item => item.id !== itemId);
 
-         if (tab.items.length < initialLength) { // Check if item was actually removed
-             saveCustomTabs();
-             // Animate removal then re-render (or just re-render simply)
-             if (cardElement) {
-                 cardElement.classList.add('deleting');
-                 cardElement.addEventListener('animationend', () => {
-                     renderCustomTabContent(tabId); // Re-render after animation
-                 }, { once: true });
-             } else {
-                 renderCustomTabContent(tabId); // Re-render immediately if no element passed
-             }
-         } else {
-             console.warn("Delete item: Item ID not found", itemId);
-         }
+       if (tab.items.length < initialLength) {
+            saveCustomTabs();
+            if (cardElement) {
+                cardElement.classList.add('deleting');
+                cardElement.addEventListener('animationend', () => {
+                    renderCustomTabContent(tabId);
+                }, { once: true });
+            } else {
+                renderCustomTabContent(tabId);
+            }
+       } else {
+            console.warn("Delete item: Item ID not found", itemId);
+       }
      }
 
     // --- Generic Card Element Creation ---
-     function createCardElement(itemData, type, tabId = null) {
+    function createCardElement(itemData, type, tabId = null) {
         const card = document.createElement('div');
-        card.className = `card ${type}-card`; // Use generic 'card' and specific type
-        if (type === 'custom') card.classList.add('custom-tab-item-card'); // Specific class for custom items
+        card.className = `card ${type}-card`;
+        if (type === 'custom') card.classList.add('custom-tab-item-card');
 
         card.dataset.id = itemData.id;
-        if (tabId) card.dataset.tabId = tabId; // Store tab ID for custom items
+        if (tabId) card.dataset.tabId = tabId;
 
         card.setAttribute('tabindex', '0');
-        card.style.animationDelay = `0s`; // Reset animation delay for dynamic rendering
+        card.style.animationDelay = `0s`;
 
-        let headerContent = '';
-        let descriptionContent = '';
-        let actionsContent = '';
-
-        // Common header
-        const faviconUrl = (itemData.url && (itemData.url.startsWith('http://') || itemData.url.startsWith('https://')))
-            ? `https://www.google.com/s2/favicons?domain=${new URL(itemData.url).hostname}&sz=32`
-            : '';
-        headerContent = `
-            <div class="card-header">
-                ${faviconUrl ? `<img class="card-favicon" src="${faviconUrl}" alt="" width="16" height="16" loading="lazy" onerror="this.style.display='none'">` : ''}
-                <h4>${sanitizeHTML(itemData.name)}</h4>
-            </div>
-        `;
-
-        // Type-specific content and actions
-        switch (type) {
-            case 'game':
-                descriptionContent = `<p class="category">${sanitizeHTML(itemData.category || 'Uncategorized')}</p>`;
-                actionsContent = `
-                    <button class="play-btn" title="Play Game">${ICONS.play}</button>
-                    <button class="proxy-play-btn" title="Play with Proxy">${ICONS.proxyPlay}</button>
-                    <button class="edit-btn" title="Edit Game">${ICONS.edit}</button>
-                    <button class="delete-btn" title="Delete Game">${ICONS.delete}</button>
-                `;
-                break;
-            case 'tool':
-                descriptionContent = `<p class="description">${sanitizeHTML(itemData.description || '')}</p>`; // Use description class maybe
-                actionsContent = `<button class="play-btn" title="Open Tool">${ICONS.play}</button>`;
-                break;
-            case 'proxy':
-                 // Proxies usually don't need description, keep header simple
-                actionsContent = `<button class="play-btn" title="Open Proxy">${ICONS.play}</button>`;
-                break;
-             case 'custom': // Custom tab item
-                 // No description needed usually
-                 actionsContent = `
-                    <button class="play-btn" title="Open Link">${ICONS.play}</button>
-                    <button class="edit-btn" title="Edit Item">${ICONS.edit}</button>
-                    <button class="delete-btn" title="Delete Item">${ICONS.delete}</button>
-                 `;
-                 break;
-        }
-
-        card.innerHTML = `
-            ${headerContent}
-            ${descriptionContent}
-            <div class="card-actions">
-                ${actionsContent}
-            </div>
-        `;
-
-        // --- Attach Event Listeners ---
-        const playBtn = card.querySelector('.play-btn');
-        const proxyPlayBtn = card.querySelector('.proxy-play-btn');
-        const editBtn = card.querySelector('.edit-btn');
-        const deleteBtn = card.querySelector('.delete-btn');
-
+        // --- Open Function ---
         const openDirect = () => {
             if(type === 'proxy' && itemData.name === 'Space') {
-                 const spaceUrls = [
-                     "https://yessir.happyforever.com/", "https://fish.happyforever.com/",
-                     "https://turtle.happyforever.com/", "https://cars.happyforever.com/"
+                 const spaceUrls = [ // Example URLs, replace if needed
+                      "https://yessir.happyforever.com/", "https://fish.happyforever.com/",
+                      "https://turtle.happyforever.com/", "https://cars.happyforever.com/"
                  ];
                  openInAboutBlank(spaceUrls[Math.floor(Math.random() * spaceUrls.length)], itemData.name);
-             } else {
-                 openInAboutBlank(itemData.url, itemData.name);
-             }
+           } else if (itemData.url) {
+                openInAboutBlank(itemData.url, itemData.name);
+           } else if (type === 'proxy' && !itemData.url && itemData.name !== 'Space') {
+                // Handle case where a non-Space proxy might somehow have no URL
+                console.warn(`Proxy "${itemData.name}" has no URL defined.`);
+                alert(`Proxy "${itemData.name}" cannot be opened (no URL).`);
+           } else if (type !== 'proxy') {
+                // Only warn if it's not a proxy and has no URL
+                console.warn(`No URL defined for item: ${itemData.name}`);
+           }
         };
 
-        if (playBtn) {
-            playBtn.onclick = (e) => { e.stopPropagation(); openDirect(); };
-        }
-        // Card click/enter opens direct for all types now
+        // --- Card Click/Enter Listener (Common for all types) ---
         card.addEventListener('click', openDirect);
         card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDirect(); } });
 
 
-        if (proxyPlayBtn) { // Only exists for games
-             proxyPlayBtn.onclick = (e) => { e.stopPropagation(); openGameInProxiedIframe(itemData.url, itemData.name); };
-        }
+        // --- Type-Specific Structure and Actions ---
+        if (type === 'proxy') {
+            // New Proxy Layout
+            card.innerHTML = `
+                <div class="proxy-preview" title="Open ${sanitizeHTML(itemData.name)}">
+                    ${ICONS.play}
+                </div>
+                <div class="proxy-label">
+                    ${sanitizeHTML(itemData.name)}
+                </div>
+            `;
+            // No extra buttons needed for proxy type in this layout
+        } else {
+            // Existing Layout for other types (Game, Tool, Custom)
+            let headerContent = '';
+            let descriptionContent = '';
+            let actionsContent = '';
 
-        if (editBtn) {
-             editBtn.onclick = (e) => {
-                 e.stopPropagation();
-                 if (type === 'game') openGameModal(itemData);
-                 else if (type === 'custom') openItemModal(itemData, tabId); // Pass tabId
-             };
-        }
+            const faviconUrl = (itemData.url && (itemData.url.startsWith('http://') || itemData.url.startsWith('https://')))
+                ? `https://www.google.com/s2/favicons?domain=${new URL(itemData.url).hostname}&sz=32`
+                : '';
+            headerContent = `
+                <div class="card-header">
+                    ${faviconUrl ? `<img class="card-favicon" src="${faviconUrl}" alt="" width="16" height="16" loading="lazy" onerror="this.style.display='none'">` : ''}
+                    <h4>${sanitizeHTML(itemData.name)}</h4>
+                </div>
+            `;
 
-        if (deleteBtn) {
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (type === 'game') deleteGame(itemData.id, card);
-                else if (type === 'custom') handleDeleteItem(itemData.id, tabId, card); // Pass tabId
-            };
-        }
+            switch (type) {
+                case 'game':
+                    descriptionContent = `<p class="category">${sanitizeHTML(itemData.category || 'Uncategorized')}</p>`;
+                    actionsContent = `
+                        <button class="play-btn" title="Play Game">${ICONS.play.replace('class="play-icon"','')}</button> <button class="proxy-play-btn" title="Play with Proxy">${ICONS.proxyPlay}</button>
+                        <button class="edit-btn" title="Edit Game">${ICONS.edit}</button>
+                        <button class="delete-btn" title="Delete Game">${ICONS.delete}</button>
+                    `;
+                    break;
+                case 'tool':
+                    descriptionContent = `<p class="description">${sanitizeHTML(itemData.description || '')}</p>`;
+                    actionsContent = `<button class="play-btn" title="Open Tool">${ICONS.play.replace('class="play-icon"','')}</button>`;
+                    break;
+                case 'custom':
+                    actionsContent = `
+                        <button class="play-btn" title="Open Link">${ICONS.play.replace('class="play-icon"','')}</button>
+                        <button class="edit-btn" title="Edit Item">${ICONS.edit}</button>
+                        <button class="delete-btn" title="Delete Item">${ICONS.delete}</button>
+                    `;
+                    break;
+            }
+
+            card.innerHTML = `
+                ${headerContent}
+                ${descriptionContent}
+                <div class="card-actions">
+                    ${actionsContent}
+                </div>
+            `;
+
+            // --- Attach Event Listeners for Buttons (Non-Proxy) ---
+            const playBtn = card.querySelector('.play-btn');
+            const proxyPlayBtn = card.querySelector('.proxy-play-btn');
+            const editBtn = card.querySelector('.edit-btn');
+            const deleteBtn = card.querySelector('.delete-btn');
+
+            // Note: Play button inside card-actions is redundant now due to whole card click,
+            // but kept for visual consistency if desired. Could be removed.
+            if (playBtn) {
+                 playBtn.onclick = (e) => { e.stopPropagation(); openDirect(); };
+            }
+
+            if (proxyPlayBtn) { // Only exists for games
+                 proxyPlayBtn.onclick = (e) => { e.stopPropagation(); openGameInProxiedIframe(itemData.url, itemData.name); };
+            }
+
+            if (editBtn) {
+                 editBtn.onclick = (e) => {
+                     e.stopPropagation();
+                     if (type === 'game') openGameModal(itemData);
+                     else if (type === 'custom') openItemModal(itemData, tabId);
+                 };
+            }
+
+            if (deleteBtn) {
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (type === 'game') deleteGame(itemData.id, card);
+                    else if (type === 'custom') handleDeleteItem(itemData.id, tabId, card);
+                };
+            }
+        } // End else (non-proxy types)
 
         return card;
     }
 
 
-    // --- Standard Link Opening (Used by default Game play, Proxy sites, Tools, Custom Items) ---
+    // --- Standard Link Opening ---
     function openInAboutBlank(url, title = 'Content') {
         if (!url || !isValidUrl(url)) {
             console.error("Invalid URL provided:", url);
@@ -960,17 +991,17 @@
                 newWindow.document.close();
             } catch (e) {
                 console.error("Error writing direct iframe to new window:", e);
-                try { newWindow.location.href = url; } // Fallback navigation
-                catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); newWindow.close(); }
+                try { newWindow.location.href = url; }
+                catch (e2) { console.error("Error navigating new window:", e2); alert("Could not open link. Check pop-up blocker."); try { newWindow.close(); } catch {} }
             }
         } else {
             alert("Could not open link. Please check pop-up blocker.");
         }
     }
 
-    // --- Open Game using AllOrigins Proxy (Used by Game Proxy Play button) ---
+    // --- Open Game using AllOrigins Proxy ---
     function openGameInProxiedIframe(url, title = 'Game') {
-        if (!url || !isValidHttpUrl(url)) { // Require http/https for proxy
+        if (!url || !isValidHttpUrl(url)) {
             console.error("Invalid URL for proxy:", url);
             alert("Cannot open game via proxy: Invalid or non-HTTP(S) URL provided.");
             return;
@@ -997,40 +1028,13 @@
 
                 const interceptScript = `<script>
                     const currentBaseUrl = document.baseURI; const shouldWarnOnClose = ${warnOnClose};
-                    async function fetchAndReplace(newUrl) {
-                        document.body.style.opacity='0.5'; document.body.style.pointerEvents='none';
-                        const proxyFetchUrl=\`https://api.allorigins.win/get?url=\${encodeURIComponent(newUrl)}\`;
-                        console.log('[Iframe Proxy Fetch] Requesting:',newUrl,'via',proxyFetchUrl);
-                        try {
-                            const resp = await fetch(proxyFetchUrl); if (!resp.ok) throw new Error('Proxy fetch failed: '+resp.status);
-                            const newData = await resp.json(); if (!newData.contents) throw new Error('Proxy response missing contents.');
-                            let newBase = ''; try { const newUrlObj = new URL(newUrl); newBase = newUrlObj.origin + (newUrlObj.pathname.endsWith('/') ? newUrlObj.pathname : newUrlObj.pathname.substring(0, newUrlObj.pathname.lastIndexOf('/')+1)); } catch(e) { newBase = newUrl; }
-                            const baseTag = '<base href="' + newBase + '">'; const scriptTag = '<script>' + document.currentScript.innerHTML.replace(/<\\/script>/g, '<\\\\/script>') + '<\\/script>';
-                            document.open(); document.write('<!DOCTYPE html>' + baseTag + newData.contents + scriptTag); document.close();
-                         } catch (error) {
-                            console.error('Error fetching/replacing content:',error); alert('Failed to load content: '+error.message);
-                            document.body.style.opacity='1'; document.body.style.pointerEvents='auto';
-                         }
-                     }
-                    document.addEventListener('click', function(event) {
-                        let te=event.target; while(te && te.tagName!=='A'){te=te.parentNode;}
-                        if (te && te.tagName==='A') { const href=te.getAttribute('href'); const ta=te.getAttribute('target');
-                            if(href && href.trim()!=='' && href!=='#' && (!ta || ta==='_self' || ta==='_top') && !href.toLowerCase().startsWith('javascript:')){
-                                event.preventDefault(); const absUrl = new URL(href, currentBaseUrl).href; console.log('Intercepted link click:', href, '->', absUrl); fetchAndReplace(absUrl);
-                            }
-                        }
-                    }, true);
-                    document.addEventListener('submit', function(event) {
-                        const form=event.target; const action=form.getAttribute('action');
-                        if(action){ event.preventDefault(); const absUrl=new URL(action, currentBaseUrl).href; console.log('Intercepted form submission:',action,'->',absUrl); fetchAndReplace(absUrl); }
-                     }, true);
-                     window.addEventListener('beforeunload', (event) => { if (shouldWarnOnClose) { const cm = 'Closing this window might interrupt your game/session. Are you sure?'; event.preventDefault(); event.returnValue = cm; return cm; } });
+                    window.addEventListener('beforeunload', (event) => { if (shouldWarnOnClose) { const cm = 'Closing this window might interrupt your game/session. Are you sure?'; event.preventDefault(); event.returnValue = cm; return cm; } });
                     console.log('Proxy interception script loaded. Base URL:', currentBaseUrl);
                 <\/script>`;
 
                 windowRef.document.open();
                 const doctype = htmlContent.toLowerCase().startsWith('<!doctype') ? '' : '<!DOCTYPE html>';
-                windowRef.document.write(doctype + '<base href="' + baseHref + '">' + htmlContent + interceptScript);
+                windowRef.document.write(doctype + '<base href="' + sanitizeHTML(baseHref) + '">' + htmlContent + interceptScript);
                 windowRef.document.close();
                 windowRef.document.title = sanitizeHTML(title) + " (Proxy)";
                 console.log(`[Proxy Fetch] Content injected for: ${targetUrl}`);
@@ -1039,7 +1043,7 @@
                 try {
                     windowRef.document.body.innerHTML = `<div style="color:red; padding:20px; text-align:center;"><h2>Error Loading Game via Proxy</h2><p>Could not load content from: ${sanitizeHTML(targetUrl)}</p><p>Error: ${sanitizeHTML(error.message)}</p><p><small>Proxy might be blocked, site down, or incompatible.</small></p></div>`;
                     windowRef.document.title = "Proxy Load Error";
-                } catch (writeError) { console.error("Failed to write error message:", writeError); windowRef.close(); alert(`Failed to load game via proxy: ${error.message}`); }
+                } catch (writeError) { console.error("Failed to write error message:", writeError); try { windowRef.close(); } catch {} alert(`Failed to load game via proxy: ${error.message}`); }
             }
         };
         fetchAndInject(url, newWindow);
@@ -1049,20 +1053,17 @@
     function renderTools() {
         if (!mainContent) return;
          mainContent.innerHTML = `
-             <div class="section-header"><h2>Tools</h2></div>
-             <div class="list-container tool-list-container"></div>
-             <p id="no-items-found" style="display: none; grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);"></p>
-         `; // Header without button
+              <div class="section-header"><h2>Tools</h2></div>
+              <div class="list-container tool-list-container"></div>
+              <p id="no-items-found" style="display: none; grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);"></p>
+         `;
 
         const toolsList = [
             { id: 'tool-chatgpt', name: "ChatGPT", url: "https://cars.happyforever.com/&?q=ChatGPT", description: "AI Language Model" },
-            { id: 'tool-vscode', name: "VS-Code", url: "https://cars.happyforever.com/&?q=VS%20Code", description: "Web-based Code Editor" },
+            { id: 'tool-vscode', name: "VS-Code", url: "https://vscode.dev/", description: "Web-based Code Editor" },
             { id: 'tool-calc', name: "Online Calculator", url: "https://www.calculator.net/", description: "General purpose calculator" },
             { id: 'tool-convert', name: "Unit Converter", url: "https://www.calculator.net/conversion-calculator.html", description: "Convert various units" },
             { id: 'tool-canvas', name: "Google Canvas", url: "https://canvas.apps.chrome/", description: "Simple drawing tool" },
-            { id: 'tool-dice', name: "Dice Roller", url: "https://webutility.io/tools/dice-roller/", description: "Roll virtual dice" },
-            { id: 'tool-coin', name: "Coin Flip", url: "https://webutility.io/tools/flip-coin/", description: "Flip a virtual coin" },
-            { id: 'tool-quickdraw', name: "Quick Draw", url: "https://quickdraw.withgoogle.com/", description: "AI Drawing Game" },
             { id: 'tool-webutils', name: "Web Utilities", url: "https://webutility.io/", description: "Collection of web tools" },
             { id: 'tool-qnews', name: "Qbit News", url: "https://qbitnewsthe2nd.pages.dev", description: "News Site" }
         ];
@@ -1075,7 +1076,7 @@
             noItemsP.style.display = 'block';
         } else {
             noItemsP.style.display = 'none';
-            toolsList.forEach((tool, index) => {
+            toolsList.forEach((tool) => {
                 const card = createCardElement(tool, 'tool');
                 container.appendChild(card);
             });
@@ -1085,18 +1086,25 @@
 
     // --- Proxy Section ---
     function renderProxySites() {
-         if (!mainContent) return;
-         mainContent.innerHTML = `
-             <div class="section-header"><h2>Proxy Sites</h2></div>
-             <div class="list-container proxy-list-container"></div>
-              <p id="no-items-found" style="display: none; grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);"></p>
-         `;
+       if (!mainContent) return;
+       mainContent.innerHTML = `
+            <div class="section-header"><h2>Proxy Sites</h2></div>
+            <div class="list-container proxy-list-container"></div>
+             <p id="no-items-found" style="display: none; grid-column:1/-1;text-align:center;opacity:0.7;color:var(--text);"></p>
+       `;
 
         const proxySites = [
-            { id: 'proxy-space', name: "Space", url: null }, // Special case handled in createCardElement
+            { id: 'proxy-space', name: "Space", url: null },
             { id: 'proxy-transend', name: "Transend", url: "https://hw.billigerhost.com/" },
             { id: 'proxy-rammer', name: "RammerHead", url: "https://pluh.root.sx/" },
-            { id: 'proxy-utopia', name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" }
+            { id: 'proxy-utopia', name: "Utopia", url: "https://bio.write.examinedbytopmen.com/" },
+            { id: 'proxy-us4', name: "US4", url: "https://example-name.global.ssl.fastly.net" },
+            { id: 'proxy-us5', name: "US5", url: "https://classes.global.ssl.fastly.net" },
+            { id: 'proxy-petezah', name: "Petezah", url: "https://petezahgames.com" },
+            { id: 'proxy-cesium', name: "Cesium", url: "https://cesium.followork.net" },
+            { id: 'proxy-sunny', name: "Sunny", url: "https://sunnysgym.easterndns.com" },
+            { id: 'proxy-interstellar', name: "Interstellar", url: "https://edu.defdc.com/" }
+            
         ];
 
         const container = mainContent.querySelector('.list-container');
@@ -1107,8 +1115,8 @@
              noItemsP.style.display = 'block';
         } else {
              noItemsP.style.display = 'none';
-             proxySites.forEach((site, index) => {
-                 const card = createCardElement(site, 'proxy');
+             proxySites.forEach((site) => {
+                 const card = createCardElement(site, 'proxy'); // createCardElement now handles proxy layout
                  container.appendChild(card);
              });
         }
@@ -1120,19 +1128,16 @@
         if (!mainContent || !sidebar) return;
         console.log(`[DEBUG] Showing section: ${sectionId}`);
         currentSectionId = sectionId;
-        saveSetting(LS_LAST_SECTION, sectionId); // Save last viewed section
+        saveSetting(LS_LAST_SECTION, sectionId);
 
-        // Update active sidebar button
         updateActiveSidebarButton(sectionId);
 
         mainContent.style.opacity = 0;
 
-        // Short delay for fade-out before changing content
         setTimeout(() => {
-            mainContent.innerHTML = ''; // Clear content
-            mainContent.style.animation = 'none'; // Reset animation
+            mainContent.innerHTML = '';
+            mainContent.style.animation = 'none';
 
-            // Determine which rendering function to call
             if (sectionId === "welcome") {
                 displayWelcomeMessage(currentUsername);
             } else if (sectionId === "games") {
@@ -1154,48 +1159,41 @@
             } else if (sectionId.startsWith("custom-tab-")) {
                 const tabId = sectionId.replace("custom-tab-", "");
                 renderCustomTabContent(tabId);
-            } else { // Default to welcome
+            } else {
                 displayWelcomeMessage(currentUsername);
-                currentSectionId = 'welcome'; // Reset ID if unknown
+                currentSectionId = 'welcome';
                 saveSetting(LS_LAST_SECTION, 'welcome');
                 updateActiveSidebarButton('welcome');
             }
 
-            // Apply fade-in animation after content is potentially set
             requestAnimationFrame(() => {
-                mainContent.style.opacity = 0;
                 mainContent.style.animation = "fadeIn 0.4s forwards";
-                 // Force reflow/repaint might not be strictly needed with requestAnimationFrame
-                // void mainContent.offsetWidth;
                 mainContent.style.opacity = 1;
             });
 
-        }, 150); // Adjust delay as needed (e.g., 150ms)
+        }, 150);
     }
      function updateActiveSidebarButton(sectionId) {
-         if (!sidebar) return;
-         // Remove active class from previous button
-         if (activeSidebarButton) {
-             activeSidebarButton.classList.remove('active');
-         }
-         // Find the new button
-         let newActiveButton = null;
-         if (sectionId === 'welcome') newActiveButton = sidebarHomeBtn;
-         else if (sectionId === 'games') newActiveButton = sidebarGamesBtn;
-         else if (sectionId === 'proxy') newActiveButton = sidebarProxyBtn;
-         else if (sectionId === 'tools') newActiveButton = sidebarToolsBtn;
-         else if (sectionId.startsWith('custom-tab-')) {
-             const tabId = sectionId.replace("custom-tab-", "");
-             newActiveButton = sidebar.querySelector(`.custom-tab-btn[data-tab-id="${tabId}"]`);
-         }
+        if (!sidebar) return;
+        if (activeSidebarButton) {
+            activeSidebarButton.classList.remove('active');
+        }
+        let newActiveButton = null;
+        if (sectionId === 'welcome') newActiveButton = sidebarHomeBtn;
+        else if (sectionId === 'games') newActiveButton = sidebarGamesBtn;
+        else if (sectionId === 'proxy') newActiveButton = sidebarProxyBtn;
+        else if (sectionId === 'tools') newActiveButton = sidebarToolsBtn;
+        else if (sectionId.startsWith('custom-tab-')) {
+            const tabId = sectionId.replace("custom-tab-", "");
+            newActiveButton = sidebar.querySelector(`.custom-tab-btn[data-tab-id="${tabId}"]`);
+        }
 
-         // Apply active class to the new button
-         if (newActiveButton) {
-             newActiveButton.classList.add('active');
-             activeSidebarButton = newActiveButton;
-         } else {
-             activeSidebarButton = null; // No button matched
-         }
+        if (newActiveButton) {
+            newActiveButton.classList.add('active');
+            activeSidebarButton = newActiveButton;
+        } else {
+            activeSidebarButton = null;
+        }
      }
 
 
@@ -1205,11 +1203,9 @@
         if (settingsPanel.classList.contains('show')) {
             settingsPanel.classList.remove('show');
         } else {
-            updateUsernameDisplay(); // Ensure input shows current name
-            // Ensure custom color input shows saved value
+            updateUsernameDisplay();
             const savedCustomColor = localStorage.getItem(LS_CUSTOM_ACCENT) || '#3b82f6';
             if(customColorInput) customColorInput.value = savedCustomColor;
-            // Show/hide color picker based on current theme selection
             toggleCustomColorPicker(themeSelector ? themeSelector.value : 'dark');
             settingsPanel.classList.add('show');
         }
@@ -1226,62 +1222,34 @@
         const theme = themeValue || 'dark';
         let accentColor, textColorValue, bgColor, sidebarColor, topbarColor, dangerColor;
 
-        // Helper to slightly darken a hex color
-        const darken = (hex, percent) => {
-            hex = hex.replace(/^#/, '');
-            let r = parseInt(hex.substring(0, 2), 16);
-            let g = parseInt(hex.substring(2, 4), 16);
-            let b = parseInt(hex.substring(4, 6), 16);
-            r = Math.max(0, Math.floor(r * (1 - percent / 100)));
-            g = Math.max(0, Math.floor(g * (1 - percent / 100)));
-            b = Math.max(0, Math.floor(b * (1 - percent / 100)));
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-        };
-
         switch (theme) {
-            case "light":
-                bgColor="#ffffff"; sidebarColor="#eeeeee"; topbarColor="#dddddd"; accentColor="#aaaaaa"; textColorValue="#1a1a1a"; dangerColor="#d32f2f"; break;
-            case "blue":
-                bgColor="#0a0f1c"; sidebarColor="#091121"; topbarColor="#101a35"; accentColor="#395b9c"; textColorValue="#e0e0ff"; dangerColor="#c62828"; break;
-            case "forest":
-                bgColor="#1f2e1f"; sidebarColor="#141e14"; topbarColor="#2a3f2a"; accentColor="#4a784a"; textColorValue="#e5f5e5"; dangerColor="#d84315"; break;
-            case "sunset":
-                bgColor="#2b1a1a"; sidebarColor="#3a2525"; topbarColor="#4d3333"; accentColor="#b36b4a"; textColorValue="#ffe8e0"; dangerColor="#e64a19"; break;
-            case "purple": // New Theme
-                bgColor="#1e1a2a"; sidebarColor="#130f1f"; topbarColor="#2c2541"; accentColor="#7e57c2"; textColorValue="#eaddff"; dangerColor="#d32f2f"; break;
-            case "mint": // New Theme
-                bgColor="#e0f2f1"; sidebarColor="#b2dfdb"; topbarColor="#80cbc4"; accentColor="#00796b"; textColorValue="#004d40"; dangerColor="#d32f2f"; break;
-             case "rose": // New Theme
-                bgColor="#3e2723"; sidebarColor="#2d1c19"; topbarColor="#4e342e"; accentColor="#bcaaa4"; textColorValue="#efebe9"; dangerColor="#d32f2f"; break;
-            case "custom": // Custom Accent Theme
-                 const customAccent = customColor || localStorage.getItem(LS_CUSTOM_ACCENT) || '#3b82f6'; // Use passed color or fallback
+            case "light": bgColor="#ffffff"; sidebarColor="#eeeeee"; topbarColor="#dddddd"; accentColor="#aaaaaa"; textColorValue="#1a1a1a"; dangerColor="#d32f2f"; break;
+            case "blue": bgColor="#0a0f1c"; sidebarColor="#091121"; topbarColor="#101a35"; accentColor="#395b9c"; textColorValue="#e0e0ff"; dangerColor="#c62828"; break;
+            case "forest": bgColor="#1f2e1f"; sidebarColor="#141e14"; topbarColor="#2a3f2a"; accentColor="#4a784a"; textColorValue="#e5f5e5"; dangerColor="#d84315"; break;
+            case "sunset": bgColor="#2b1a1a"; sidebarColor="#3a2525"; topbarColor="#4d3333"; accentColor="#b36b4a"; textColorValue="#ffe8e0"; dangerColor="#e64a19"; break;
+            case "purple": bgColor="#1e1a2a"; sidebarColor="#130f1f"; topbarColor="#2c2541"; accentColor="#7e57c2"; textColorValue="#eaddff"; dangerColor="#d32f2f"; break;
+            case "mint": bgColor="#e0f2f1"; sidebarColor="#b2dfdb"; topbarColor="#80cbc4"; accentColor="#00796b"; textColorValue="#004d40"; dangerColor="#d32f2f"; break;
+             case "rose": bgColor="#3e2723"; sidebarColor="#2d1c19"; topbarColor="#4e342e"; accentColor="#bcaaa4"; textColorValue="#efebe9"; dangerColor="#d32f2f"; break;
+             case "custom":
+                 const customAccent = customColor || localStorage.getItem(LS_CUSTOM_ACCENT) || '#3b82f6';
                  accentColor = customAccent;
-                 // Base dark theme structure, modify accent
                  bgColor="#1e1e1e"; sidebarColor="#111111"; topbarColor="#2c2c2c"; textColorValue="#ffffff"; dangerColor="#e53e3e";
-                 // Optionally derive other colors slightly
-                 // sidebarColor = darken(customAccent, 60); // Example: much darker accent
-                 // topbarColor = darken(customAccent, 40); // Example: darker accent
                  break;
-            case "trigonometrical-red":
-                bgColor="#ffffff"; sidebarColor="#a02020"; topbarColor="#b03030"; accentColor="#e53e3e"; textColorValue="#1a1a1a"; dangerColor="#8B0000"; /* Darker red for danger */ break;
-            case "dark":
-            default:
-                bgColor="#1e1e1e"; sidebarColor="#111111"; topbarColor="#2c2c2c"; accentColor="#444444"; textColorValue="#ffffff"; dangerColor="#e53e3e"; break;
+             case "trigonometrical-red": bgColor="#ffffff"; sidebarColor="#a02020"; topbarColor="#b03030"; accentColor="#e53e3e"; textColorValue="#1a1a1a"; dangerColor="#8B0000"; break;
+             case "dark": default: bgColor="#1e1e1e"; sidebarColor="#111111"; topbarColor="#2c2c2c"; accentColor="#444444"; textColorValue="#ffffff"; dangerColor="#e53e3e"; break;
         }
 
-        // Apply CSS Variables
         root.style.setProperty("--bg", bgColor);
         root.style.setProperty("--sidebar", sidebarColor);
         root.style.setProperty("--topbar", topbarColor);
         root.style.setProperty("--accent", accentColor);
         root.style.setProperty("--text", textColorValue);
-        root.style.setProperty("--danger-color", dangerColor); // Set themed danger color
+        root.style.setProperty("--danger-color", dangerColor);
 
-        currentThemeColor = accentColor; // For logo color
+        currentThemeColor = accentColor;
         body.setAttribute('data-theme', theme);
         updateSelectArrowColor(textColorValue);
 
-        // Update component colors based on new variables
         if (root.style && typeof root.style.setProperty === 'function') {
             const ca = getComputedStyle(root).getPropertyValue('--accent').trim();
             const ct = getComputedStyle(root).getPropertyValue('--text').trim();
@@ -1289,21 +1257,19 @@
             root.style.setProperty('--slider-track-bg', ca);
             root.style.setProperty('--slider-thumb-bg', ct);
             root.style.setProperty('--slider-progress-color', ct);
-            root.style.setProperty('--game-card-bg', ctb); // Card background = topbar
-            root.style.setProperty('--game-card-hover-bg', ca); // Card hover = accent
+            root.style.setProperty('--card-bg', ctb);
+            root.style.setProperty('--card-hover-bg', ca);
         }
 
         updateFavicon(accentColor);
         updateWelcomeLogoColor(accentColor);
-        applyCustomBackground(); // Re-apply background in case theme changes affect it
+        applyCustomBackground();
 
-        // Save the *selected* theme value (e.g., "custom"), not the derived colors
         saveSetting(LS_THEME, theme);
         if (theme === 'custom' && customColor) {
-             saveSetting(LS_CUSTOM_ACCENT, customColor); // Save the specific custom color
+             saveSetting(LS_CUSTOM_ACCENT, customColor);
         }
 
-        // Show/hide custom color picker based on selection
         toggleCustomColorPicker(theme);
     }
 
@@ -1316,7 +1282,7 @@
     // --- Clear All Data Function ---
     function handleClearAllData() {
         if (!confirm('Are you absolutely sure? This will reset ALL settings, custom games, categories, and custom tabs to their defaults. This cannot be undone.')) {
-            return; // User cancelled
+            return;
         }
         console.warn("Clearing all application data from localStorage...");
         try {
@@ -1349,26 +1315,34 @@
         if(!searchInputEl || !mainContentEl) return;
         const searchTerm = searchInputEl.value.toLowerCase().trim();
 
-        const listContainer = mainContentEl.querySelector('.list-container'); // Find the active list
-        const noItemsP = mainContentEl.querySelector('#no-items-found'); // Find the message element
+        const listContainer = mainContentEl.querySelector('.list-container');
+        const noItemsP = mainContentEl.querySelector('#no-items-found');
         let visibleCount = 0;
 
         if (!listContainer) {
-             // If no list container (e.g., welcome page), do nothing with filtering items
              if (noItemsP) noItemsP.style.display = 'none';
              return;
         }
 
-        const cards = listContainer.querySelectorAll('.card'); // Get all cards in the active list
+        const cards = listContainer.querySelectorAll('.card');
 
         if (cards.length > 0) {
             cards.forEach(card => {
-                const titleEl = card.querySelector('h4');
-                const descEl = card.querySelector('p.category, p.description'); // Check both potential p tags
-                const titleText = titleEl ? titleEl.textContent.toLowerCase() : '';
-                const descText = descEl ? descEl.textContent.toLowerCase() : '';
+                // Search logic needs to adapt to the proxy card structure
+                let textToSearch = '';
+                if (card.classList.contains('proxy-card')) {
+                    const labelEl = card.querySelector('.proxy-label');
+                    textToSearch = labelEl ? labelEl.textContent.toLowerCase() : '';
+                } else {
+                    const titleEl = card.querySelector('h4');
+                    const descEl = card.querySelector('p.category, p.description');
+                    const titleText = titleEl ? titleEl.textContent.toLowerCase() : '';
+                    const descText = descEl ? descEl.textContent.toLowerCase() : '';
+                    textToSearch = titleText + ' ' + descText;
+                }
 
-                if (!searchTerm || titleText.includes(searchTerm) || descText.includes(searchTerm)) {
+
+                if (!searchTerm || textToSearch.includes(searchTerm)) {
                     card.style.display = '';
                     visibleCount++;
                 } else {
@@ -1376,21 +1350,17 @@
                 }
             });
         } else {
-            // If there are no cards in the list container initially (e.g., empty tab),
-            // ensure the "no items" message reflects the initial state, not the search result.
-            // This is handled when the section is initially rendered.
-            visibleCount = 0; // Ensure count is 0 if no cards exist
+            visibleCount = 0;
         }
 
 
-        // Handle "No Items Found" Message
         if (noItemsP) {
-            const totalItemsInitial = cards.length; // How many items were there before filtering
+            const totalItemsInitial = cards.length;
             if (visibleCount === 0 && totalItemsInitial > 0 && searchTerm) {
                 noItemsP.textContent = `No items found matching "${sanitizeHTML(searchInputEl.value.trim())}"`;
                 noItemsP.style.display = 'block';
             } else if (visibleCount === 0 && totalItemsInitial === 0) {
-                 // Message is set during initial render, just ensure it's shown if needed
+                 if (!noItemsP.textContent) noItemsP.textContent = 'No items added yet.'; // Default if empty
                  noItemsP.style.display = 'block';
             }
             else {
@@ -1408,7 +1378,6 @@
     function loadSettingsAndInit() {
         console.log("[DEBUG] loadSettingsAndInit called.");
         try {
-            // --- Load basic settings ---
             const savedTheme=localStorage.getItem(LS_THEME)||'dark';
             const savedFontSize=localStorage.getItem(LS_FONTSIZE)||'16';
             const savedFontFamily=localStorage.getItem(LS_FONTFAMILY)||"'Segoe UI', sans-serif";
@@ -1417,7 +1386,6 @@
             bgImageUrl=localStorage.getItem(LS_BGIMAGE_URL)||'';
             const savedCustomAccent = localStorage.getItem(LS_CUSTOM_ACCENT) || '#3b82f6';
 
-            // --- Apply visual settings ---
             if(themeSelector) themeSelector.value=savedTheme;
             if(fontSelector) fontSelector.value=savedFontFamily;
             if(fontSizeSlider) fontSizeSlider.value=savedFontSize;
@@ -1425,31 +1393,24 @@
             if(bgImageToggleSwitch) bgImageToggleSwitch.checked=bgImageEnabled;
             if(customColorInput) customColorInput.value = savedCustomAccent;
 
-            // Apply theme FIRST (important for other visual updates)
             updateTheme(savedTheme, savedCustomAccent);
-            // Apply other visual settings
             updateFontSize(savedFontSize);
             updateFontFamily(savedFontFamily);
-            applyCustomBackground(); // Includes toggle check
+            applyCustomBackground();
 
-            // --- Load app data ---
             loadGames();
             loadCategories();
-            loadCustomTabs(); // Load custom tab data
+            loadCustomTabs();
 
-            // --- Render dynamic UI elements ---
-            renderCustomTabButtons(); // Create sidebar buttons for custom tabs
+            renderCustomTabButtons();
 
-            // --- Final UI setup ---
-            updateLoginUI(); // Update UI based on currentUsername
+            updateLoginUI();
             if(warnOnClose) window.addEventListener('beforeunload',handleMainBeforeUnload);
-            if(welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display='none'; // Hide loading placeholder
+            if(welcomeAreaPlaceholder) welcomeAreaPlaceholder.style.display='none';
 
-            // Show last viewed section or default to welcome
             const lastSection = localStorage.getItem(LS_LAST_SECTION) || 'welcome';
-            // Validate last section exists before showing
             const isValidLastSection = ['welcome', 'games', 'proxy', 'tools'].includes(lastSection) ||
-                                     (lastSection.startsWith('custom-tab-') && customTabs.some(t => `custom-tab-${t.id}` === lastSection));
+                                       (lastSection.startsWith('custom-tab-') && customTabs.some(t => `custom-tab-${t.id}` === lastSection));
 
             showSection(isValidLastSection ? lastSection : 'welcome');
             updateFavicon(currentThemeColor);
@@ -1457,7 +1418,6 @@
         } catch(e){
             console.error("Initialization Error:", e);
             if(mainContent) mainContent.innerHTML=`<h2 style="color:red;">Error loading Qbit: ${e.message}</h2><p>Try clearing data or check console.</p>`;
-            // Attempt to apply safe defaults
             try {
                 updateTheme('dark'); updateFontSize('16'); updateFontFamily("'Segoe UI', sans-serif");
                 currentUsername = 'Guest'; updateLoginUI(); showSection('welcome');
@@ -1472,8 +1432,7 @@
 
     // --- Update UI Based on Username (Simplified) ---
     function updateLoginUI() {
-        updateUsernameDisplay(); // Update display span and settings input
-        // Ensure section buttons are enabled (assuming no login needed)
+        updateUsernameDisplay();
         [sidebarHomeBtn, sidebarGamesBtn, sidebarProxyBtn, sidebarToolsBtn, sidebarAddTabBtn].forEach(btn => { if(btn) btn.disabled = false; });
         if (settingsBtn) settingsBtn.disabled = false;
     }
@@ -1489,7 +1448,6 @@
             settingsUsernameInput = document.getElementById('settingsUsernameInput'); saveUsernameBtn = document.getElementById('saveUsernameBtn'); clearDataBtn = document.getElementById('clearDataBtn');
             customColorSettingContainer = document.getElementById('customColorSettingContainer'); customColorInput = document.getElementById('customColorInput');
             gameModalTitle=document.getElementById('gameModalTitle'); gameIdInput=document.getElementById('gameIdInput'); gameNameInput=document.getElementById('gameNameInput'); gameUrlInput=document.getElementById('gameUrlInput'); gameCategorySelect=document.getElementById('gameCategorySelect'); addCategoryBtn=document.getElementById('addCategoryBtn'); saveGameBtn=document.getElementById('saveGameBtn'); cancelGameBtn=document.getElementById('cancelGameBtn');
-            // Item Modal Refs
             itemModal = document.getElementById('itemModal'); itemModalTitle = document.getElementById('itemModalTitle'); itemIdInput = document.getElementById('itemIdInput'); itemTabIdInput = document.getElementById('itemTabIdInput'); itemNameInput = document.getElementById('itemNameInput'); itemUrlInput = document.getElementById('itemUrlInput'); saveItemBtn = document.getElementById('saveItemBtn'); cancelItemBtn = document.getElementById('cancelItemBtn');
 
             const criticalElements = { mainContent, settingsPanel, root, body, gameModal, itemModal, settingsBtn, searchInput, sidebar, sidebarAddTabBtn, customTabsSection, settingsUsernameInput, saveUsernameBtn, clearDataBtn, themeSelector, customColorInput, customColorSettingContainer };
@@ -1498,18 +1456,13 @@
 
         } catch(e){ console.error("FATAL: Element finding error:", e); document.body.innerHTML=`<div style="padding:30px;color:red;background:#333;"><h2>App Init Error</h2><p>${e.message}</p></div>`; return; }
 
-        // --- Load or Prompt for Username ---
-        loadOrPromptUsername(); // Determine username first
-
-        // --- Then Load Settings & Initialize UI ---
-        loadSettingsAndInit(); // This will now use the determined currentUsername
+        loadOrPromptUsername();
+        loadSettingsAndInit();
 
         console.log("Attaching listeners.");
 
-        // --- Settings Button Listener ---
         settingsBtn.addEventListener('click', handleSettingsButtonClick);
 
-        // --- Listener to close settings panel ---
         document.addEventListener('click', (event) => {
             if (settingsPanel && settingsPanel.classList.contains('show') &&
                 !settingsPanel.contains(event.target) && !settingsBtn.contains(event.target))
@@ -1518,10 +1471,8 @@
             }
         });
 
-        // --- Search Listener ---
         searchInput.addEventListener('input', debouncedFilterContent);
 
-        // --- Modal Listeners ---
         if(saveGameBtn) saveGameBtn.addEventListener('click', handleSaveGame);
         if(cancelGameBtn) cancelGameBtn.addEventListener('click', closeGameModal);
         if(addCategoryBtn) addCategoryBtn.addEventListener('click', handleAddCategory);
@@ -1530,22 +1481,15 @@
         if(cancelItemBtn) cancelItemBtn.addEventListener('click', closeItemModal);
         if(itemModal) itemModal.addEventListener('click', (e) => { if(e.target === itemModal) closeItemModal(); });
 
-
-        // --- Settings Panel Control Listeners ---
         fontSizeSlider.addEventListener('input', (e) => updateFontSize(e.target.value));
-        themeSelector.addEventListener('change', (e) => updateTheme(e.target.value)); // Pass selected value
+        themeSelector.addEventListener('change', (e) => updateTheme(e.target.value));
         fontSelector.addEventListener('change', (e) => updateFontFamily(e.target.value));
-        customColorInput.addEventListener('input', (e) => { // Update theme live as color changes
-             if(themeSelector.value === 'custom') {
-                 updateTheme('custom', e.target.value);
-             }
-         });
-         customColorInput.addEventListener('change', (e) => { // Save final color on 'change' (when picker closes)
-             if(themeSelector.value === 'custom') {
-                  saveSetting(LS_CUSTOM_ACCENT, e.target.value);
-             }
-         });
-
+        customColorInput.addEventListener('input', (e) => {
+             if(themeSelector.value === 'custom') { updateTheme('custom', e.target.value); }
+          });
+         customColorInput.addEventListener('change', (e) => {
+             if(themeSelector.value === 'custom') { saveSetting(LS_CUSTOM_ACCENT, e.target.value); }
+          });
         warnOnCloseSwitch.addEventListener('change', (e) => { warnOnClose=e.target.checked; saveSetting(LS_WARNONCLOSE,warnOnClose); if(warnOnClose)window.addEventListener('beforeunload',handleMainBeforeUnload); else window.removeEventListener('beforeunload',handleMainBeforeUnload); });
         bgImageToggleSwitch.addEventListener('change', (e)=>{bgImageEnabled=e.target.checked;saveSetting(LS_BGIMAGE_ENABLED,bgImageEnabled);if(!bgImageEnabled){bgImageUrl='';removeSetting(LS_BGIMAGE_URL);if(bgImageFileInput)bgImageFileInput.value=null;}applyCustomBackground();});
         bgImageFileInput.addEventListener('change',handleImageFileSelect);
@@ -1554,9 +1498,7 @@
         if(settingsUsernameInput) settingsUsernameInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleUpdateUsername(); });
         if(clearDataBtn) clearDataBtn.addEventListener('click', handleClearAllData);
 
-        // --- Sidebar Button Listeners ---
         if(sidebarAddTabBtn) sidebarAddTabBtn.addEventListener('click', handleAddTab);
-        // Standard sidebar buttons are handled by inline onclick="showSection('sectionName')"
 
         console.log("Listeners attached.");
     }); // End DOMContentLoaded
