@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Timelapse Maker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.7/dist/ffmpeg.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6a11cb; /* A sleek purple */
+            --secondary-color: #2575fc; /* A vibrant blue */
+            --background-color: #f0f2f5; /* Light gray background */
+            --card-background: #ffffff;
+            --text-color: #333;
+            --border-radius: 12px;
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --button-hover-brightness: 1.1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--background-color), #e2e8f0);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px; /* Slightly wider for better mobile feel */
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            letter-spacing: -0.5px;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.15em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            box-sizing: border-box;
+            font-weight: 600;
+        }
+
+        .button i {
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+
+        .button.primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .button.primary:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+        }
+
+        .button.secondary {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+        }
+        .button.secondary:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+        }
+
+        .button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1.05em;
+        }
+
+        .input-group input[type="number"] {
+            width: calc(100% - 24px); /* Account for padding */
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            box-sizing: border-box;
+            appearance: textfield; /* Remove spinner on Firefox */
+        }
+        .input-group input[type="number"]::-webkit-outer-spin-button,
+        .input-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0; /* Remove spinner on Chrome/Safari */
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-input-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px;
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--border-radius);
+            font-size: 1.15em;
+            cursor: pointer;
+            background-color: rgba(106, 17, 203, 0.05);
+            color: var(--primary-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .file-input-button:hover {
+            background-color: rgba(106, 17, 203, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .file-input-button i {
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            justify-content: center;
+        }
+
+        .image-gallery img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        #timelapsePreview {
+            width: 100%;
+            border-radius: var(--border-radius);
+            background-color: #000;
+            display: none; /* Hidden until video is generated */
+            margin-top: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-color);
+            font-style: italic;
+        }
+
+        /* Added for loading state */
+        .button.loading {
+            cursor: progress;
+            background: #999 !important; /* Override with a neutral color */
+            transform: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Timelapse Creator</h1>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="imageUpload">Select Photos:</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="imageUpload" multiple accept="image/*">
+                    <button class="file-input-button">
+                        <i class="fas fa-upload"></i> Choose Images
+                    </button>
+                </div>
+            </div>
+            <p>Photos Loaded: <span id="photoCount">0</span></p>
+            <div class="image-gallery" id="imageGallery">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="fpsInput">Frames Per Second (FPS):</label>
+                <input type="number" id="fpsInput" value="10" min="1" max="60">
+            </div>
+            <p id="message">Upload photos to enable timelapse actions.</p>
+        </div>
+
+        <div class="card controls">
+            <button class="button primary" id="playTimelapseButton" disabled>
+                <i class="fas fa-play"></i> Play Timelapse (Browser)
+            </button>
+            <button class="button secondary" id="downloadTimelapseButton" disabled>
+                <i class="fas fa-download"></i> Download Video Timelapse
+            </button>
+            <button class="button secondary" id="clearStorageButton">
+                <i class="fas fa-trash-alt"></i> Clear Saved Photos
+            </button>
+        </div>
+
+        <canvas id="timelapseCanvas" style="display: none;"></canvas>
+        <video id="timelapsePreview" controls playsinline></video>
+    </div>
+
+    <script>
+        // Initialize FFmpeg.wasm
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true }); // `log: true` outputs FFmpeg messages to console
+
+        // Get DOM elements
+        const imageUpload = document.getElementById('imageUpload');
+        const fpsInput = document.getElementById('fpsInput');
+        const imageGallery = document.getElementById('imageGallery');
+        const photoCountSpan = document.getElementById('photoCount');
+        const playTimelapseButton = document.getElementById('playTimelapseButton');
+        const downloadTimelapseButton = document.getElementById('downloadTimelapseButton');
+        const clearStorageButton = document.getElementById('clearStorageButton');
+        const timelapseCanvas = document.getElementById('timelapseCanvas');
+        const timelapsePreview = document.getElementById('timelapsePreview');
+        const messageElement = document.getElementById('message');
+        const fileInputButton = document.querySelector('.file-input-button'); // Get the styled button
+
+        // Local storage key for saving images
+        const LOCAL_STORAGE_KEY = 'timelapseImages';
+        let capturedImages = []; // Array to store Base64 image data
+        let videoDimensions = { width: 0, height: 0 }; // To store common dimensions for video consistency
+
+        // --- Utility Functions ---
+
+        // Load images from Local Storage on page load
+        async function loadImagesFromLocalStorage() {
+            const storedImages = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (storedImages) {
+                try {
+                    const parsedImages = JSON.parse(storedImages);
+                    // Filter out any potentially corrupt or invalid data URLs
+                    capturedImages = parsedImages.filter(data => data.startsWith('data:image/'));
+
+                    // If images loaded from storage, try to determine video dimensions from the first one
+                    if (capturedImages.length > 0) {
+                        const img = new Image();
+                        img.onload = () => {
+                            videoDimensions.width = img.naturalWidth;
+                            videoDimensions.height = img.naturalHeight;
+                            displayImages();
+                            updateUI();
+                        };
+                        img.onerror = () => {
+                            console.error("Could not load first image from storage to determine dimensions.");
+                            displayImages();
+                            updateUI();
+                        };
+                        img.src = capturedImages[0];
+                    } else {
+                        displayImages();
+                        updateUI();
+                    }
+                } catch (e) {
+                    console.error("Error parsing stored images:", e);
+                    localStorage.removeItem(LOCAL_STORAGE_KEY); // Clear corrupt data
+                    updateUI(); // Update UI even after clearing
+                }
+            } else {
+                updateUI(); // Update UI if no stored images
+            }
+        }
+
+        // Save images to Local Storage
+        function saveImagesToLocalStorage() {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(capturedImages));
+            } catch (e) {
+                console.error("Error saving images to local storage:", e);
+                messageElement.textContent = "Warning: Could not save all images to local storage. Your browser's storage limit might be reached. You can still download the timelapse, but images might not persist after closing the page.";
+                messageElement.style.color = 'orange'; // Highlight warning
+            }
+        }
+
+        // Display images in the gallery
+        function displayImages() {
+            imageGallery.innerHTML = ''; // Clear previous images
+            capturedImages.forEach((imageDataURL, index) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = imageDataURL;
+                imgElement.alt = `Timelapse Frame ${index + 1}`;
+                imgElement.title = `Frame ${index + 1}`;
+                imageGallery.appendChild(imgElement);
+            });
+            photoCountSpan.textContent = capturedImages.length;
+        }
+
+        // Update button states based on photo count and current operations
+        function updateUI() {
+            const hasPhotos = capturedImages.length > 0;
+            playTimelapseButton.disabled = !hasPhotos;
+            downloadTimelapseButton.disabled = !hasPhotos;
+            clearStorageButton.disabled = !hasPhotos;
+            // Reset message only if it's not a temporary processing message
+            if (!messageElement.textContent.includes("Processing") && !messageElement.textContent.includes("Generating")) {
+                messageElement.textContent = hasPhotos ? `Ready to create your timelapse with ${capturedImages.length} photos.` : 'Upload photos to enable timelapse actions.';
+                messageElement.style.color = varToCss('text-color'); // Reset message color
+            }
+
+            timelapsePreview.style.display = 'none'; // Hide preview video when UI updates
+            timelapseCanvas.style.display = 'none'; // Hide canvas when UI updates
+        }
+
+        // Helper to get CSS variable values
+        function varToCss(varName) {
+            return getComputedStyle(document.documentElement).getPropertyValue(`--${varName}`).trim();
+        }
+
+        // --- Event Listeners ---
+
+        // Handle file selection
+        imageUpload.addEventListener('change', async (event) => {
+            const files = event.target.files;
+            if (files.length === 0) {
+                // If no files are selected (e.g., user opens and closes dialog),
+                // clear previous selections and update UI.
+                capturedImages = [];
+                videoDimensions = { width: 0, height: 0 }; // Reset dimensions
+                displayImages();
+                updateUI();
+                messageElement.textContent = 'No new photos selected.';
+                messageElement.style.color = varToCss('text-color');
+                return;
+            }
+
+            // Temporarily disable upload button to prevent multiple selections while processing
+            imageUpload.disabled = true;
+            fileInputButton.disabled = true; // Disable the styled button as well
+            messageElement.textContent = 'Processing images... please wait.';
+            messageElement.style.color = varToCss('primary-color');
+            timelapsePreview.style.display = 'none'; // Hide video preview during upload
+            timelapseCanvas.style.display = 'none'; // Hide canvas during upload
+
+            // Store newly selected files in a temporary array
+            const newCapturedImages = [];
+            let firstImageDimensionsDetermined = false;
+
+            // Use Promise.all to wait for all files to be read
+            const readFilePromises = Array.from(files).map(file => {
+                return new Promise(resolve => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            newCapturedImages.push(e.target.result);
+
+                            // Determine dimensions from the very first image for video consistency
+                            if (!firstImageDimensionsDetermined) {
+                                const img = new Image();
+                                img.onload = () => {
+                                    videoDimensions.width = img.naturalWidth;
+                                    videoDimensions.height = img.naturalHeight;
+                                    firstImageDimensionsDetermined = true;
+                                    resolve(); // Resolve after dimensions are set for the first image
+                                };
+                                img.onerror = () => {
+                                    console.error("Could not load first image to determine dimensions.");
+                                    firstImageDimensionsDetermined = true; // Mark as true to prevent re-trying
+                                    resolve();
+                                };
+                                img.src = e.target.result;
+                            } else {
+                                resolve(); // Resolve immediately if dimensions already set
+                            }
+                        };
+                        reader.onerror = () => {
+                            console.error(`Error reading file: ${file.name}`);
+                            resolve(); // Resolve even on error to not block other files
+                        };
+                        reader.readAsDataURL(file); // Convert file to Base64 data URL
+                    } else {
+                        console.warn(`Skipping non-image file: ${file.name}`);
+                        resolve(); // Resolve for non-image files
+                    }
+                });
+            });
+
+            await Promise.all(readFilePromises); // Wait for all files to be processed
+
+            // Sort the images by their data URL string for a consistent order.
+            // This is not perfect for original file order (e.g., if files are named IMG_1.jpg, IMG_10.jpg, IMG_2.jpg),
+            // but it provides a deterministic sort. For perfect order, files need to be named with leading zeros.
+            newCapturedImages.sort();
+
+            // Replace the old images with the new set
+            capturedImages = newCapturedImages;
+
+            saveImagesToLocalStorage();
+            displayImages();
+            updateUI();
+
+            // Re-enable upload button
+            imageUpload.disabled = false;
+            fileInputButton.disabled = false;
+
+            if (capturedImages.length > 0) {
+                alert(`Successfully loaded ${capturedImages.length} images.`);
+            } else {
+                alert('No valid images were loaded from your selection.');
+            }
+        });
+
+        // Play Timelapse (Simulated on Canvas)
+        let playbackIntervalId;
+        playTimelapseButton.addEventListener('click', () => {
+            if (capturedImages.length === 0) {
+                alert('Please upload photos first!');
+                return;
+            }
+
+            // Stop any existing playback
+            if (playbackIntervalId) {
+                clearInterval(playbackIntervalId);
+            }
+
+            const fps = parseFloat(fpsInput.value);
+            if (isNaN(fps) || fps <= 0) {
+                alert('Please enter a valid FPS value (greater than 0).');
+                return;
+            }
+            const intervalTime = 1000 / fps; // Milliseconds per frame
+
+            timelapsePreview.style.display = 'none'; // Hide video element during canvas playback
+            timelapseCanvas.style.display = 'block'; // Make canvas visible for playback
+
+            let frameIndex = 0;
+            const context = timelapseCanvas.getContext('2d');
+
+            const playFrame = () => {
+                if (frameIndex < capturedImages.length) {
+                    const img = new Image();
+                    img.onload = () => {
+                        // Set canvas dimensions to the determined video dimensions for consistency
+                        // If videoDimensions are not set (e.g., loaded from storage without re-upload),
+                        // use the current image's natural dimensions.
+                        if (videoDimensions.width > 0 && videoDimensions.height > 0) {
+                             timelapseCanvas.width = videoDimensions.width;
+                             timelapseCanvas.height = videoDimensions.height;
+                        } else {
+                            timelapseCanvas.width = img.naturalWidth;
+                            timelapseCanvas.height = img.naturalHeight;
+                        }
+
+                        // Optionally, resize canvas if it's too big for screen while maintaining aspect ratio
+                        const maxWidth = window.innerWidth * 0.9;
+                        const maxHeight = window.innerHeight * 0.7;
+                        let displayWidth = timelapseCanvas.width;
+                        let displayHeight = timelapseCanvas.height;
+
+                        if (displayWidth > maxWidth || displayHeight > maxHeight) {
+                            const aspectRatio = displayWidth / displayHeight;
+                            if (displayWidth > maxWidth) {
+                                displayWidth = maxWidth;
+                                displayHeight = maxWidth / aspectRatio;
+                            }
+                            if (displayHeight > maxHeight) {
+                                displayHeight = maxHeight;
+                                displayWidth = maxHeight * aspectRatio;
+                            }
+                        }
+                        timelapseCanvas.style.width = `${displayWidth}px`;
+                        timelapseCanvas.style.height = `${displayHeight}px`;
+
+
+                        context.clearRect(0, 0, timelapseCanvas.width, timelapseCanvas.height);
+                        context.drawImage(img, 0, 0, timelapseCanvas.width, timelapseCanvas.height);
+                        frameIndex++;
+                    };
+                    img.src = capturedImages[frameIndex];
+                } else {
+                    clearInterval(playbackIntervalId);
+                    alert('Timelapse playback finished.');
+                    timelapseCanvas.style.display = 'none'; // Hide canvas after playback
+                }
+            };
+
+            // Start playing frames
+            playbackIntervalId = setInterval(playFrame, intervalTime);
+            playFrame(); // Play the first frame immediately
+        });
+
+        // Download Timelapse (Generates MP4 using ffmpeg.wasm)
+        downloadTimelapseButton.addEventListener('click', async () => {
+            if (capturedImages.length === 0) {
+                alert('No photos to download!');
+                return;
+            }
+
+            const fps = parseFloat(fpsInput.value);
+            if (isNaN(fps) || fps <= 0) {
+                alert('Please enter a valid FPS value (greater than 0).');
+                return;
+            }
+
+            // Disable buttons and show loading state
+            downloadTimelapseButton.disabled = true;
+            downloadTimelapseButton.classList.add('loading');
+            downloadTimelapseButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            playTimelapseButton.disabled = true;
+            clearStorageButton.disabled = true;
+            imageUpload.disabled = true; // Disable upload during generation
+            fileInputButton.disabled = true;
+            messageElement.textContent = 'Generating video... this may take a while depending on image count and size.';
+            messageElement.style.color = varToCss('primary-color');
+
+            timelapsePreview.style.display = 'none'; // Hide preview video initially
+            timelapseCanvas.style.display = 'none'; // Hide canvas during generation
+
+            try {
+                if (!ffmpeg.isLoaded()) {
+                    messageElement.textContent = 'Loading video encoder...';
+                    await ffmpeg.load();
+                }
+
+                // Write images to FFmpeg's virtual file system
+                for (let i = 0; i < capturedImages.length; i++) {
+                    const imageData = capturedImages[i];
+                    // Convert Base64 to ArrayBuffer
+                    const byteCharacters = atob(imageData.split(',')[1]);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let j = 0; j < byteCharacters.length; j++) {
+                        byteNumbers[j] = byteCharacters.charCodeAt(j);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+
+                    // Determine image extension from data URL
+                    const mimeType = imageData.substring(imageData.indexOf(':') + 1, imageData.indexOf(';'));
+                    let ext = 'jpg'; // Default to jpg
+                    if (mimeType.includes('png')) ext = 'png';
+                    else if (mimeType.includes('gif')) ext = 'gif'; // Though GIFs as input might be rare
+
+                    ffmpeg.FS('writeFile', `input_${String(i).padStart(4, '0')}.${ext}`, await fetchFile(byteArray));
+                }
+
+                // Get dimensions. If not set (e.g., directly from local storage without re-upload),
+                // attempt to use the first image's actual dimensions.
+                let width = videoDimensions.width || 0;
+                let height = videoDimensions.height || 0;
+
+                if (width === 0 || height === 0) {
+                    // Fallback: load the first image to get dimensions if not already set
+                    const tempImg = new Image();
+                    await new Promise((resolve, reject) => {
+                        tempImg.onload = () => {
+                            width = tempImg.naturalWidth;
+                            height = tempImg.naturalHeight;
+                            resolve();
+                        };
+                        tempImg.onerror = reject;
+                        tempImg.src = capturedImages[0];
+                    });
+                }
+
+                // If dimensions are still 0 or invalid, use a sensible default
+                if (width === 0 || height === 0) {
+                    console.warn("Could not determine image dimensions, falling back to 1920x1080.");
+                    width = 1920;
+                    height = 1080;
+                }
+
+                // Ensure dimensions are even for FFmpeg compatibility
+                width = width % 2 === 0 ? width : width - 1;
+                height = height % 2 === 0 ? height : height - 1;
+                if (width <= 0 || height <= 0) { // Ensure dimensions are positive after adjustment
+                    throw new Error("Invalid image dimensions for video encoding after adjustment.");
+                }
+
+
+                // Run FFmpeg command
+                // -r ${fps}: Set frame rate
+                // -i input_%04d.jpg: Input pattern for sequentially numbered images
+                // -pix_fmt yuv420p: Pixel format for broad compatibility (most players)
+                // -vf "scale=${width}:${height}": Scale all images to the determined dimensions
+                // -preset fast: Faster encoding, might result in larger file or slightly lower quality
+                // -crf 23: Constant Rate Factor (quality setting, lower is better quality/larger file). 23 is a good default.
+                messageElement.textContent = `Encoding video (${capturedImages.length} frames at ${fps} FPS, ${width}x${height})...`;
+
+                const firstImageExtension = capturedImages[0].includes('png') ? 'png' : 'jpg';
+
+                await ffmpeg.run(
+                    '-r', String(fps),
+                    '-i', `input_%04d.${firstImageExtension}`,
+                    '-pix_fmt', 'yuv420p',
+                    '-vf', `scale=${width}:${height}`,
+                    '-preset', 'fast',
+                    '-crf', '23',
+                    'output.mp4'
+                );
+
+                const data = ffmpeg.FS('readFile', 'output.mp4');
+
+                // Create a Blob from the video data
+                const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
+                const videoUrl = URL.createObjectURL(videoBlob);
+
+                // Display in the video player
+                timelapsePreview.src = videoUrl;
+                timelapsePreview.style.display = 'block';
+                timelapsePreview.load(); // Load the video
+                timelapsePreview.play(); // Auto-play the video
+
+                // Offer for download
+                const a = document.createElement('a');
+                a.href = videoUrl;
+                a.download = `timelapse_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.mp4`; // e.g., timelapse_20250705.mp4
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(videoUrl); // Clean up object URL after download link is clicked
+
+                messageElement.textContent = 'Video timelapse generated and downloaded! You can also preview it above.';
+                messageElement.style.color = varToCss('text-color');
+
+            } catch (error) {
+                console.error("Error generating video:", error);
+                messageElement.textContent = `Error generating video: ${error.message || 'An unknown error occurred.'} Please check console.`;
+                messageElement.style.color = 'red';
+                alert('Failed to generate video. Check browser console for details or try with fewer/smaller images, or a lower FPS.');
+            } finally {
+                // Re-enable buttons and reset state
+                downloadTimelapseButton.disabled = false;
+                downloadTimelapseButton.classList.remove('loading');
+                downloadTimelapseButton.innerHTML = '<i class="fas fa-download"></i> Download Video Timelapse';
+                playTimelapseButton.disabled = false;
+                clearStorageButton.disabled = false;
+                imageUpload.disabled = false; // Re-enable upload button
+                fileInputButton.disabled = false;
+                updateUI(); // Ensure all UI elements are updated correctly
+            }
+        });
+
+        // Clear Saved Photos
+        clearStorageButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all saved photos? This action cannot be undone.')) {
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+                capturedImages = [];
+                videoDimensions = { width: 0, height: 0 }; // Reset dimensions
+                displayImages();
+                updateUI();
+                if (playbackIntervalId) {
+                    clearInterval(playbackIntervalId);
+                    timelapseCanvas.style.display = 'none'; // Hide canvas if playback was active
+                }
+                timelapsePreview.style.display = 'none'; // Hide video preview
+                timelapsePreview.src = ''; // Clear video source
+                alert('All saved photos cleared from browser storage.');
+            }
+        });
+
+        // --- Initial Load ---
+        loadImagesFromLocalStorage();
+    </script>
+</body>
+</html>
