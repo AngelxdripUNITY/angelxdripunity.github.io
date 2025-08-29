@@ -1,737 +1,1054 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Timelapse Maker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.7/dist/ffmpeg.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #6a11cb; /* A sleek purple */
-            --secondary-color: #2575fc; /* A vibrant blue */
-            --background-color: #f0f2f5; /* Light gray background */
-            --card-background: #ffffff;
-            --text-color: #333;
-            --border-radius: 12px;
-            --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            --button-hover-brightness: 1.1;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QBit — Game Portal</title>
+<meta name="description" content="QBit — a polished customizable game portal (single-file). Add and store embeddable games, upload thumbnails, view changelog, tips, and more." />
+<style>
+  /* ============ Base / Theme ============ */
+  :root{
+    --bg:#071018; --panel:#0f1720; --muted:#97a6b2; --text:#ecf7ff;
+    --accent-start:#4dd2ff; --accent-end:#7af3d0;
+    --accent-angle:135deg;
+    --primary-gradient: linear-gradient(var(--accent-angle), var(--accent-start), var(--accent-end));
+    --card:#0b1220;
+    --radius:14px; --gap:12px; --glass: rgba(255,255,255,0.03);
+    --shadow: 0 8px 28px rgba(2,8,20,0.6);
+    --highlight: rgba(255, 255, 255, 0.05);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  
+  html.light-theme {
+    --bg:#f4f7fb; --panel:#ffffff; --muted:#55606a; --text:#0b1320;
+    --accent-start:#2b8cff; --accent-end:#06c08c;
+    --card:#ffffff; --glass: rgba(8,10,12,0.02);
+    --highlight: rgba(0, 0, 0, 0.05);
+  }
 
-        body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, var(--background-color), #e2e8f0);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; background:var(--bg); color:var(--text);
+  transition: background .3s, color .3s; }
+  a{ color:inherit; text-decoration:none }
+  img { display:block; max-width:100%; }
 
-        .container {
-            width: 100%;
-            max-width: 550px; /* Slightly wider for better mobile feel */
-            padding: 20px;
-            box-sizing: border-box;
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
+  /* ============ Layout ============ */
+  .app{ display:grid; grid-template-rows:auto 1fr; min-height:100vh; gap:12px; padding:14px; }
+  header.topbar{ display:flex; gap:12px;
+  align-items:center; padding:10px 14px; background:var(--panel); border-radius:12px; box-shadow:var(--shadow); }
+  .logo{ display:flex; gap:10px; align-items:center; font-weight:700; font-size:18px }
+  .logo-badge{ width:44px; height:44px; display:flex;
+  justify-content:center; align-items:center; gap:3px; border-radius:10px; background:var(--primary-gradient); color:#001a20; box-shadow:0 6px 18px rgba(0,0,0,0.45) }
+  .logo-badge-line{ width:4px; height:22px; background:currentColor; border-radius:2px; }
+  .search{ flex:1; display:flex; gap:8px; align-items:center; background:var(--glass); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.03) }
+  .search input{ flex:1; background:transparent; border:0;
+  color:var(--text); font-size:14px; padding:6px; outline:none }
+  
+  .btn, button, .file-label { background:transparent; border:1px solid transparent; color:var(--text); cursor:pointer; font-weight:600;
+  padding:8px 12px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition: background .2s, box-shadow .2s, transform .2s;
+  }
+  .btn:hover, button:hover, .file-label:hover { background:var(--highlight); }
+  .btn:active, button:active, .file-label:active { transform:scale(0.97); }
+  .btn.primary{ background:var(--primary-gradient); color:#002427;
+  box-shadow:0 8px 18px rgba(6,12,20,0.6); padding:10px 14px }
+  nav.tabs{ display:flex; gap:6px; align-items:center; padding:6px; border-radius:10px }
+  nav .tab{ padding:8px 12px;
+  border-radius:10px; color:var(--muted); transition: transform .2s, color .2s; }
+  nav .tab:hover{ transform: scale(1.05); color: var(--text); }
+  nav .tab.active{ background:var(--card);
+  color:var(--text); box-shadow:0 6px 16px rgba(2,8,20,0.5) }
 
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.2em;
-            letter-spacing: -0.5px;
-        }
+  .shell{ display:grid; grid-template-columns:260px 1fr; gap:14px; align-items:start; min-height:60vh; }
+  .panel{ background:var(--panel); border-radius:12px; padding:12px;
+  box-shadow:var(--shadow); border:1px solid rgba(255,255,255,0.02) }
 
-        .card {
-            background-color: var(--card-background);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease-in-out;
-        }
+  .sidebar .group{ margin-bottom:12px }
+  .sidebar h4{ margin:6px 0; color:var(--muted); font-size:12px; letter-spacing:1px; text-transform:uppercase;
+  }
+  .filter-pill{ display:flex; justify-content:space-between; margin:6px 0; padding:8px; border-radius:10px; background:transparent; border:1px solid transparent; cursor:pointer; color:var(--text); transition: background .2s;
+  }
+  .filter-pill:hover{ background:var(--highlight); }
+  .filter-pill.active{ background:var(--primary-gradient); color:#002427; font-weight:700; }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
+  .grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:14px;
+  align-items:start }
+  .card{ border-radius:12px; overflow:hidden; background:var(--card); border:1px solid rgba(255,255,255,0.02); display:flex; flex-direction:column; min-height:160px; transition:transform .18s ease, box-shadow .18s;
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow:0 14px 40px rgba(2,8,20,0.6) }
+  .thumb{ aspect-ratio:16/9; background:var(--primary-gradient); display:grid; place-items:center; position:relative;
+  overflow:hidden }
+  .thumb .thumb-img{ width:100%; height:100%; object-fit:cover }
+  .card-meta{ padding:12px; display:flex; justify-content:space-between; align-items:center; gap:8px }
+  .card-title{ font-weight:700;
+  font-size:14px; }
+  .card-actions{ display:flex; gap:8px; }
+  .fav-btn{ background:rgba(255,255,255,0.02); padding:6px 8px; border-radius:10px }
+  .small{ font-size:13px;
+  color:var(--muted) }
 
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
+  .player{ position:fixed; inset:0; display:none; place-items:center; z-index:200; padding:20px; background:linear-gradient(180deg, rgba(2,6,12,0.6), rgba(2,6,12,0.75)); backdrop-filter:blur(8px); }
+  .player.show{ display:grid;
+  }
+  .player-card{ width:min(1200px,96vw); max-height:88vh; border-radius:14px; overflow:hidden; display:grid; grid-template-rows:auto 1fr; background:var(--panel); border:1px solid rgba(255,255,255,0.03);
+  box-shadow:0 40px 80px rgba(2,8,20,0.8) }
+  .player-top{ display:flex; gap:10px; align-items:center; padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.02) }
+  .player-title{ font-weight:800 }
+  .player-actions{ margin-left:auto; display:flex; gap:8px }
+  .player-body{ background:#000; min-height:340px; display:grid; grid-template-rows:1fr;
+  position:relative; }
+  .player-body iframe{ width:100%; height:100%; border:0; background:#000 }
 
-        .button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.15em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            text-align: center;
-            text-decoration: none;
-            color: white;
-            box-sizing: border-box;
-            font-weight: 600;
-        }
+  .loader{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
+  }
+  .spinner{ width:40px; height:40px; border-radius:50%; border:4px solid rgba(255,255,255,0.06); border-top-color:var(--accent-start);
+  animation:spin 1s linear infinite }
+  @keyframes spin{ to{ transform:rotate(360deg) } }
 
-        .button i {
-            margin-right: 10px;
-            font-size: 1.3em;
-        }
+  dialog{ border:0; border-radius:12px; padding:0; overflow:hidden; background:var(--panel); color:var(--text);
+  box-shadow:var(--shadow); transition: transform 0.3s ease, opacity 0.3s ease; }
+  dialog::backdrop{ background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); }
+  dialog:not([open]){ opacity:0; transform: scale(0.95); pointer-events:none;
+  }
+  .modal{ padding:16px; display:grid; gap:10px; min-width:320px; }
+  input, select { background:var(--glass); border:1px solid var(--highlight); color:var(--text); padding:8px; border-radius:8px; width:100%;
+  font-size: 14px; }
+  
+  .drop-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer;
+  color: var(--muted); border: 2px dashed var(--highlight); border-radius: 10px; height: 140px; margin-top: 6px; transition: border-color .2s, background-color .2s; position: relative;
+  overflow: hidden; background: var(--glass); }
+  .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent-start); background: var(--highlight); }
+  .drop-zone-prompt { display: flex;
+  flex-direction: column; align-items: center; gap: 8px; }
+  #dlg-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover; display: none; }
+  .drop-zone.has-preview .drop-zone-prompt { display: none; }
+  .drop-zone.has-preview #dlg-preview { display: block;
+  }
 
-        .button.primary {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
-        }
+  /* New Settings Styles */
+  .settings-container { display: flex; flex-direction: column; gap: 16px; max-width: 450px;
+  }
+  .settings-container > div > label { display: block; margin-bottom: 6px; font-weight: 600;
+  }
+  .settings-container .color-pickers { display: flex; gap: 12px; }
+  .settings-container .color-pickers > div { flex: 1;
+  }
+  .settings-container input[type="color"] { width: 100%; height: 38px; padding: 0; border: 1px solid var(--highlight); border-radius: 8px; overflow: hidden;
+  cursor: pointer; }
+  .settings-container .range-row { display: flex; align-items: center; gap: 12px;
+  }
+  .settings-container .range-row input[type="range"] { flex-grow: 1; }
+  
+  /* === Custom Range Slider Styles === */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: var(--glass);
+    border-radius: 4px;
+    outline: none;
+    transition: opacity .2s;
+    cursor: pointer;
+    margin: 10px 0;
+  }
+  input[type="range"]:hover {
+    opacity: 1;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--accent-start);
+    background-image: var(--primary-gradient);
+    border-radius: 50%;
+    border: 3px solid var(--panel);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    margin-top: -6px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--accent-start);
+    background-image: var(--primary-gradient);
+    border-radius: 50%;
+    border: 3px solid var(--panel);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  /* === End Custom Styles === */
 
-        .button.primary:hover {
-            opacity: 0.9;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
-        }
+  .settings-container .toggle-row { display: flex;
+  justify-content: space-between; align-items: center; background: var(--glass); padding: 8px 12px; border-radius: 8px; }
+  .toggle-switch { position: relative; display: inline-block;
+  width: 44px; height: 24px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0;
+  }
+  .toggle-slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--highlight); border-radius: 24px; transition: .4s;
+  }
+  .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: var(--muted); border-radius: 50%;
+  transition: .4s; }
+  input:checked + .toggle-slider { background-image: var(--primary-gradient); }
+  input:checked + .toggle-slider:before { transform: translateX(20px); background-color: white;
+  }
+  hr { border: none; height: 1px; background-color: var(--highlight); margin: 8px 0; }
 
-        .button.secondary {
-            background-color: var(--secondary-color);
-            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
-        }
-        .button.secondary:hover {
-            opacity: 0.9;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
-        }
+  footer{ display:flex; justify-content:space-between; gap:8px;
+  padding:8px 12px; color:var(--muted); font-size:13px; align-items:center; }
 
-        .button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            opacity: 0.7;
-            transform: none;
-            box-shadow: none;
-        }
+  /* Onboarding Tutorial Styles */
+  .tutorial-overlay { position: fixed; inset: 0;
+  z-index: 9998; background: rgba(0,0,0,0.7); transition: opacity 0.3s; }
+  .tutorial-overlay.hidden { opacity: 0; pointer-events: none;
+  }
+  .tutorial-highlight { position: absolute; border-radius: 8px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.7);
+  transition: all 0.4s cubic-bezier(0.445, 0.05, 0.55, 0.95); z-index: 9999; pointer-events: none; }
+  .tutorial-box { position: absolute; z-index: 10000;
+  background: var(--panel); border-radius: 12px; padding: 16px; width: 300px; box-shadow: var(--shadow); border: 1px solid var(--highlight);
+  transition: all 0.4s cubic-bezier(0.445, 0.05, 0.55, 0.95); }
+  .tutorial-box h4 { margin: 0 0 8px 0;
+  }
+  .tutorial-box p { margin: 0 0 12px 0; font-size: 14px; color: var(--muted); line-height: 1.5;
+  }
+  .tutorial-nav { display: flex; justify-content: space-between; align-items: center; }
+  .tutorial-dots { display: flex; gap: 6px;
+  }
+  .tutorial-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--glass); transition: background 0.2s;
+  }
+  .tutorial-dot.active { background: var(--accent-start); }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--text-color);
-            font-size: 1.05em;
-        }
-
-        .input-group input[type="number"] {
-            width: calc(100% - 24px); /* Account for padding */
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-            font-size: 1em;
-            box-sizing: border-box;
-            appearance: textfield; /* Remove spinner on Firefox */
-        }
-        .input-group input[type="number"]::-webkit-outer-spin-button,
-        .input-group input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0; /* Remove spinner on Chrome/Safari */
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
-
-        .file-input-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 16px;
-            border: 2px dashed var(--primary-color);
-            border-radius: var(--border-radius);
-            font-size: 1.15em;
-            cursor: pointer;
-            background-color: rgba(106, 17, 203, 0.05);
-            color: var(--primary-color);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            font-weight: 600;
-        }
-
-        .file-input-button:hover {
-            background-color: rgba(106, 17, 203, 0.1);
-            border-color: var(--secondary-color);
-        }
-
-        .file-input-button i {
-            margin-right: 10px;
-            font-size: 1.3em;
-        }
-
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-            justify-content: center;
-        }
-
-        .image-gallery img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .image-gallery img:hover {
-            transform: scale(1.05);
-        }
-
-        #timelapsePreview {
-            width: 100%;
-            border-radius: var(--border-radius);
-            background-color: #000;
-            display: none; /* Hidden until video is generated */
-            margin-top: 25px;
-            box-shadow: var(--shadow);
-        }
-
-        #message {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--text-color);
-            font-style: italic;
-        }
-
-        /* Added for loading state */
-        .button.loading {
-            cursor: progress;
-            background: #999 !important; /* Override with a neutral color */
-            transform: none !important;
-            box-shadow: none !important;
-        }
-    </style>
+  @media (max-width:880px){ .shell{ grid-template-columns:1fr;
+  } nav.tabs{ display:none } .logo-text{ display:none } .search{ min-width:0 } }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Timelapse Creator</h1>
-
-        <div class="card">
-            <div class="input-group">
-                <label for="imageUpload">Select Photos:</label>
-                <div class="file-input-wrapper">
-                    <input type="file" id="imageUpload" multiple accept="image/*">
-                    <button class="file-input-button">
-                        <i class="fas fa-upload"></i> Choose Images
-                    </button>
-                </div>
-            </div>
-            <p>Photos Loaded: <span id="photoCount">0</span></p>
-            <div class="image-gallery" id="imageGallery">
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="input-group">
-                <label for="fpsInput">Frames Per Second (FPS):</label>
-                <input type="number" id="fpsInput" value="10" min="1" max="60">
-            </div>
-            <p id="message">Upload photos to enable timelapse actions.</p>
-        </div>
-
-        <div class="card controls">
-            <button class="button primary" id="playTimelapseButton" disabled>
-                <i class="fas fa-play"></i> Play Timelapse (Browser)
-            </button>
-            <button class="button secondary" id="downloadTimelapseButton" disabled>
-                <i class="fas fa-download"></i> Download Video Timelapse
-            </button>
-            <button class="button secondary" id="clearStorageButton">
-                <i class="fas fa-trash-alt"></i> Clear Saved Photos
-            </button>
-        </div>
-
-        <canvas id="timelapseCanvas" style="display: none;"></canvas>
-        <video id="timelapsePreview" controls playsinline></video>
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="logo" aria-hidden="true">
+      <div class="logo-badge">
+        <div class="logo-badge-line"></div><div class="logo-badge-line"></div><div class="logo-badge-line"></div>
+      </div>
+      <div class="logo-text">QBit <span class="small" style="font-weight:600; color:var(--muted); font-size:12px">Game Portal</span></div>
     </div>
+    <div class="search" role="search" aria-label="Search games">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+      <input id="q" placeholder="Search games, tags, or URLs…" autocomplete="off" />
+      <button class="btn" id="btn-add" title="Add a custom game"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Add</button>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist">
+      <div class="tab active" data-tab="home" role="tab" title="View featured games">Home</div>
+      <div class="tab" data-tab="library" role="tab" title="View all games">Library</div>
+      <div class="tab" data-tab="my" role="tab" title="View your custom games">My Games</div>
+      <div class="tab" data-tab="changelog" role="tab" title="See what's new">Changelog</div>
+      <div class="tab" data-tab="settings" role="tab" title="Customize the app">Settings</div>
+    </nav>
+    <div style="display:flex; gap:8px;
+  align-items:center">
+      <button class="btn" id="btn-import" title="Import library from a file"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      <button class="btn" id="btn-export" title="Export library to a file"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar panel">
+      <div class="group" id="filters-group" style="display: none;">
+        <h4>Filters</h4>
+        <div class="filter-pill active" data-filter="all">All <span class="small" id="count-all"></span></div>
+        <div class="filter-pill" data-filter="fav">Favorites</div>
+        <div class="filter-pill" data-filter="user">My Games</div>
+        <div class="filter-pill" data-filter="tag:arcade">Arcade</div>
+        <div class="filter-pill" data-filter="tag:puzzle">Puzzle</div>
+        <div class="filter-pill" data-filter="tag:action">Action</div>
+      </div>
+    </aside>
+    <main class="panel" style="min-height:0">
+      <section id="view-home" class="view">
+        <div style="display:flex;
+  justify-content:space-between; align-items:center; margin-bottom:10px">
+          <h3 style="margin:0">Featured</h3>
+          <div class="small" id="featured-sub">Hand-picked starters</div>
+        </div>
+        <div class="grid" id="grid-home"></div>
+      </section>
+      <section id="view-library" class="view" hidden>
+        <div style="display:flex;
+  justify-content:space-between; align-items:center; margin-bottom:10px">
+          <h3 style="margin:0">Library</h3>
+          <div class="small" id="library-sub">All available games</div>
+        </div>
+        <div class="grid" id="grid-library"></div>
+      </section>
+      <section id="view-my" class="view" hidden>
+        <div style="display:flex;
+  justify-content:space-between; align-items:center; margin-bottom:10px">
+          <h3 style="margin:0">My Games</h3>
+          <div class="small">Manage custom entries and thumbnails</div>
+        </div>
+        <div class="grid" id="grid-my"></div>
+        <div id="empty-my" class="small" style="padding:18px;
+  text-align:center" hidden>No custom games yet. Click the "Add" button to create one.</div>
+      </section>
+      <section id="view-changelog" class="view" hidden>
+        <h3 style="margin-top:0">Changelog</h3>
+        <div id="changelog" style="display:grid;
+  gap:8px; margin-top:8px;"></div>
+      </section>
+      <section id="view-settings" class="view" hidden>
+        <h3 style="margin-top:0">Settings</h3>
+        <div class="settings-container">
+          <div>
+            <label for="theme-select" class="small">Theme</label>
+            <select id="theme-select">
+              <option value="auto">Auto</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+          <div class="color-pickers">
+            <div>
+              <label for="accent-picker-start" class="small">Accent Start</label>
+              <input type="color" id="accent-picker-start" value="#4dd2ff" />
+            </div>
+            <div>
+              <label for="accent-picker-end" class="small">Accent End</label>
+              <input type="color" id="accent-picker-end" value="#7af3d0" />
+            </div>
+          </div>
+          <div>
+            <label for="angle" class="small">Gradient Angle</label>
+            <div class="range-row">
+              <input id="angle" type="range" min="0" max="360" value="135" />
+              <div class="small" id="angle-val">135deg</div>
+            </div>
+          </div>
+          <div>
+            <label for="radius" class="small">Corner Radius</label>
+            <div class="range-row">
+              <input id="radius" type="range" min="6" max="28" value="14" />
+              <div class="small" id="radius-val">14px</div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <label for="confirm-leave" class="small" style="margin:0;
+  font-weight:normal;">Confirm on Exit While Playing</label>
+            <label class="toggle-switch">
+               <input id="confirm-leave" type="checkbox" checked />
+               <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <hr>
+          <div>
+            <label class="small">Saved Data</label>
+            <button class="btn" id="btn-clear-storage">Clear All Storage</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="panel" style="display:flex;
+  align-items:center; justify-content:space-between">
+    <div class="small">© QBit — local demo • Built for learning and personal use</div>
+    <div class="small">v<span id="version">2.5</span></div>
+  </footer>
+</div>
 
-    <script>
-        // Initialize FFmpeg.wasm
-        const { createFFmpeg, fetchFile } = FFmpeg;
-        const ffmpeg = createFFmpeg({ log: true }); // `log: true` outputs FFmpeg messages to console
+<div class="player" id="player" aria-hidden="true">
+  <div class="player-card" role="dialog" aria-modal="true" aria-label="Game player">
+    <div class="player-top">
+      <div class="player-title" id="player-title">Playing…</div>
+      <div class="player-actions">
+        <button class="btn" id="player-new">Open in new tab</button>
+        <button class="btn" id="player-close">Close</button>
+      </div>
+    </div>
+    <div class="player-body">
+      <div class="loader" id="loader" aria-hidden="true"><div><div class="spinner"></div></div></div>
+      <iframe id="frame" allowfullscreen sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+    </div>
+  </div>
+</div>
 
-        // Get DOM elements
-        const imageUpload = document.getElementById('imageUpload');
-        const fpsInput = document.getElementById('fpsInput');
-        const imageGallery = document.getElementById('imageGallery');
-        const photoCountSpan = document.getElementById('photoCount');
-        const playTimelapseButton = document.getElementById('playTimelapseButton');
-        const downloadTimelapseButton = document.getElementById('downloadTimelapseButton');
-        const clearStorageButton = document.getElementById('clearStorageButton');
-        const timelapseCanvas = document.getElementById('timelapseCanvas');
-        const timelapsePreview = document.getElementById('timelapsePreview');
-        const messageElement = document.getElementById('message');
-        const fileInputButton = document.querySelector('.file-input-button'); // Get the styled button
+<dialog id="dlg">
+  <form method="dialog" class="modal" id="dlg-form">
+    <h3 id="dlg-title">Add custom game</h3>
+    <input type="hidden" id="dlg-id" />
+    <div>
+      <label class="small">Title</label>
+      <input id="dlg-name" required placeholder="Game title" />
+    </div>
+    <div>
+      <label class="small">Game URL (embeddable)</label>
+      <input id="dlg-url" required placeholder="https://..." inputmode="url" />
+    </div>
+    <div>
+      <label class="small">Thumbnail</label>
+      <label for="dlg-file" class="drop-zone" id="drop-zone">
+        <img id="dlg-preview" alt="Thumbnail preview" />
+        <div class="drop-zone-prompt">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Click to upload or drag & drop</span>
+        </div>
+        <input type="file" id="dlg-file" accept="image/*" style="display: none;" />
+      </label>
+    </div>
+    <div style="display:flex;
+  gap:8px; justify-content:flex-end; margin-top:10px">
+      <button class="btn" value="cancel">Cancel</button>
+      <button class="btn primary" id="dlg-save">Save</button>
+    </div>
+  </form>
+</dialog>
 
-        // Local storage key for saving images
-        const LOCAL_STORAGE_KEY = 'timelapseImages';
-        let capturedImages = []; // Array to store Base64 image data
-        let videoDimensions = { width: 0, height: 0 }; // To store common dimensions for video consistency
+<div class="tutorial-overlay hidden" id="tutorial-overlay">
+    <div class="tutorial-highlight" id="tutorial-highlight"></div>
+    <div class="tutorial-box" id="tutorial-box">
+        <h4 id="tutorial-title"></h4>
+        <p id="tutorial-text"></p>
+        <div class="tutorial-nav">
+            <button class="btn" id="tutorial-skip">Skip</button>
+            <div class="tutorial-dots" id="tutorial-dots"></div>
+            <div style="display: flex;
+  gap: 8px;">
+                <button class="btn" id="tutorial-prev" style="display: none;">Prev</button>
+                <button class="btn primary" id="tutorial-next">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        // --- Utility Functions ---
+<script>
+/* ========================
+   QBit — Single-file portal v2.5
+   - Made localStorage key persistent to prevent data loss between versions.
+   - Fixed "Confirm on Exit" to work for both the main window and new tabs.
+   - Reworked "Open in New Tab" to be more robust and inject a self-contained page.
+   ======================== */
+(() => {
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  // Use a persistent key to avoid data loss between versions.
+  const LS_KEY = 'qbit_data';
+  const VERSION = '2.5';
 
-        // Load images from Local Storage on page load
-        async function loadImagesFromLocalStorage() {
-            const storedImages = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if (storedImages) {
-                try {
-                    const parsedImages = JSON.parse(storedImages);
-                    // Filter out any potentially corrupt or invalid data URLs
-                    capturedImages = parsedImages.filter(data => data.startsWith('data:image/'));
+  function escapeHtml(s='') { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-                    // If images loaded from storage, try to determine video dimensions from the first one
-                    if (capturedImages.length > 0) {
-                        const img = new Image();
-                        img.onload = () => {
-                            videoDimensions.width = img.naturalWidth;
-                            videoDimensions.height = img.naturalHeight;
-                            displayImages();
-                            updateUI();
-                        };
-                        img.onerror = () => {
-                            console.error("Could not load first image from storage to determine dimensions.");
-                            displayImages();
-                            updateUI();
-                        };
-                        img.src = capturedImages[0];
-                    } else {
-                        displayImages();
-                        updateUI();
-                    }
-                } catch (e) {
-                    console.error("Error parsing stored images:", e);
-                    localStorage.removeItem(LOCAL_STORAGE_KEY); // Clear corrupt data
-                    updateUI(); // Update UI even after clearing
-                }
+  const defaultGames = [
+    { id:'eg1', title:'Hextris', url:'https://hextris.io/', img:'', tags:['puzzle'] },
+    { id:'eg2', title:'2048', url:'https://play2048.co/', img:'', tags:['puzzle'], fav:true },
+    { id:'eg3', title:'A Dark Room', url:'https://adarkroom.doublespeakgames.com/', img:'', tags:['sim'] },
+    { id:'eg4', title:'Snake', url:'https://playsnake.org/', img:'', tags:['arcade'] },
+    { id:'eg5', title:'Tic Tac Toe', url:'https://playtictactoe.org/', img:'', tags:['puzzle'] },
+  ];
+  const defaultChangelog = [
+    { date:'2025-09-01', text:'Added interactive tutorial for new users and improved UI intuitiveness.' },
+    { date:'2025-09-02', text:'Removed tutorial blur; redesigned Settings page; fixed Open in New Tab.' },
+    { date:'2025-09-03', text:'Completely reworked settings page and fixed exit confirmation bugs.'},
+    { date:'2025-09-04', text:'Made localStorage key persistent to prevent data loss on updates. Improved new tab functionality.'}
+  ];
+  const defaultSettings = { theme:'auto', accentStart:'#4dd2ff', accentEnd:'#7af3d0', accentAngle:135, radius:14, confirmLeave:true };
+
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return { games: defaultGames.slice(), settings: { ...defaultSettings }, changelog: defaultChangelog.slice(), meta:{ tutorialCompleted:false, version: VERSION } };
+      const parsed = JSON.parse(raw);
+      parsed.games = parsed.games || defaultGames.slice();
+      parsed.settings = { ...defaultSettings, ...parsed.settings };
+      parsed.changelog = parsed.changelog || defaultChangelog.slice();
+      parsed.meta = parsed.meta || { tutorialCompleted:false, version: VERSION };
+      return parsed;
+    } catch(e) {
+      console.warn('Failed to parse state, resetting', e);
+      localStorage.removeItem(LS_KEY);
+      return loadState();
+    }
+  }
+
+  function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+  const state = loadState();
+  const grids = { home: $('#grid-home'), library: $('#grid-library'), my: $('#grid-my') };
+  const playerEl = $('#player'), iframe = $('#frame'), loader = $('#loader'), playerTitle = $('#player-title');
+  const dlg = $('#dlg'), dlgForm = $('#dlg-form'), dlgPreview = $('#dlg-preview'), dlgFile = $('#dlg-file');
+  const dropZone = $('#drop-zone');
+  $('#version').textContent = VERSION;
+  const themeMediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+
+  function applyTheme() {
+    const theme = state.settings.theme;
+    document.documentElement.classList.toggle('light-theme', theme === 'auto' ? themeMediaQuery.matches : theme === 'light');
+  }
+
+  themeMediaQuery.addEventListener('change', applyTheme);
+
+  function applySettings(){
+    const s = state.settings;
+    document.documentElement.style.setProperty('--accent-start', s.accentStart);
+    document.documentElement.style.setProperty('--accent-end', s.accentEnd);
+    document.documentElement.style.setProperty('--accent-angle', `${s.accentAngle}deg`);
+    document.documentElement.style.setProperty('--radius', `${s.radius || 14}px`);
+    $('#radius').value = s.radius;
+    $('#radius-val').textContent = `${s.radius}px`;
+    $('#accent-picker-start').value = s.accentStart;
+    $('#accent-picker-end').value = s.accentEnd;
+    $('#angle').value = s.accentAngle;
+    $('#angle-val').textContent = `${s.accentAngle}deg`;
+    $('#theme-select').value = s.theme || 'auto';
+    $('#confirm-leave').checked = !!s.confirmLeave;
+    applyTheme();
+  }
+
+  function renderAll(){
+    applySettings();
+    $('#count-all').textContent = `(${state.games.length || 0})`;
+    renderGrid('home', state.games.slice(0,8));
+    applyFilterSearch();
+    renderChangelog();
+    saveState();
+  }
+
+  function cardHTML(game){
+    const imgHtml = game.img ?
+    `<img class="thumb-img" src="${escapeHtml(game.img)}" alt="${escapeHtml(game.title)} thumbnail">` : `<svg width="80" height="80" viewBox="0 0 24 24" fill="none" style="opacity:.95"><path d="M6 11v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 13h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 11v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="2" y="6" width="20" height="12" rx="3" stroke="currentColor" stroke-width="1.2"/></svg>`;
+    return `
+      <div class="thumb" aria-hidden="true">${imgHtml}
+        <div style="position:absolute; left:8px; top:8px; display:flex; gap:6px">
+          <button class="fav-btn" data-id="${game.id}" title="Toggle Favorite">${game.fav ?
+    '★' : '☆'}</button>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div style="display:flex; flex-direction:column; gap:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          <div class="card-title">${escapeHtml(game.title)}</div>
+          <div class="small">${escapeHtml(game.tags ? game.tags.join(', ') : '')}</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn open" data-id="${game.id}">Play</button>
+          <button class="btn more" data-id="${game.id}" title="More options">⋯</button>
+        </div>
+      </div>`;
+  }
+
+  function renderGrid(key, list){
+    const el = grids[key];
+    if(!el) return;
+    el.innerHTML = list.length ?
+    '' : `<div style="padding:18px; text-align:center;" class="small">No games found.</div>`;
+    list.forEach(g => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = cardHTML(g);
+      card.querySelector('.open').addEventListener('click', () => play(g));
+      card.querySelector('.fav-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleFav(g.id); });
+      card.querySelector('.more').addEventListener('click', (e) => showCardMenu(e.currentTarget, g));
+      el.appendChild(card);
+    });
+  }
+
+  function renderChangelog(){
+    const ch = $('#changelog');
+    ch.innerHTML = state.changelog.slice().reverse().map(item => `
+      <div class="panel" style="padding:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <div class="small">${escapeHtml(item.text)}</div>
+          <div class="small" style="flex-shrink:0;">${escapeHtml(item.date)}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  let loadTimeout = null;
+  function play(game){
+    playerTitle.textContent = game.title || 'Playing…';
+    playerEl.classList.add('show');
+    iframe.src = 'about:blank';
+    iframe.dataset.href = game.url || '';
+    loader.style.display = 'grid';
+    if(loadTimeout) clearTimeout(loadTimeout);
+    setTimeout(() => {
+      try {
+        iframe.src = game.url;
+      } catch(e){
+        alert('Unable to set iframe URL.');
+        return;
+      }
+      loadTimeout = setTimeout(() => {
+        loader.style.display = 'none';
+        loadTimeout = null;
+      }, 1500);
+    }, 60);
+  }
+
+  iframe.addEventListener('load', () => { if(loadTimeout) clearTimeout(loadTimeout); loader.style.display = 'none'; });
+  iframe.addEventListener('error', () => alert('An error occurred while loading the game.'));
+
+  function closePlayer(){ playerEl.classList.remove('show'); iframe.src = 'about:blank'; loader.style.display = 'none'; }
+  $('#player-close').addEventListener('click', closePlayer);
+  
+  // ===================== FIX STARTS HERE =====================
+  // This event listener handles the "Confirm on Exit" feature.
+  window.addEventListener('beforeunload', (event) => {
+    // Check if the setting is enabled AND the player is currently visible.
+    if (state.settings.confirmLeave && playerEl.classList.contains('show')) {
+      // Prevent the page from closing/reloading immediately
+      event.preventDefault();
+      // Required for cross-browser compatibility to trigger the confirmation dialog
+      event.returnValue = '';
+      return '';
+    }
+  });
+  // ====================== FIX ENDS HERE ======================
+
+  function openGameInNewTab(gameUrl, gameTitle) {
+    const newTabHtml = `
+    <!doctype html>
+    <html>
+    <head>
+      <title>${gameTitle}</title>
+      <style>
+        html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden;
+          background: #000;
+        }
+        iframe {
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+      </style>
+    </head>
+    <body>
+      <iframe src="${gameUrl}" allowfullscreen></iframe>
+    </body>
+    </html>
+    `;
+    const newTab = window.open('about:blank', '_blank');
+    if (newTab) {
+      newTab.document.write(newTabHtml);
+      newTab.document.close();
+    }
+  }
+
+  $('#player-new').addEventListener('click', () => {
+    const gameUrl = iframe.dataset.href;
+    const gameTitle = playerTitle.textContent;
+    openGameInNewTab(gameUrl, gameTitle);
+  });
+
+  function showCardMenu(button, game){
+    const menu = document.createElement('div');
+    menu.className = 'card-actions-menu';
+    menu.style.position = 'absolute';
+    menu.style.background = 'var(--panel)';
+    menu.style.padding = '8px';
+    menu.style.borderRadius = '10px';
+    menu.style.boxShadow = 'var(--shadow)';
+    menu.style.zIndex = '10';
+    menu.innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:4px">
+        <button class="btn small edit-btn">Edit</button>
+        <button class="btn small delete-btn">Delete</button>
+        <button class="btn small open-new-tab-btn">Open in new tab</button>
+      </div>
+    `;
+    menu.querySelector('.edit-btn').addEventListener('click', () => {
+      closeMenu();
+      editGame(game.id);
+    });
+    menu.querySelector('.delete-btn').addEventListener('click', () => {
+      closeMenu();
+      deleteGame(game.id);
+    });
+    menu.querySelector('.open-new-tab-btn').addEventListener('click', () => {
+      closeMenu();
+      openGameInNewTab(game.url, game.title);
+    });
+    document.body.appendChild(menu);
+    const rect = button.getBoundingClientRect();
+    Object.assign(menu.style, {
+      top: `${rect.bottom + window.scrollY + 5}px`,
+      left: `${rect.left + window.scrollX}px`
+    });
+
+    function closeMenu(){
+      if(menu.parentNode) document.body.removeChild(menu);
+      document.removeEventListener('click', clickOutside);
+    }
+    
+    function clickOutside(e){
+      if(!menu.contains(e.target) && e.target !== button){
+        closeMenu();
+      }
+    }
+    
+    document.addEventListener('click', clickOutside);
+  }
+  
+  function toggleFav(id){
+    const game = state.games.find(g => g.id === id);
+    if(game){
+      game.fav = !game.fav;
+      renderAll();
+    }
+  }
+
+  function addGame(){
+    dlgForm.reset();
+    dlgPreview.src = '';
+    dropZone.classList.remove('has-preview');
+    dlg.showModal();
+  }
+
+  function editGame(id){
+    const game = state.games.find(g => g.id === id);
+    if(!game) return;
+    $('#dlg-id').value = game.id;
+    $('#dlg-name').value = game.title;
+    $('#dlg-url').value = game.url;
+    if(game.img){
+      dlgPreview.src = game.img;
+      dropZone.classList.add('has-preview');
+    } else {
+      dlgPreview.src = '';
+      dropZone.classList.remove('has-preview');
+    }
+    dlg.showModal();
+  }
+
+  function deleteGame(id){
+    if(confirm('Are you sure you want to delete this game?')){
+      const gameIndex = state.games.findIndex(g => g.id === id);
+      if(gameIndex !== -1){
+        state.games.splice(gameIndex, 1);
+        renderAll();
+      }
+    }
+  }
+
+  dlgForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = $('#dlg-id').value || Math.random().toString(36).substring(2, 9);
+    const title = $('#dlg-name').value;
+    const url = $('#dlg-url').value;
+    const img = dlgPreview.src || '';
+    const gameIndex = state.games.findIndex(g => g.id === id);
+    
+    const newGame = { id, title, url, img, tags: [] };
+    if(gameIndex !== -1){
+      state.games[gameIndex] = { ...state.games[gameIndex], ...newGame };
+    } else {
+      state.games.push(newGame);
+    }
+    renderAll();
+    dlg.close();
+  });
+
+  dlgFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        dlgPreview.src = reader.result;
+        dropZone.classList.add('has-preview');
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if(file && file.type.startsWith('image/')){
+      dlgFile.files = e.dataTransfer.files;
+      const event = new Event('change');
+      dlgFile.dispatchEvent(event);
+    }
+  });
+
+  $('#btn-add').addEventListener('click', addGame);
+
+  // Filter and Search Logic
+  let currentFilter = 'all';
+  let currentSearch = '';
+
+  const filterButtons = $$('.filter-pill');
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilterSearch();
+    });
+  });
+
+  $('#q').addEventListener('input', (e) => {
+    currentSearch = e.target.value.toLowerCase();
+    applyFilterSearch();
+  });
+
+  function applyFilterSearch(){
+    const list = state.games.filter(game => {
+      const matchFilter = (currentFilter === 'all') ||
+                          (currentFilter === 'fav' && game.fav) ||
+                          (currentFilter === 'user' && !game.id.startsWith('eg')) ||
+                          (currentFilter.startsWith('tag:') && game.tags.includes(currentFilter.substring(4)));
+      const matchSearch = (game.title.toLowerCase().includes(currentSearch)) ||
+                          (game.tags.some(tag => tag.includes(currentSearch))) ||
+                          (game.url.toLowerCase().includes(currentSearch));
+      return matchFilter && matchSearch;
+    });
+    renderGrid('library', list);
+    renderGrid('my', list.filter(g => !g.id.startsWith('eg')));
+  }
+
+  // Tab switching logic
+  const tabs = $$('.tab');
+  const views = $$('.view');
+  
+  function switchTab(target){
+    tabs.forEach(tab => tab.classList.remove('active'));
+    views.forEach(view => view.hidden = true);
+    $(`[data-tab="${target}"]`).classList.add('active');
+    $(`#view-${target}`).hidden = false;
+    $('#filters-group').style.display = target === 'library' ? 'block' : 'none';
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  });
+
+  // Settings handlers
+  $('#theme-select').addEventListener('change', (e) => { state.settings.theme = e.target.value; applySettings(); saveState(); });
+  $('#accent-picker-start').addEventListener('input', (e) => { state.settings.accentStart = e.target.value; applySettings(); saveState(); });
+  $('#accent-picker-end').addEventListener('input', (e) => { state.settings.accentEnd = e.target.value; applySettings(); saveState(); });
+  $('#angle').addEventListener('input', (e) => { state.settings.accentAngle = parseInt(e.target.value); applySettings(); saveState(); });
+  $('#radius').addEventListener('input', (e) => { state.settings.radius = parseInt(e.target.value); applySettings(); saveState(); });
+  $('#confirm-leave').addEventListener('change', (e) => { state.settings.confirmLeave = e.target.checked; saveState(); });
+  $('#btn-clear-storage').addEventListener('click', () => { if(confirm('Are you sure you want to clear all data? This cannot be undone.')) { localStorage.removeItem(LS_KEY); location.reload(); } });
+
+  // Import/Export
+  $('#btn-export').addEventListener('click', () => {
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'qbit-library.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  $('#btn-import').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if(file){
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const importedState = JSON.parse(e.target.result);
+            if(importedState.games && Array.isArray(importedState.games)){
+              state.games = importedState.games;
+              state.settings = { ...state.settings, ...(importedState.settings || {}) };
+              state.meta = { ...state.meta, ...(importedState.meta || {}) };
+              renderAll();
+              alert('Library imported successfully!');
             } else {
-                updateUI(); // Update UI if no stored images
+              throw new Error('Invalid file format.');
             }
-        }
+          } catch(err){
+            alert('Failed to import file: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  });
+  
+  // Tutorial
+  const tutorial = {
+    overlay: $('#tutorial-overlay'),
+    box: $('#tutorial-box'),
+    highlight: $('#tutorial-highlight'),
+    title: $('#tutorial-title'),
+    text: $('#tutorial-text'),
+    skipBtn: $('#tutorial-skip'),
+    nextBtn: $('#tutorial-next'),
+    prevBtn: $('#tutorial-prev'),
+    dots: $('#tutorial-dots'),
+    elements: {}
+  };
 
-        // Save images to Local Storage
-        function saveImagesToLocalStorage() {
-            try {
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(capturedImages));
-            } catch (e) {
-                console.error("Error saving images to local storage:", e);
-                messageElement.textContent = "Warning: Could not save all images to local storage. Your browser's storage limit might be reached. You can still download the timelapse, but images might not persist after closing the page.";
-                messageElement.style.color = 'orange'; // Highlight warning
-            }
-        }
+  const tutorialSteps = [
+    {
+      id: 0,
+      element: '#btn-add',
+      title: 'Add Games',
+      text: 'Click here to add your own embeddable web games. Paste a URL and, optionally, add a thumbnail.',
+      position: 'bottom'
+    },
+    {
+      id: 1,
+      element: '#q',
+      title: 'Search',
+      text: 'Use this bar to search for games by title, tags, or URL.',
+      position: 'bottom'
+    },
+    {
+      id: 2,
+      element: '#tabs',
+      title: 'Switch Views',
+      text: 'Easily switch between different views, like your library, custom games, or settings.',
+      position: 'bottom'
+    },
+    {
+      id: 3,
+      element: '#btn-import',
+      title: 'Backup & Restore',
+      text: 'Import or export your entire library to a JSON file for easy backup.',
+      position: 'bottom'
+    },
+    {
+      id: 4,
+      element: '.card:not(:has(.open))',
+      title: 'Play a Game',
+      text: 'Click on a card to open the game player.',
+      position: 'bottom'
+    },
+    {
+      id: 5,
+      element: '#player-close',
+      title: 'Close Player',
+      text: 'When you\'re done, click this button to return to the library.',
+      position: 'left'
+    },
+    {
+      id: 6,
+      element: '#view-settings',
+      title: 'Settings',
+      text: 'Customize the portal\'s look and feel, and manage your data here.',
+      position: 'top',
+      action: () => switchTab('settings')
+    }
+  ];
 
-        // Display images in the gallery
-        function displayImages() {
-            imageGallery.innerHTML = ''; // Clear previous images
-            capturedImages.forEach((imageDataURL, index) => {
-                const imgElement = document.createElement('img');
-                imgElement.src = imageDataURL;
-                imgElement.alt = `Timelapse Frame ${index + 1}`;
-                imgElement.title = `Frame ${index + 1}`;
-                imageGallery.appendChild(imgElement);
-            });
-            photoCountSpan.textContent = capturedImages.length;
-        }
+  let currentStep = -1;
 
-        // Update button states based on photo count and current operations
-        function updateUI() {
-            const hasPhotos = capturedImages.length > 0;
-            playTimelapseButton.disabled = !hasPhotos;
-            downloadTimelapseButton.disabled = !hasPhotos;
-            clearStorageButton.disabled = !hasPhotos;
-            // Reset message only if it's not a temporary processing message
-            if (!messageElement.textContent.includes("Processing") && !messageElement.textContent.includes("Generating")) {
-                messageElement.textContent = hasPhotos ? `Ready to create your timelapse with ${capturedImages.length} photos.` : 'Upload photos to enable timelapse actions.';
-                messageElement.style.color = varToCss('text-color'); // Reset message color
-            }
+  function showStep(stepId){
+    if (stepId >= tutorialSteps.length) return endTutorial();
+    currentStep = stepId;
+    const step = tutorialSteps[stepId];
+    tutorial.nextBtn.style.display = stepId < tutorialSteps.length - 1 ? 'flex' : 'none';
+    tutorial.prevBtn.style.display = stepId > 0 ? 'flex' : 'none';
+    tutorial.title.textContent = step.title;
+    tutorial.text.textContent = step.text;
+    
+    $$('.tutorial-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === stepId);
+    });
 
-            timelapsePreview.style.display = 'none'; // Hide preview video when UI updates
-            timelapseCanvas.style.display = 'none'; // Hide canvas when UI updates
-        }
+    if(step.action) step.action();
 
-        // Helper to get CSS variable values
-        function varToCss(varName) {
-            return getComputedStyle(document.documentElement).getPropertyValue(`--${varName}`).trim();
-        }
+    const targetElement = $(step.element);
+    if (!targetElement) {
+        console.error(`Tutorial element not found: ${step.element}`);
+        nextStep();
+        return;
+    }
+    
+    const highlightRect = targetElement.getBoundingClientRect();
+    const highlightStyle = {
+      width: `${highlightRect.width}px`,
+      height: `${highlightRect.height}px`,
+      top: `${highlightRect.top + window.scrollY}px`,
+      left: `${highlightRect.left + window.scrollX}px`,
+      borderRadius: window.getComputedStyle(targetElement).borderRadius || '8px',
+      boxShadow: '0 0 0 9999px rgba(0,0,0,0.7)',
+    };
+    Object.assign(tutorial.highlight.style, highlightStyle);
 
-        // --- Event Listeners ---
+    const boxRect = tutorial.box.getBoundingClientRect();
+    let top = 0;
+    let left = 0;
 
-        // Handle file selection
-        imageUpload.addEventListener('change', async (event) => {
-            const files = event.target.files;
-            if (files.length === 0) {
-                // If no files are selected (e.g., user opens and closes dialog),
-                // clear previous selections and update UI.
-                capturedImages = [];
-                videoDimensions = { width: 0, height: 0 }; // Reset dimensions
-                displayImages();
-                updateUI();
-                messageElement.textContent = 'No new photos selected.';
-                messageElement.style.color = varToCss('text-color');
-                return;
-            }
+    switch(step.position){
+      case 'bottom':
+        top = highlightRect.bottom + 15;
+        left = highlightRect.left + (highlightRect.width / 2) - (boxRect.width / 2);
+        if (top + boxRect.height > window.innerHeight - 10) top = highlightRect.top - boxRect.height - 15;
+        break;
+      case 'top':
+        top = highlightRect.top - boxRect.height - 15;
+        left = highlightRect.left + (highlightRect.width / 2) - (boxRect.width / 2);
+        if (top < 10) top = highlightRect.bottom + 15;
+        break;
+      case 'left':
+        top = highlightRect.top + (highlightRect.height / 2) - (boxRect.height / 2);
+        left = highlightRect.left - boxRect.width - 15;
+        if (left < 10) left = highlightRect.right + 15;
+        break;
+      case 'right':
+        top = highlightRect.top + (highlightRect.height / 2) - (boxRect.height / 2);
+        left = highlightRect.right + 15;
+        if (left + boxRect.width > window.innerWidth - 10) left = highlightRect.left - boxRect.width - 15;
+        break;
+    }
+    
+    if (left < 10) left = 10;
+    if (left + boxRect.width > window.innerWidth - 10) left = window.innerWidth - boxRect.width - 10;
+    if (top < 10) top = 10;
+    if (top + boxRect.height > window.innerHeight - 10) top = window.innerHeight - boxRect.height - 10;
+    
+    Object.assign(tutorial.box.style, { top: `${top}px`, left: `${left}px` });
+  }
 
-            // Temporarily disable upload button to prevent multiple selections while processing
-            imageUpload.disabled = true;
-            fileInputButton.disabled = true; // Disable the styled button as well
-            messageElement.textContent = 'Processing images... please wait.';
-            messageElement.style.color = varToCss('primary-color');
-            timelapsePreview.style.display = 'none'; // Hide video preview during upload
-            timelapseCanvas.style.display = 'none'; // Hide canvas during upload
+  const nextStep = () => currentStep < tutorialSteps.length - 1 ?
+  showStep(currentStep + 1) : endTutorial();
+  const prevStep = () => currentStep > 0 ? showStep(currentStep - 1) : null;
 
-            // Store newly selected files in a temporary array
-            const newCapturedImages = [];
-            let firstImageDimensionsDetermined = false;
+  function endTutorial() {
+    tutorial.overlay.classList.add('hidden');
+    state.meta.tutorialCompleted = true; saveState();
+    if (tutorialSteps[currentStep].element === '#view-settings') { switchTab('home'); }
+    tutorial.nextBtn.removeEventListener('click', nextStep);
+    tutorial.prevBtn.removeEventListener('click', prevStep);
+    tutorial.skipBtn.removeEventListener('click', endTutorial);
+    window.removeEventListener('resize', () => showStep(currentStep));
+  }
 
-            // Use Promise.all to wait for all files to be read
-            const readFilePromises = Array.from(files).map(file => {
-                return new Promise(resolve => {
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            newCapturedImages.push(e.target.result);
+  function startTutorial(){
+    tutorial.overlay.classList.remove('hidden');
+    tutorial.dots.innerHTML = tutorialSteps.map(() => `<div class="tutorial-dot"></div>`).join('');
+    tutorial.nextBtn.addEventListener('click', nextStep);
+    tutorial.prevBtn.addEventListener('click', prevStep);
+    tutorial.skipBtn.addEventListener('click', endTutorial);
+    window.addEventListener('resize', () => showStep(currentStep));
+    showStep(0);
+  }
+  
+  // Initialize
+  renderAll();
+  
+  if(!state.meta.tutorialCompleted) {
+    setTimeout(startTutorial, 1500);
+  }
 
-                            // Determine dimensions from the very first image for video consistency
-                            if (!firstImageDimensionsDetermined) {
-                                const img = new Image();
-                                img.onload = () => {
-                                    videoDimensions.width = img.naturalWidth;
-                                    videoDimensions.height = img.naturalHeight;
-                                    firstImageDimensionsDetermined = true;
-                                    resolve(); // Resolve after dimensions are set for the first image
-                                };
-                                img.onerror = () => {
-                                    console.error("Could not load first image to determine dimensions.");
-                                    firstImageDimensionsDetermined = true; // Mark as true to prevent re-trying
-                                    resolve();
-                                };
-                                img.src = e.target.result;
-                            } else {
-                                resolve(); // Resolve immediately if dimensions already set
-                            }
-                        };
-                        reader.onerror = () => {
-                            console.error(`Error reading file: ${file.name}`);
-                            resolve(); // Resolve even on error to not block other files
-                        };
-                        reader.readAsDataURL(file); // Convert file to Base64 data URL
-                    } else {
-                        console.warn(`Skipping non-image file: ${file.name}`);
-                        resolve(); // Resolve for non-image files
-                    }
-                });
-            });
-
-            await Promise.all(readFilePromises); // Wait for all files to be processed
-
-            // Sort the images by their data URL string for a consistent order.
-            // This is not perfect for original file order (e.g., if files are named IMG_1.jpg, IMG_10.jpg, IMG_2.jpg),
-            // but it provides a deterministic sort. For perfect order, files need to be named with leading zeros.
-            newCapturedImages.sort();
-
-            // Replace the old images with the new set
-            capturedImages = newCapturedImages;
-
-            saveImagesToLocalStorage();
-            displayImages();
-            updateUI();
-
-            // Re-enable upload button
-            imageUpload.disabled = false;
-            fileInputButton.disabled = false;
-
-            if (capturedImages.length > 0) {
-                alert(`Successfully loaded ${capturedImages.length} images.`);
-            } else {
-                alert('No valid images were loaded from your selection.');
-            }
-        });
-
-        // Play Timelapse (Simulated on Canvas)
-        let playbackIntervalId;
-        playTimelapseButton.addEventListener('click', () => {
-            if (capturedImages.length === 0) {
-                alert('Please upload photos first!');
-                return;
-            }
-
-            // Stop any existing playback
-            if (playbackIntervalId) {
-                clearInterval(playbackIntervalId);
-            }
-
-            const fps = parseFloat(fpsInput.value);
-            if (isNaN(fps) || fps <= 0) {
-                alert('Please enter a valid FPS value (greater than 0).');
-                return;
-            }
-            const intervalTime = 1000 / fps; // Milliseconds per frame
-
-            timelapsePreview.style.display = 'none'; // Hide video element during canvas playback
-            timelapseCanvas.style.display = 'block'; // Make canvas visible for playback
-
-            let frameIndex = 0;
-            const context = timelapseCanvas.getContext('2d');
-
-            const playFrame = () => {
-                if (frameIndex < capturedImages.length) {
-                    const img = new Image();
-                    img.onload = () => {
-                        // Set canvas dimensions to the determined video dimensions for consistency
-                        // If videoDimensions are not set (e.g., loaded from storage without re-upload),
-                        // use the current image's natural dimensions.
-                        if (videoDimensions.width > 0 && videoDimensions.height > 0) {
-                             timelapseCanvas.width = videoDimensions.width;
-                             timelapseCanvas.height = videoDimensions.height;
-                        } else {
-                            timelapseCanvas.width = img.naturalWidth;
-                            timelapseCanvas.height = img.naturalHeight;
-                        }
-
-                        // Optionally, resize canvas if it's too big for screen while maintaining aspect ratio
-                        const maxWidth = window.innerWidth * 0.9;
-                        const maxHeight = window.innerHeight * 0.7;
-                        let displayWidth = timelapseCanvas.width;
-                        let displayHeight = timelapseCanvas.height;
-
-                        if (displayWidth > maxWidth || displayHeight > maxHeight) {
-                            const aspectRatio = displayWidth / displayHeight;
-                            if (displayWidth > maxWidth) {
-                                displayWidth = maxWidth;
-                                displayHeight = maxWidth / aspectRatio;
-                            }
-                            if (displayHeight > maxHeight) {
-                                displayHeight = maxHeight;
-                                displayWidth = maxHeight * aspectRatio;
-                            }
-                        }
-                        timelapseCanvas.style.width = `${displayWidth}px`;
-                        timelapseCanvas.style.height = `${displayHeight}px`;
-
-
-                        context.clearRect(0, 0, timelapseCanvas.width, timelapseCanvas.height);
-                        context.drawImage(img, 0, 0, timelapseCanvas.width, timelapseCanvas.height);
-                        frameIndex++;
-                    };
-                    img.src = capturedImages[frameIndex];
-                } else {
-                    clearInterval(playbackIntervalId);
-                    alert('Timelapse playback finished.');
-                    timelapseCanvas.style.display = 'none'; // Hide canvas after playback
-                }
-            };
-
-            // Start playing frames
-            playbackIntervalId = setInterval(playFrame, intervalTime);
-            playFrame(); // Play the first frame immediately
-        });
-
-        // Download Timelapse (Generates MP4 using ffmpeg.wasm)
-        downloadTimelapseButton.addEventListener('click', async () => {
-            if (capturedImages.length === 0) {
-                alert('No photos to download!');
-                return;
-            }
-
-            const fps = parseFloat(fpsInput.value);
-            if (isNaN(fps) || fps <= 0) {
-                alert('Please enter a valid FPS value (greater than 0).');
-                return;
-            }
-
-            // Disable buttons and show loading state
-            downloadTimelapseButton.disabled = true;
-            downloadTimelapseButton.classList.add('loading');
-            downloadTimelapseButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-            playTimelapseButton.disabled = true;
-            clearStorageButton.disabled = true;
-            imageUpload.disabled = true; // Disable upload during generation
-            fileInputButton.disabled = true;
-            messageElement.textContent = 'Generating video... this may take a while depending on image count and size.';
-            messageElement.style.color = varToCss('primary-color');
-
-            timelapsePreview.style.display = 'none'; // Hide preview video initially
-            timelapseCanvas.style.display = 'none'; // Hide canvas during generation
-
-            try {
-                if (!ffmpeg.isLoaded()) {
-                    messageElement.textContent = 'Loading video encoder...';
-                    await ffmpeg.load();
-                }
-
-                // Write images to FFmpeg's virtual file system
-                for (let i = 0; i < capturedImages.length; i++) {
-                    const imageData = capturedImages[i];
-                    // Convert Base64 to ArrayBuffer
-                    const byteCharacters = atob(imageData.split(',')[1]);
-                    const byteNumbers = new Array(byteCharacters.length);
-                    for (let j = 0; j < byteCharacters.length; j++) {
-                        byteNumbers[j] = byteCharacters.charCodeAt(j);
-                    }
-                    const byteArray = new Uint8Array(byteNumbers);
-
-                    // Determine image extension from data URL
-                    const mimeType = imageData.substring(imageData.indexOf(':') + 1, imageData.indexOf(';'));
-                    let ext = 'jpg'; // Default to jpg
-                    if (mimeType.includes('png')) ext = 'png';
-                    else if (mimeType.includes('gif')) ext = 'gif'; // Though GIFs as input might be rare
-
-                    ffmpeg.FS('writeFile', `input_${String(i).padStart(4, '0')}.${ext}`, await fetchFile(byteArray));
-                }
-
-                // Get dimensions. If not set (e.g., directly from local storage without re-upload),
-                // attempt to use the first image's actual dimensions.
-                let width = videoDimensions.width || 0;
-                let height = videoDimensions.height || 0;
-
-                if (width === 0 || height === 0) {
-                    // Fallback: load the first image to get dimensions if not already set
-                    const tempImg = new Image();
-                    await new Promise((resolve, reject) => {
-                        tempImg.onload = () => {
-                            width = tempImg.naturalWidth;
-                            height = tempImg.naturalHeight;
-                            resolve();
-                        };
-                        tempImg.onerror = reject;
-                        tempImg.src = capturedImages[0];
-                    });
-                }
-
-                // If dimensions are still 0 or invalid, use a sensible default
-                if (width === 0 || height === 0) {
-                    console.warn("Could not determine image dimensions, falling back to 1920x1080.");
-                    width = 1920;
-                    height = 1080;
-                }
-
-                // Ensure dimensions are even for FFmpeg compatibility
-                width = width % 2 === 0 ? width : width - 1;
-                height = height % 2 === 0 ? height : height - 1;
-                if (width <= 0 || height <= 0) { // Ensure dimensions are positive after adjustment
-                    throw new Error("Invalid image dimensions for video encoding after adjustment.");
-                }
-
-
-                // Run FFmpeg command
-                // -r ${fps}: Set frame rate
-                // -i input_%04d.jpg: Input pattern for sequentially numbered images
-                // -pix_fmt yuv420p: Pixel format for broad compatibility (most players)
-                // -vf "scale=${width}:${height}": Scale all images to the determined dimensions
-                // -preset fast: Faster encoding, might result in larger file or slightly lower quality
-                // -crf 23: Constant Rate Factor (quality setting, lower is better quality/larger file). 23 is a good default.
-                messageElement.textContent = `Encoding video (${capturedImages.length} frames at ${fps} FPS, ${width}x${height})...`;
-
-                const firstImageExtension = capturedImages[0].includes('png') ? 'png' : 'jpg';
-
-                await ffmpeg.run(
-                    '-r', String(fps),
-                    '-i', `input_%04d.${firstImageExtension}`,
-                    '-pix_fmt', 'yuv420p',
-                    '-vf', `scale=${width}:${height}`,
-                    '-preset', 'fast',
-                    '-crf', '23',
-                    'output.mp4'
-                );
-
-                const data = ffmpeg.FS('readFile', 'output.mp4');
-
-                // Create a Blob from the video data
-                const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
-                const videoUrl = URL.createObjectURL(videoBlob);
-
-                // Display in the video player
-                timelapsePreview.src = videoUrl;
-                timelapsePreview.style.display = 'block';
-                timelapsePreview.load(); // Load the video
-                timelapsePreview.play(); // Auto-play the video
-
-                // Offer for download
-                const a = document.createElement('a');
-                a.href = videoUrl;
-                a.download = `timelapse_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.mp4`; // e.g., timelapse_20250705.mp4
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(videoUrl); // Clean up object URL after download link is clicked
-
-                messageElement.textContent = 'Video timelapse generated and downloaded! You can also preview it above.';
-                messageElement.style.color = varToCss('text-color');
-
-            } catch (error) {
-                console.error("Error generating video:", error);
-                messageElement.textContent = `Error generating video: ${error.message || 'An unknown error occurred.'} Please check console.`;
-                messageElement.style.color = 'red';
-                alert('Failed to generate video. Check browser console for details or try with fewer/smaller images, or a lower FPS.');
-            } finally {
-                // Re-enable buttons and reset state
-                downloadTimelapseButton.disabled = false;
-                downloadTimelapseButton.classList.remove('loading');
-                downloadTimelapseButton.innerHTML = '<i class="fas fa-download"></i> Download Video Timelapse';
-                playTimelapseButton.disabled = false;
-                clearStorageButton.disabled = false;
-                imageUpload.disabled = false; // Re-enable upload button
-                fileInputButton.disabled = false;
-                updateUI(); // Ensure all UI elements are updated correctly
-            }
-        });
-
-        // Clear Saved Photos
-        clearStorageButton.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all saved photos? This action cannot be undone.')) {
-                localStorage.removeItem(LOCAL_STORAGE_KEY);
-                capturedImages = [];
-                videoDimensions = { width: 0, height: 0 }; // Reset dimensions
-                displayImages();
-                updateUI();
-                if (playbackIntervalId) {
-                    clearInterval(playbackIntervalId);
-                    timelapseCanvas.style.display = 'none'; // Hide canvas if playback was active
-                }
-                timelapsePreview.style.display = 'none'; // Hide video preview
-                timelapsePreview.src = ''; // Clear video source
-                alert('All saved photos cleared from browser storage.');
-            }
-        });
-
-        // --- Initial Load ---
-        loadImagesFromLocalStorage();
-    </script>
+})();
+</script>
 </body>
 </html>
